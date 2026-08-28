@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="description"
+    content="Free Travel — encontre voos, hospedagens e viagens pelo melhor preço."
+  >
+
+  <title>Free Travel — Viaje por um preço justo</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <!-- ================= HEADER ================= -->
+
+  <header class="site-header">
+
+    <div class="container header-inner">
+
+      <a href="#home" class="logo">
+        <span class="logo-icon">✈</span>
+        <span class="logo-text">
+          FREE <span>TRAVEL</span>
+        </span>
+      </a>
+
+      <nav class="main-nav" id="mainNav">
+
+        <a href="#home">Início</a>
+        <a href="#ofertas">Ofertas</a>
+        <a href="#destinos">Destinos</a>
+        <a href="#como-funciona">Como funciona</a>
+
+      </nav>
+
+      <div class="header-actions">
+
+        <button
+          class="favorites-link"
+          type="button"
+          data-action="show-favorites"
+        >
+          <span>♡</span>
+          Favoritos
+          <b data-favorite-count hidden>0</b>
+        </button>
+
+        <button
+          class="login-btn"
+          type="button"
+          data-action="login"
+        >
+          Entrar
+        </button>
+
+        <button
+          class="menu-toggle"
+          type="button"
+          data-menu-toggle
+          aria-label="Abrir menu"
+          aria-expanded="false"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+      </div>
+
+    </div>
+
+  </header>
+
+
+  <!-- ================= HERO ================= -->
+
+  <main>
+
+    <section class="hero" id="home">
+
+      <div class="hero-overlay"></div>
+
+      <div class="container hero-content">
+
+        <div class="hero-copy">
+
+          <span class="eyebrow">
+            VIAJE MAIS. PAGUE MENOS.
+          </span>
+
+          <h1>
+            Sua próxima viagem
+            começa <strong>aqui.</strong>
+          </h1>
+
+          <p>
+            Compare destinos, encontre ofertas e descubra
+            viagens que cabem no seu orçamento.
+          </p>
+
+        </div>
+
+
+        <!-- ================= SEARCH ================= -->
+
+        <div class="search-card">
+
+          <div class="search-tabs">
+
+            <button
+              class="search-tab active"
+              type="button"
+            >
+              ✈ Voos
+            </button>
+
+            <button
+              class="search-tab"
+              type="button"
+            >
+              🏨 Hotéis
+            </button>
+
+            <button
+              class="search-tab"
+              type="button"
+            >
+              🌎 Pacotes
+            </button>
+
+          </div>
+
+
+          <form
+            class="search-form"
+            id="searchForm"
+          >
+
+            <div class="search-field">
+
+              <label for="destination">
+                Destino
+              </label>
+
+              <div class="input-wrap">
+
+                <span class="input-icon">
+                  📍
+                </span>
+
+                <input
+                  id="destination"
+                  name="destination"
+                  type="text"
+                  placeholder="Para onde você quer ir?"
+                  autocomplete="off"
+                >
+
+              </div>
+
+            </div>
+
+
+            <div class="search-field">
+
+              <label for="departure">
+                Ida
+              </label>
+
+              <div class="input-wrap">
+
+                <span class="input-icon">
+                  📅
+                </span>
+
+                <input
+                  id="departure"
+                  name="departure"
+                  type="date"
+                >
+
+              </div>
+
+            </div>
+
+
+            <div class="search-field">
+
+              <label for="return">
+                Volta
+              </label>
+
+              <div class="input-wrap">
+
+                <span class="input-icon">
+                  📅
+                </span>
+
+                <input
+                  id="return"
+                  name="return"
+                  type="date"
+                >
+
+              </div>
+
+            </div>
+
+
+            <div class="search-field">
+
+              <label for="passengers">
+                Passageiros
+              </label>
+
+              <div class="input-wrap">
+
+                <span class="input-icon">
+                  👤
+                </span>
+
+                <select
+                  id="passengers"
+                  name="passengers"
+                >
+                  <option value="1">1 passageiro</option>
+                  <option value="2">2 passageiros</option>
+                  <option value="3">3 passageiros</option>
+                  <option value="4">4 passageiros</option>
+                  <option value="5">5 passageiros</option>
+                  <option value="6">6 passageiros</option>
+                </select>
+
+              </div>
+
+            </div>
+
+
+            <button
+              class="search-button"
+              type="submit"
+            >
+              <span class="search-button-icon">⌕</span>
+              Buscar
+            </button>
+
+          </form>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= TRUST ================= -->
+
+    <section class="trust-bar">
+
+      <div class="container trust-inner">
+
+        <div class="trust-item">
+
+          <span>✓</span>
+
+          <div>
+            <strong>Melhores ofertas</strong>
+            <small>Compare antes de reservar</small>
+          </div>
+
+        </div>
+
+
+        <div class="trust-item">
+
+          <span>★</span>
+
+          <div>
+            <strong>Destinos selecionados</strong>
+            <small>Opções para todos os bolsos</small>
+          </div>
+
+        </div>
+
+
+        <div class="trust-item">
+
+          <span>⚡</span>
+
+          <div>
+            <strong>Busca rápida</strong>
+            <small>Encontre sua viagem facilmente</small>
+          </div>
+
+        </div>
+
+
+        <div class="trust-item">
+
+          <span>🔒</span>
+
+          <div>
+            <strong>Experiência segura</strong>
+            <small>Você escolhe onde reservar</small>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= OFERTAS ================= -->
+
+    <section
+      class="section offers-section"
+      id="ofertas"
+    >
+
+      <div class="container">
+
+        <div class="section-heading">
+
+          <div>
+
+            <span class="section-kicker">
+              OFERTAS EM DESTAQUE
+            </span>
+
+            <h2>
+              Viaje mais pagando menos.
+            </h2>
+
+            <p>
+              Descubra destinos incríveis selecionados
+              para você.
+            </p>
+
+          </div>
+
+          <button
+            class="outline-btn"
+            type="button"
+            data-action="show-all"
+          >
+            Ver todas
+            <span>→</span>
+          </button>
+
+        </div>
+
+
+        <!-- ================= FILTROS ================= -->
+
+        <div class="filter-row">
+
+          <button
+            class="filter-btn active"
+            type="button"
+            data-trip-type="Todos"
+          >
+            Todos
+          </button>
+
+          <button
+            class="filter-btn"
+            type="button"
+            data-trip-type="Praia"
+          >
+            🏖 Praia
+          </button>
+
+          <button
+            class="filter-btn"
+            type="button"
+            data-trip-type="Cidade"
+          >
+            🏙 Cidade
+          </button>
+
+          <button
+            class="filter-btn"
+            type="button"
+            data-trip-type="Natureza"
+          >
+            🌲 Natureza
+          </button>
+
+        </div>
+
+
+        <div
+          class="results-info"
+          id="resultCount"
+        >
+          Carregando ofertas...
+        </div>
+
+
+        <div
+          class="trip-grid"
+          id="tripGrid"
+        >
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= DESTINOS ================= -->
+
+    <section
+      class="section destinations-section"
+      id="destinos"
+    >
+
+      <div class="container">
+
+        <div class="section-heading centered">
+
+          <span class="section-kicker">
+            EXPLORE O MUNDO
+          </span>
+
+          <h2>
+            Destinos que inspiram.
+          </h2>
+
+          <p>
+            Escolha um destino e comece a planejar
+            sua próxima aventura.
+          </p>
+
+        </div>
+
+
+        <div class="destination-grid">
+
+
+          <button
+            class="destination-card destination-large"
+            type="button"
+            data-destination="Rio de Janeiro"
+          >
+
+            <img
+              src="https://images.unsplash.com/photo-1483729558449-99ef09a8c325?auto=format&fit=crop&w=1400&q=85"
+              alt="Rio de Janeiro"
+              loading="lazy"
+            >
+
+            <div class="destination-overlay"></div>
+
+            <div class="destination-content">
+
+              <small>BRASIL</small>
+
+              <strong>
+                Rio de Janeiro
+              </strong>
+
+              <span>
+                Praias, montanhas e muita energia.
+              </span>
+
+            </div>
+
+          </button>
+
+
+          <button
+            class="destination-card"
+            type="button"
+            data-destination="Buenos Aires"
+          >
+
+            <img
+              src="https://images.unsplash.com/photo-1589909202802-8f4aadce1849?auto=format&fit=crop&w=1000&q=85"
+              alt="Buenos Aires"
+              loading="lazy"
+            >
+
+            <div class="destination-overlay"></div>
+
+            <div class="destination-content">
+
+              <small>ARGENTINA</small>
+
+              <strong>
+                Buenos Aires
+              </strong>
+
+              <span>
+                Cultura, gastronomia e tango.
+              </span>
+
+            </div>
+
+          </button>
+
+
+          <button
+            class="destination-card"
+            type="button"
+            data-destination="Madrid"
+          >
+
+            <img
+              src="https://images.unsplash.com/photo-1539037116277-4db20889f2d4?auto=format&fit=crop&w=1000&q=85"
+              alt="Madrid"
+              loading="lazy"
+            >
+
+            <div class="destination-overlay"></div>
+
+            <div class="destination-content">
+
+              <small>ESPANHA</small>
+
+              <strong>
+                Madrid
+              </strong>
+
+              <span>
+                História, arte e gastronomia.
+              </span>
+
+            </div>
+
+          </button>
+
+
+          <button
+            class="destination-card"
+            type="button"
+            data-destination="Bariloche"
+          >
+
+            <img
+              src="https://images.unsplash.com/photo-1544986581-efac024faf62?auto=format&fit=crop&w=1000&q=85"
+              alt="Bariloche"
+              loading="lazy"
+            >
+
+            <div class="destination-overlay"></div>
+
+            <div class="destination-content">
+
+              <small>ARGENTINA</small>
+
+              <strong>
+                Bariloche
+              </strong>
+
+              <span>
+                Lagos, montanhas e neve.
+              </span>
+
+            </div>
+
+          </button>
+
+
+          <button
+            class="destination-card"
+            type="button"
+            data-destination="Paris"
+          >
+
+            <img
+              src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1000&q=85"
+              alt="Paris"
+              loading="lazy"
+            >
+
+            <div class="destination-overlay"></div>
+
+            <div class="destination-content">
+
+              <small>FRANÇA</small>
+
+              <strong>
+                Paris
+              </strong>
+
+              <span>
+                Arte, romance e arquitetura.
+              </span>
+
+            </div>
+
+          </button>
+
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= ORÇAMENTO ================= -->
+
+    <section class="budget-section">
+
+      <div class="container">
+
+        <div class="budget-card">
+
+          <div class="budget-copy">
+
+            <span class="section-kicker">
+              PLANEJE DE ACORDO COM SEU BOLSO
+            </span>
+
+            <h2>
+              Qual é o seu orçamento?
+            </h2>
+
+            <p>
+              Ajuste o valor e encontre ofertas
+              dentro do que você pretende gastar.
+            </p>
+
+          </div>
+
+
+          <div class="budget-control">
+
+            <div class="budget-value">
+
+              <span>
+                Até
+              </span>
+
+              <strong id="budgetValue">
+                R$ 5.000
+              </strong>
+
+            </div>
+
+
+            <input
+              id="budgetSlider"
+              type="range"
+              min="500"
+              max="5000"
+              step="100"
+              value="5000"
+            >
+
+
+            <div class="budget-range-labels">
+
+              <span>
+                R$ 500
+              </span>
+
+              <span>
+                R$ 5.000
+              </span>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= COMO FUNCIONA ================= -->
+
+    <section
+      class="section how-section"
+      id="como-funciona"
+    >
+
+      <div class="container">
+
+        <div class="section-heading centered">
+
+          <span class="section-kicker">
+            SIMPLES ASSIM
+          </span>
+
+          <h2>
+            Como funciona?
+          </h2>
+
+          <p>
+            O Free Travel ajuda você a encontrar
+            oportunidades de viagem sem complicação.
+          </p>
+
+        </div>
+
+
+        <div class="steps-grid">
+
+
+          <article class="step-card">
+
+            <span class="step-number">
+              01
+            </span>
+
+            <div class="step-icon">
+              🔎
+            </div>
+
+            <h3>
+              Pesquise
+            </h3>
+
+            <p>
+              Informe o destino e encontre
+              diferentes opções de viagem.
+            </p>
+
+          </article>
+
+
+          <article class="step-card">
+
+            <span class="step-number">
+              02
+            </span>
+
+            <div class="step-icon">
+              ⚖
+            </div>
+
+            <h3>
+              Compare
+            </h3>
+
+            <p>
+              Compare preços e escolha a alternativa
+              que melhor combina com você.
+            </p>
+
+          </article>
+
+
+          <article class="step-card">
+
+            <span class="step-number">
+              03
+            </span>
+
+            <div class="step-icon">
+              ✈
+            </div>
+
+            <h3>
+              Viaje
+            </h3>
+
+            <p>
+              Escolha sua oferta e siga para
+              a reserva com o parceiro.
+            </p>
+
+          </article>
+
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= CTA ================= -->
+
+    <section class="cta-section">
+
+      <div class="container">
+
+        <div class="cta-card">
+
+          <div>
+
+            <span class="section-kicker">
+              FREE TRAVEL
+            </span>
+
+            <h2>
+              Sua próxima aventura
+              está mais perto.
+            </h2>
+
+            <p>
+              Encontre uma viagem que combina
+              com seu orçamento.
+            </p>
+
+          </div>
+
+          <button
+            class="primary-btn"
+            type="button"
+            data-action="go-search"
+          >
+            Encontrar minha viagem →
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- ================= FOOTER ================= -->
+
+  <footer class="site-footer">
+
+    <div class="container footer-main">
+
+
+      <div class="footer-brand">
+
+        <a href="#home" class="logo">
+
+          <span class="logo-icon">
+            ✈
+          </span>
+
+          <span class="logo-text">
+            FREE <span>TRAVEL</span>
+          </span>
+
+        </a>
+
+        <p>
+          Viaje por um preço justo.
+        </p>
+
+      </div>
+
+
+      <div class="footer-column">
+
+        <h4>
+          Free Travel
+        </h4>
+
+        <a href="#home">
+          Início
+        </a>
+
+        <a href="#ofertas">
+          Ofertas
+        </a>
+
+        <a href="#destinos">
+          Destinos
+        </a>
+
+        <a href="#como-funciona">
+          Como funciona
+        </a>
+
+      </div>
+
+
+      <div class="footer-column">
+
+        <h4>
+          Ajuda
+        </h4>
+
+        <a href="#">
+          Central de ajuda
+        </a>
+
+        <a href="#">
+          Termos de uso
+        </a>
+
+        <a href="#">
+          Privacidade
+        </a>
+
+        <a href="#contact" data-action="contact">
+        Fale conosco
+        </a>
+
+      </div>
+
+
+      <div class="footer-column">
+
+        <h4>
+          Explore
+        </h4>
+
+        <a href="#destinos">
+          Brasil
+        </a>
+
+        <a href="#destinos">
+          América do Sul
+        </a>
+
+        <a href="#destinos">
+          Europa
+        </a>
+
+        <a href="#ofertas">
+          Ofertas de viagem
+        </a>
+
+      </div>
+
+
+    </div>
+
+
+    <div class="container footer-bottom">
+
+      <span>
+        © 2026 Free Travel. Todos os direitos reservados.
+      </span>
+
+      <span>
+        Viaje mais. Pague menos.
+      </span>
+
+    </div>
+
+  </footer>
+
+
+  <!-- ================= JAVASCRIPT ================= -->
+
+  
+<script src="script.js" defer></script>
+
+</body>
+</html>
