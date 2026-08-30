@@ -1,28 +1,25 @@
-// Permite que os links normais (.html) abram a página e apenas links com '#' rolem a tela
 document.addEventListener('DOMContentLoaded', () => {
-    const links = document.querySelectorAll('a');
-    
-    links.forEach(link => {
-        link.addEventListener('click', (e) => {
-            const href = link.getAttribute('href');
-            
-            // Se o link for para um arquivo .html ou link externo, deixa navegar normalmente
-            if (href && (href.endsWith('.html') || href.startsWith('http') || href.startsWith('https'))) {
-                return; // Não bloqueia a navegação
-            }
-            
-            // Se for apenas uma âncora interna (#), faz a rolagem suave
-            if (href && href.startsWith('#')) {
-                e.preventDefault();
-                const targetElement = document.querySelector(href);
-                if (targetElement) {
-                    targetElement.scrollIntoView({ behavior: 'smooth' });
-                }
-            }
-        });
+  
+  // 1. GERENCIAMENTO DE LINKS E ROLAGEM SUAVE
+  const links = document.querySelectorAll('a[href^="#"]');
+  
+  links.forEach(link => {
+    link.addEventListener('click', (e) => {
+      const href = link.getAttribute('href');
+      
+      // Evita erro se o href for apenas "#"
+      if (href && href.length > 1) {
+        const targetElement = document.querySelector(href);
+        
+        if (targetElement) {
+          e.preventDefault();
+          targetElement.scrollIntoView({ behavior: 'smooth' });
+        }
+      }
     });
-});
-document.addEventListener('DOMContentLoaded', () => {
+  });
+
+  // 2. ALTERNÂNCIA IDA E VOLTA / SOMENTE IDA
   const oneWayRadio = document.getElementById('typeOneWay');
   const roundTripRadio = document.getElementById('typeRoundTrip');
   const returnInput = document.getElementById('return');
@@ -44,4 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
     oneWayRadio.addEventListener('change', toggleReturnField);
     roundTripRadio.addEventListener('change', toggleReturnField);
   }
+
 });
+
+
