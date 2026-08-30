@@ -135,12 +135,50 @@
 
           </div>
 
+          <!-- SELETOR: IDA E VOLTA / SOMENTE IDA -->
+          <div class="trip-type-container">
+            <label class="radio-label">
+              <input type="radio" name="tripType" value="roundTrip" checked id="typeRoundTrip">
+              Ida e volta
+            </label>
+            <label class="radio-label">
+              <input type="radio" name="tripType" value="oneWay" id="typeOneWay">
+              Somente ida
+            </label>
+          </div>
 
           <form
             class="search-form"
             id="searchForm"
           >
 
+            <!-- NOVO CAMPO: ORIGEM -->
+            <div class="search-field">
+
+              <label for="origin">
+                Origem
+              </label>
+
+              <div class="input-wrap">
+
+                <span class="input-icon">
+                  📍
+                </span>
+
+                <input
+                  id="origin"
+                  name="origin"
+                  type="text"
+                  placeholder="De onde você vai sair?"
+                  autocomplete="off"
+                  required
+                >
+
+              </div>
+
+            </div>
+
+            <!-- CAMPO: DESTINO -->
             <div class="search-field">
 
               <label for="destination">
@@ -159,6 +197,7 @@
                   type="text"
                   placeholder="Para onde você quer ir?"
                   autocomplete="off"
+                  required
                 >
 
               </div>
@@ -182,6 +221,7 @@
                   id="departure"
                   name="departure"
                   type="date"
+                  required
                 >
 
               </div>
@@ -189,7 +229,7 @@
             </div>
 
 
-            <div class="search-field">
+            <div class="search-field" id="returnField">
 
               <label for="return">
                 Volta
@@ -205,6 +245,7 @@
                   id="return"
                   name="return"
                   type="date"
+                  required
                 >
 
               </div>
@@ -826,7 +867,7 @@
 
   <!-- ================= FOOTER ================= -->
 
-           <footer style="background-color: #0d0d0d; color: #ffffff; padding: 40px 20px 20px 20px; font-family: sans-serif;">
+  <footer style="background-color: #0d0d0d; color: #ffffff; padding: 40px 20px 20px 20px; font-family: sans-serif;">
     <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px;">
         
         <!-- Marca / Coluna 1 -->
@@ -867,19 +908,10 @@
         <p>© 2026 Free Travel. Todos os direitos reservados.</p>
         <p>Viaje mais. Pague menos.</p>
     </div>
-</footer> 
-
-          
-       
-        
-
-        
-
+  </footer> 
 
   <!-- ================= JAVASCRIPT ================= -->
-
-  
-<script src="script.js" defer></script>
+  <script src="script.js" defer></script>
 
 </body>
 </html>
