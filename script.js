@@ -5,7 +5,7 @@ const state = {
     favorites: JSON.parse(localStorage.getItem('freetravel_favorites') || '[]'),
     activeFilter: 'Todos',
     maxBudget: 5000,
-    travelPayoutsMarker: '123456' // Substitua pelo seu ID de afiliado do Travelpayouts
+    travelPayoutsMarker: '771005' // Substitua pelo seu ID de afiliado do Travelpayouts
 };
 
 // Mock Data - Ofertas de Viagem com Códigos IATA
@@ -359,7 +359,7 @@ function handleSearchSubmit() {
     window.open(searchUrl, '_blank');
 }
 
-// Gerar URL de Afiliado (Travelpayouts / Aviasales)
+// Gerar URL de Afiliado (Travelpayouts / Aviasales em PT-BR e R$)
 function generateTravelpayoutsUrl(origin, destination, departureDate, returnDate) {
     const originIata = extractIataCode(origin) || 'GRU';
     const destinationIata = extractIataCode(destination) || 'GIG';
@@ -373,7 +373,7 @@ function generateTravelpayoutsUrl(origin, destination, departureDate, returnDate
     }
     routePath += '1'; // 1 Passageiro
 
-    return `https://www.aviasales.com/search/${routePath}?marker=${state.travelPayoutsMarker}`;
+    return `https://www.aviasales.com.br/search/${routePath}?marker=${state.travelPayoutsMarker}&currency=BRL`;
 }
 
 // Extrair Código IATA (3 Letras)
