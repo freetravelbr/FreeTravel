@@ -152,7 +152,7 @@
             id="searchForm"
           >
 
-            <!-- NOVO CAMPO: ORIGEM -->
+            <!-- CAMPO: ORIGEM (IATA) -->
             <div class="search-field">
 
               <label for="origin">
@@ -169,7 +169,7 @@
                   id="origin"
                   name="origin"
                   type="text"
-                  placeholder="De onde você vai sair?"
+                  placeholder="Cidade ou Aeroporto (Ex: GRU, BSB)"
                   autocomplete="off"
                   required
                 >
@@ -178,7 +178,7 @@
 
             </div>
 
-            <!-- CAMPO: DESTINO -->
+            <!-- CAMPO: DESTINO (IATA) -->
             <div class="search-field">
 
               <label for="destination">
@@ -195,7 +195,7 @@
                   id="destination"
                   name="destination"
                   type="text"
-                  placeholder="Para onde você quer ir?"
+                  placeholder="Cidade ou Aeroporto (Ex: GIG, EZE, MIA)"
                   autocomplete="off"
                   required
                 >
@@ -287,7 +287,7 @@
               type="submit"
             >
               <span class="search-button-icon">⌕</span>
-              Buscar
+              Buscar Aeroportos
             </button>
 
           </form>
@@ -504,7 +504,7 @@
               <small>BRASIL</small>
 
               <strong>
-                Rio de Janeiro
+                Rio de Janeiro (GIG / SDU)
               </strong>
 
               <span>
@@ -535,7 +535,7 @@
               <small>ARGENTINA</small>
 
               <strong>
-                Buenos Aires
+                Buenos Aires (EZE / AEP)
               </strong>
 
               <span>
@@ -566,7 +566,7 @@
               <small>ESPANHA</small>
 
               <strong>
-                Madrid
+                Madrid (MAD)
               </strong>
 
               <span>
@@ -597,7 +597,7 @@
               <small>ARGENTINA</small>
 
               <strong>
-                Bariloche
+                Bariloche (BRC)
               </strong>
 
               <span>
@@ -628,7 +628,7 @@
               <small>FRANÇA</small>
 
               <strong>
-                Paris
+                Paris (CDG / ORY)
               </strong>
 
               <span>
@@ -764,8 +764,8 @@
             </h3>
 
             <p>
-              Informe o destino e encontre
-              diferentes opções de viagem.
+              Informe o aeroporto IATA de origem/destino e encontre
+              diferentes opções de voos.
             </p>
 
           </article>
@@ -913,5 +913,8 @@
   <!-- ================= JAVASCRIPT ================= -->
   <script src="script.js" defer></script>
 
+  <!-- WIDGET INTEGRATION (AUTOCOMPLETE/IATA BUSCA) -->
+  <script charset="utf-8" src="//tp.media/content?promo_id=4054&shmarker=123456&campaign_id=100&target_host=www.aviasales.com&locale=pt&currency=brl" async></script>
+
 </body>
-</html>
+</html> 
