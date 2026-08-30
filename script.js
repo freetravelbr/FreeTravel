@@ -373,7 +373,7 @@ function generateTravelpayoutsUrl(origin, destination, departureDate, returnDate
     }
     routePath += '1'; // 1 Passageiro
 
-    return `https://www.aviasales.com.br/search/${routePath}?marker=${state.travelPayoutsMarker}&currency=BRL`;
+    return `https://www.aviasales.com/search/${routePath}?marker=${state.travelPayoutsMarker}&currency=BRL`;
 }
 
 // Extrair Código IATA (3 Letras)
