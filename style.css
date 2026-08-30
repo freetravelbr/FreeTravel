@@ -1254,7 +1254,32 @@ a {
 /* =========================================================
    TOAST
    ========================================================= */
+.trip-type-container {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
 
+.radio-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.radio-label input[type="radio"] {
+  accent-color: #f2bc07;
+}
+
+.disabled-input {
+  opacity: 0.3;
+  pointer-events: none;
+}
 .ft-toast {
   position: fixed;
   z-index: 7000;
