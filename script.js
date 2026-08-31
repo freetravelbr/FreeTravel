@@ -70,8 +70,7 @@ const mockTrips = [
         departureDate: '2026-11-20',
         returnDate: '2026-11-30'
     },
-    {
-        
+        {
         id: '5',
         title: 'São Paulo → Salvador',
         originCode: 'GRU',
@@ -81,12 +80,13 @@ const mockTrips = [
         category: 'Praia',
         price: 650,
         days: 4,
-        // Imagem corrigida para Salvador (Pelourinho / Farol da Barra)
-        image: 'https://images.unsplash.com/photo-1548811579-017cf2a4268b?auto=format&fit=crop&w=800&q=80',
+        // Imagem atualizada: Farol da Barra - Salvador
+        image: 'https://images.unsplash.com/photo-1599839575945-a9e5af0c3fa5?auto=format&fit=crop&w=800&q=80',
         badge: 'Nordeste',
         departureDate: '2026-10-01',
         returnDate: '2026-10-05'
     },
+
     
     {
         id: '6',
