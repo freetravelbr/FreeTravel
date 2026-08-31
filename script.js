@@ -81,7 +81,7 @@ const mockTrips = [
         price: 650,
         days: 4,
         // Imagem atualizada: Farol da Barra - Salvador
-        image: 'https://images.unsplash.com/photo-1599839575945-a9e5af0c3fa5?auto=format&fit=crop&w=800&q=80',
+        image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80',
         badge: 'Nordeste',
         departureDate: '2026-10-01',
         returnDate: '2026-10-05'
