@@ -71,6 +71,7 @@ const mockTrips = [
         returnDate: '2026-11-30'
     },
     {
+        
         id: '5',
         title: 'São Paulo → Salvador',
         originCode: 'GRU',
@@ -80,11 +81,13 @@ const mockTrips = [
         category: 'Praia',
         price: 650,
         days: 4,
-        image: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=800&q=80',
+        // Imagem corrigida para Salvador (Pelourinho / Farol da Barra)
+        image: 'https://images.unsplash.com/photo-1548811579-017cf2a4268b?auto=format&fit=crop&w=800&q=80',
         badge: 'Nordeste',
         departureDate: '2026-10-01',
         returnDate: '2026-10-05'
     },
+    
     {
         id: '6',
         title: 'São Paulo → Paris',
