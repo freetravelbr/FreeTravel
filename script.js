@@ -1,3 +1,4 @@
+// Estado da Aplicação
 const state = {
     allTrips: [
         {
@@ -49,7 +50,7 @@ const state = {
             destinationCode: 'MIA',
             departureDate: '2026-11-10',
             returnDate: '2026-11-17',
-            image: 'https://images.unsplash.com/photo-1506968604616-1b9365053641?auto=format&fit=crop&w=600&q=80',
+            image: 'https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=600&q=80',
             badge: 'Popular'
         },
         {
@@ -138,7 +139,7 @@ function generateTravelpayoutsUrl(origin, destination, departureDate, returnDate
     return `https://www.aviasales.com/search/${routePath}?marker=${state.travelPayoutsMarker}&currency=BRL`;
 }
 
-// Renderização dos Cards
+// Renderização dos Cards (Ajustado para CSS nativo)
 function renderTrips() {
     if (!elements.tripGrid) return;
 
@@ -156,7 +157,7 @@ function renderTrips() {
 
     if (state.filteredTrips.length === 0) {
         elements.tripGrid.innerHTML = `
-            <div style="grid-column: 1 / -1; text-align: center; padding: 40px 20px; color: #a0a0a0;">
+            <div style="grid-column: 1 / -1; text-align: center; padding: 40px 20px; color: #666;">
                 <p style="font-size: 1.2rem; margin-bottom: 10px;">Nenhuma oferta encontrada.</p>
                 <small>Tente alterar os filtros de categoria ou ajustar o orçamento.</small>
             </div>
@@ -175,36 +176,34 @@ function renderTrips() {
 
         return `
             <article class="trip-card" data-id="${trip.id}">
-                <div class="trip-card-image" style="position: relative;">
+                <div class="trip-card-image">
                     <img src="${trip.image}" alt="${trip.title}" loading="lazy">
-                    ${trip.badge ? `<span class="trip-badge" style="position: absolute; top: 12px; left: 12px; background: rgba(0,0,0,0.7); color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; text-transform: uppercase; font-weight: bold;">${trip.badge}</span>` : ''}
+                    ${trip.badge ? `<span class="trip-badge">${trip.badge}</span>` : ''}
                     <button 
                         type="button" 
                         class="favorite-toggle-btn ${isFav ? 'active' : ''}" 
                         onclick="toggleFavorite('${trip.id}')"
-                        style="position: absolute; top: 12px; right: 12px; background: #fff; border: none; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.15); font-size: 1.1rem; color: ${isFav ? '#e63946' : '#666'};"
                         title="${isFav ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}"
                     >
                         ${isFav ? '♥' : '♡'}
                     </button>
                 </div>
-                <div class="trip-card-body" style="padding: 16px;">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                        <span style="font-size: 0.8rem; color: #f2bc07; font-weight: bold; text-transform: uppercase;">${trip.category}</span>
-                        <span style="font-size: 0.8rem; color: #888;">${trip.days} dias</span>
+                <div class="trip-card-body">
+                    <div class="trip-card-header">
+                        <span class="trip-category">${trip.category}</span>
+                        <span class="trip-duration">${trip.days} dias</span>
                     </div>
-                    <h3 style="font-size: 1.1rem; margin: 0 0 12px 0; color: #fff;">${trip.title}</h3>
-                    <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 16px;">
-                        <div>
-                            <small style="display: block; color: #aaa; font-size: 0.75rem;">A partir de</small>
-                            <strong style="font-size: 1.3rem; color: #2ec4b6;">R$ ${trip.price.toLocaleString('pt-BR')}</strong>
+                    <h3 class="trip-title" style="color: #1a1a1a; font-size: 1.1rem; margin: 8px 0 12px 0;">${trip.title}</h3>
+                    <div class="trip-card-footer">
+                        <div class="trip-price">
+                            <small>A partir de</small>
+                            <strong>R$ ${trip.price.toLocaleString('pt-BR')}</strong>
                         </div>
                         <a 
                             href="${affiliateUrl}" 
                             target="_blank" 
                             rel="noopener noreferrer" 
-                            class="search-button" 
-                            style="padding: 8px 16px; font-size: 0.85rem; text-decoration: none; text-align: center; border-radius: 6px;"
+                            class="search-button"
                         >
                             Ver Oferta →
                         </a>
@@ -253,7 +252,6 @@ function filterFavorites() {
 
 // Inicialização de Eventos
 function initEventListeners() {
-    // Alternar exibição do campo de volta
     if (elements.typeOneWay && elements.typeRoundTrip && elements.returnField) {
         elements.typeOneWay.addEventListener('change', () => {
             elements.returnField.style.display = 'none';
@@ -265,7 +263,6 @@ function initEventListeners() {
         });
     }
 
-    // Formulário de busca
     if (elements.searchForm) {
         elements.searchForm.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -280,7 +277,6 @@ function initEventListeners() {
         });
     }
 
-    // Controle do Slider de Orçamento
     if (elements.budgetSlider && elements.budgetValue) {
         elements.budgetSlider.addEventListener('input', (e) => {
             state.maxBudget = Number(e.target.value);
@@ -289,7 +285,6 @@ function initEventListeners() {
         });
     }
 
-    // Filtros de Categoria
     document.querySelectorAll('[data-trip-type]').forEach(button => {
         button.addEventListener('click', (e) => {
             document.querySelectorAll('[data-trip-type]').forEach(btn => btn.classList.remove('active'));
@@ -299,13 +294,12 @@ function initEventListeners() {
         });
     });
 
-    // Botão de Favoritos no Header
     if (elements.favoritesButton) {
         elements.favoritesButton.addEventListener('click', filterFavorites);
     }
 }
 
-// Inicialização do App
+// Inicialização
 document.addEventListener('DOMContentLoaded', () => {
     updateFavoriteBadge();
     initEventListeners();
