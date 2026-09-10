@@ -50,7 +50,7 @@ const state = {
             destinationCode: 'MIA',
             departureDate: '2026-11-10',
             returnDate: '2026-11-17',
-            image: 'https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=600&q=80',
+            image: 'https://images.unsplash.com/photo-1506968604616-1b9365053641?auto=format&fit=crop&w=600&q=80',
             badge: 'Popular'
         },
         {
@@ -139,7 +139,7 @@ function generateTravelpayoutsUrl(origin, destination, departureDate, returnDate
     return `https://www.aviasales.com/search/${routePath}?marker=${state.travelPayoutsMarker}&currency=BRL`;
 }
 
-// Renderização dos Cards (Ajustado para CSS nativo)
+// Renderização dos Cards com estilos blindados
 function renderTrips() {
     if (!elements.tripGrid) return;
 
@@ -175,35 +175,38 @@ function renderTrips() {
         );
 
         return `
-            <article class="trip-card" data-id="${trip.id}">
-                <div class="trip-card-image">
-                    <img src="${trip.image}" alt="${trip.title}" loading="lazy">
-                    ${trip.badge ? `<span class="trip-badge">${trip.badge}</span>` : ''}
+            <article class="trip-card" data-id="${trip.id}" style="background: #ffffff; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.08); height: 100%;">
+                <div class="trip-card-image" style="position: relative; width: 100%; height: 200px; overflow: hidden; background: #f0f0f0;">
+                    <img src="${trip.image}" alt="${trip.title}" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block;">
+                    ${trip.badge ? `<span class="trip-badge" style="position: absolute; top: 12px; left: 12px; background: #111111; color: #ffffff; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; text-transform: uppercase; font-weight: bold; letter-spacing: 0.5px;">${trip.badge}</span>` : ''}
                     <button 
                         type="button" 
                         class="favorite-toggle-btn ${isFav ? 'active' : ''}" 
                         onclick="toggleFavorite('${trip.id}')"
+                        style="position: absolute; top: 12px; right: 12px; background: #ffffff; border: none; border-radius: 50%; width: 34px; height: 34px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.2); font-size: 1.1rem; color: ${isFav ? '#e63946' : '#777777'}; transition: transform 0.2s;"
                         title="${isFav ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}"
                     >
                         ${isFav ? '♥' : '♡'}
                     </button>
                 </div>
-                <div class="trip-card-body">
-                    <div class="trip-card-header">
-                        <span class="trip-category">${trip.category}</span>
-                        <span class="trip-duration">${trip.days} dias</span>
+                <div class="trip-card-body" style="padding: 16px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <span style="font-size: 0.8rem; color: #d4a373; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">${trip.category}</span>
+                            <span style="font-size: 0.8rem; color: #777777;">${trip.days} dias</span>
+                        </div>
+                        <h3 style="font-size: 1.05rem; font-weight: 700; color: #111111; margin: 0 0 16px 0; line-height: 1.3;">${trip.title}</h3>
                     </div>
-                    <h3 class="trip-title" style="color: #1a1a1a; font-size: 1.1rem; margin: 8px 0 12px 0;">${trip.title}</h3>
-                    <div class="trip-card-footer">
-                        <div class="trip-price">
-                            <small>A partir de</small>
-                            <strong>R$ ${trip.price.toLocaleString('pt-BR')}</strong>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end; padding-top: 12px; border-top: 1px solid #f0f0f0;">
+                        <div>
+                            <small style="display: block; color: #777777; font-size: 0.75rem; font-weight: 500;">A partir de</small>
+                            <strong style="font-size: 1.25rem; color: #000000; font-weight: 800;">R$ ${trip.price.toLocaleString('pt-BR')}</strong>
                         </div>
                         <a 
                             href="${affiliateUrl}" 
                             target="_blank" 
                             rel="noopener noreferrer" 
-                            class="search-button"
+                            style="background-color: #ffcc00; color: #111111; font-weight: 700; padding: 10px 16px; font-size: 0.85rem; text-decoration: none; border-radius: 6px; display: inline-block; transition: background 0.2s;"
                         >
                             Ver Oferta →
                         </a>
