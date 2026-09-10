@@ -1,249 +1,115 @@
-// State Management
+// Estado da Aplicação
 const state = {
-    allTrips: [],
+    allTrips: [
+        {
+            id: 'trip-1',
+            title: 'Rio de Janeiro saindo de São Paulo',
+            category: 'Praia',
+            price: 450,
+            days: 5,
+            originCode: 'GRU',
+            destinationCode: 'GIG',
+            departureDate: '2026-10-15',
+            returnDate: '2026-10-20',
+            image: 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?auto=format&fit=crop&w=600&q=80',
+            badge: 'Imperdível'
+        },
+        {
+            id: 'trip-2',
+            title: 'Buenos Aires saindo de São Paulo',
+            category: 'Cidade',
+            price: 1200,
+            days: 7,
+            originCode: 'GRU',
+            destinationCode: 'EZE',
+            departureDate: '2026-11-01',
+            returnDate: '2026-11-08',
+            image: 'https://images.unsplash.com/photo-1589909202802-8f4aadce1849?auto=format&fit=crop&w=600&q=80',
+            badge: 'Mais Vendido'
+        },
+        {
+            id: 'trip-3',
+            title: 'Bariloche saindo de Buenos Aires',
+            category: 'Natureza',
+            price: 1800,
+            days: 6,
+            originCode: 'EZE',
+            destinationCode: 'BRC',
+            departureDate: '2026-12-05',
+            returnDate: '2026-12-11',
+            image: 'https://images.unsplash.com/photo-1544986581-efac024faf62?auto=format&fit=crop&w=600&q=80',
+            badge: null
+        }
+    ],
     filteredTrips: [],
     favorites: JSON.parse(localStorage.getItem('freetravel_favorites') || '[]'),
     activeFilter: 'Todos',
     maxBudget: 5000,
-    travelPayoutsMarker: '771005' // Substitua pelo seu ID de afiliado do Travelpayouts
+    showOnlyFavorites: false,
+    travelPayoutsMarker: '771005'
 };
 
-// Mock Data - Ofertas de Viagem com Códigos IATA
-const mockTrips = [
-    {
-        id: '1',
-        title: 'São Paulo → Rio de Janeiro',
-        originCode: 'GRU',
-        originName: 'São Paulo (GRU)',
-        destinationCode: 'GIG',
-        destinationName: 'Rio de Janeiro (GIG)',
-        category: 'Praia',
-        price: 380,
-        days: 3,
-        image: 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?auto=format&fit=crop&w=800&q=80',
-        badge: 'Mais Vendido',
-        departureDate: '2026-10-15',
-        returnDate: '2026-10-18'
-    },
-    {
-        id: '2',
-        title: 'São Paulo → Buenos Aires',
-        originCode: 'GRU',
-        originName: 'São Paulo (GRU)',
-        destinationCode: 'EZE',
-        destinationName: 'Buenos Aires (EZE)',
-        category: 'Cidade',
-        price: 1250,
-        days: 5,
-        image: 'https://images.unsplash.com/photo-1589909202802-8f4aadce1849?auto=format&fit=crop&w=800&q=80',
-        badge: 'Oferta Especial',
-        departureDate: '2026-11-05',
-        returnDate: '2026-11-10'
-    },
-    {
-        id: '3',
-        title: 'Rio de Janeiro → Bariloche',
-        originCode: 'GIG',
-        originName: 'Rio de Janeiro (GIG)',
-        destinationCode: 'BRC',
-        destinationName: 'Bariloche (BRC)',
-        category: 'Natureza',
-        price: 2400,
-        days: 7,
-        image: 'https://images.unsplash.com/photo-1544986581-efac024faf62?auto=format&fit=crop&w=800&q=80',
-        badge: 'Inverno & Neve',
-        departureDate: '2026-09-12',
-        returnDate: '2026-09-19'
-    },
-    {
-        id: '4',
-        title: 'São Paulo → Madrid',
-        originCode: 'GRU',
-        originName: 'São Paulo (GRU)',
-        destinationCode: 'MAD',
-        destinationName: 'Madrid (MAD)',
-        category: 'Cidade',
-        price: 3890,
-        days: 10,
-        image: 'https://images.unsplash.com/photo-1539037116277-4db20889f2d4?auto=format&fit=crop&w=800&q=80',
-        badge: 'Internacional',
-        departureDate: '2026-11-20',
-        returnDate: '2026-11-30'
-    },
-        {
-        id: '5',
-        title: 'São Paulo → Salvador',
-        originCode: 'GRU',
-        originName: 'São Paulo (GRU)',
-        destinationCode: 'SSA',
-        destinationName: 'Salvador (SSA)',
-        category: 'Praia',
-        price: 650,
-        days: 4,
-        // Imagem atualizada: Farol da Barra - Salvador
-        image: 'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=800&q=80',
-        badge: 'Nordeste',
-        departureDate: '2026-10-01',
-        returnDate: '2026-10-05'
-    },
-
-    
-    {
-        id: '6',
-        title: 'São Paulo → Paris',
-        originCode: 'GRU',
-        originName: 'São Paulo (GRU)',
-        destinationCode: 'CDG',
-        destinationName: 'Paris (CDG)',
-        category: 'Cidade',
-        price: 4600,
-        days: 8,
-        image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=80',
-        badge: 'Europa',
-        departureDate: '2026-12-01',
-        returnDate: '2026-12-09'
-    }
-];
-
-// DOM Elements
+// Mapeamento dos Elementos do DOM
 const elements = {
-    tripGrid: document.getElementById('tripGrid'),
-    resultCount: document.getElementById('resultCount'),
-    filterBtns: document.querySelectorAll('.filter-btn'),
-    budgetSlider: document.getElementById('budgetSlider'),
-    budgetValue: document.getElementById('budgetValue'),
     searchForm: document.getElementById('searchForm'),
     originInput: document.getElementById('origin'),
     destinationInput: document.getElementById('destination'),
     departureInput: document.getElementById('departure'),
     returnInput: document.getElementById('return'),
     passengersSelect: document.getElementById('passengers'),
+    returnField: document.getElementById('returnField'),
     typeRoundTrip: document.getElementById('typeRoundTrip'),
     typeOneWay: document.getElementById('typeOneWay'),
-    returnField: document.getElementById('returnField'),
-    menuToggle: document.querySelector('[data-menu-toggle]'),
-    mainNav: document.getElementById('mainNav'),
-    favoriteCountBadge: document.querySelector('[data-favorite-count]')
+    tripGrid: document.getElementById('tripGrid'),
+    resultCount: document.getElementById('resultCount'),
+    budgetSlider: document.getElementById('budgetSlider'),
+    budgetValue: document.getElementById('budgetValue'),
+    favoriteCountBadge: document.querySelector('[data-favorite-count]'),
+    favoritesButton: document.querySelector('[data-action="show-favorites"]')
 };
 
-// Initialize Application
-document.addEventListener('DOMContentLoaded', () => {
-    state.allTrips = [...mockTrips];
-    initEventListeners();
-    updateFavoritesBadge();
-    renderTrips();
-});
-
-// Event Listeners Initialization
-function initEventListeners() {
-    // 1. GERENCIAMENTO DE LINKS E ROLAGEM SUAVE
-    const links = document.querySelectorAll('a[href^="#"]');
-    links.forEach(link => {
-        link.addEventListener('click', (e) => {
-            const href = link.getAttribute('href');
-            if (href && href.length > 1) {
-                const targetElement = document.querySelector(href);
-                if (targetElement) {
-                    e.preventDefault();
-                    targetElement.scrollIntoView({ behavior: 'smooth' });
-                }
-            }
-        });
-    });
-
-    // 2. ALTERNÂNCIA IDA E VOLTA / SOMENTE IDA
-    if (elements.typeOneWay && elements.typeRoundTrip && elements.returnInput) {
-        function toggleReturnField() {
-            if (elements.typeOneWay.checked) {
-                elements.returnInput.disabled = true;
-                elements.returnInput.required = false;
-                elements.returnInput.value = '';
-                elements.returnInput.classList.add('disabled-input');
-            } else {
-                elements.returnInput.disabled = false;
-                elements.returnInput.required = true;
-                elements.returnInput.classList.remove('disabled-input');
-            }
-        }
-
-        elements.typeOneWay.addEventListener('change', toggleReturnField);
-        elements.typeRoundTrip.addEventListener('change', toggleReturnField);
-    }
-
-    // 3. MENU MOBILE
-    if (elements.menuToggle && elements.mainNav) {
-        elements.menuToggle.addEventListener('click', () => {
-            const isExpanded = elements.menuToggle.getAttribute('aria-expanded') === 'true';
-            elements.menuToggle.setAttribute('aria-expanded', !isExpanded);
-            elements.mainNav.classList.toggle('open');
-        });
-    }
-
-    // 4. FILTROS DE CATEGORIA
-    if (elements.filterBtns) {
-        elements.filterBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                elements.filterBtns.forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                state.activeFilter = btn.getAttribute('data-trip-type') || 'Todos';
-                renderTrips();
-            });
-        });
-    }
-
-    // 5. SLIDER DE ORÇAMENTO
-    if (elements.budgetSlider && elements.budgetValue) {
-        elements.budgetSlider.addEventListener('input', (e) => {
-            state.maxBudget = Number(e.target.value);
-            elements.budgetValue.textContent = `R$ ${state.maxBudget.toLocaleString('pt-BR')}`;
-            renderTrips();
-        });
-    }
-
-    // 6. SUBMIT DO FORMULÁRIO (REDIRECIONAMENTO TRAVELPAYOUTS)
-    if (elements.searchForm) {
-        elements.searchForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            handleSearchSubmit();
-        });
-    }
-
-    // 7. CARDS RÁPIDOS DE DESTINO
-    document.querySelectorAll('.destination-card').forEach(card => {
-        card.addEventListener('click', () => {
-            const destName = card.getAttribute('data-destination');
-            if (elements.destinationInput) {
-                elements.destinationInput.value = destName;
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                elements.destinationInput.focus();
-            }
-        });
-    });
-
-    // 8. BOTÕES DE IR PARA BUSCA
-    document.querySelectorAll('[data-action="go-search"]').forEach(btn => {
-        btn.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-    });
-
-    // 9. EXIBIR FAVORITOS
-    const favLink = document.querySelector('[data-action="show-favorites"]');
-    if (favLink) {
-        favLink.addEventListener('click', () => {
-            filterFavorites();
-        });
-    }
+// Utilitários de Formatação
+function extractIataCode(inputString) {
+    if (!inputString) return '';
+    const match = inputString.match(/\b[A-Z]{3}\b/i);
+    return match ? match[0].toUpperCase() : inputString.trim().substring(0, 3).toUpperCase();
 }
 
-// Render Trips to Grid
+function formatDateForUrl(dateString) {
+    if (!dateString) return '';
+    const [year, month, day] = dateString.split('-');
+    return `${day}${month}`;
+}
+
+// Gerador de URL de Afiliado (Travelpayouts / Aviasales)
+function generateTravelpayoutsUrl(origin, destination, departureDate, returnDate, passengers = 1) {
+    const originIata = extractIataCode(origin) || 'GRU';
+    const destinationIata = extractIataCode(destination) || 'GIG';
+    const formattedDep = formatDateForUrl(departureDate);
+    const formattedRet = formatDateForUrl(returnDate);
+    const isOneWay = elements.typeOneWay && elements.typeOneWay.checked;
+
+    let routePath = `${originIata}${formattedDep}${destinationIata}`;
+    
+    if (formattedRet && !isOneWay) {
+        routePath += `${formattedRet}`;
+    }
+    
+    routePath += `${passengers}`;
+
+    return `https://www.aviasales.com/search/${routePath}?marker=${state.travelPayoutsMarker}&currency=BRL`;
+}
+
+// Renderização dos Cards
 function renderTrips() {
     if (!elements.tripGrid) return;
 
     state.filteredTrips = state.allTrips.filter(trip => {
         const matchesCategory = state.activeFilter === 'Todos' || trip.category === state.activeFilter;
         const matchesBudget = trip.price <= state.maxBudget;
-        return matchesCategory && matchesBudget;
+        const matchesFavorites = state.showOnlyFavorites ? state.favorites.includes(trip.id) : true;
+        
+        return matchesCategory && matchesBudget && matchesFavorites;
     });
 
     if (elements.resultCount) {
@@ -253,8 +119,8 @@ function renderTrips() {
     if (state.filteredTrips.length === 0) {
         elements.tripGrid.innerHTML = `
             <div style="grid-column: 1 / -1; text-align: center; padding: 40px 20px; color: #a0a0a0;">
-                <p style="font-size: 1.2rem; margin-bottom: 10px;">Nenhuma oferta encontrada para os filtros selecionados.</p>
-                <small>Tente aumentar o valor do orçamento no controle acima.</small>
+                <p style="font-size: 1.2rem; margin-bottom: 10px;">Nenhuma oferta encontrada.</p>
+                <small>Tente alterar os filtros de categoria ou ajustar o orçamento.</small>
             </div>
         `;
         return;
@@ -311,34 +177,21 @@ function renderTrips() {
     }).join('');
 }
 
-// Alternar Favorito
-window.toggleFavorite = function(id) {
-    const index = state.favorites.indexOf(id);
-    if (index > -1) {
-        state.favorites.splice(index, 1);
+// Gerenciamento de Favoritos
+function toggleFavorite(tripId) {
+    const index = state.favorites.indexOf(tripId);
+    if (index === -1) {
+        state.favorites.push(tripId);
     } else {
-        state.favorites.push(id);
+        state.favorites.splice(index, 1);
     }
+    
     localStorage.setItem('freetravel_favorites', JSON.stringify(state.favorites));
-    updateFavoritesBadge();
-    renderTrips();
-};
-
-// Filtrar Apenas Favoritos
-function filterFavorites() {
-    if (state.favorites.length === 0) {
-        alert('Você ainda não tem ofertas salvas nos favoritos!');
-        return;
-    }
-    state.filteredTrips = state.allTrips.filter(t => state.favorites.includes(t.id));
-    if (elements.resultCount) {
-        elements.resultCount.textContent = `Exibindo ${state.filteredTrips.length} favorito(s)`;
-    }
+    updateFavoriteBadge();
     renderTrips();
 }
 
-// Atualizar Contador no Header
-function updateFavoritesBadge() {
+function updateFavoriteBadge() {
     if (elements.favoriteCountBadge) {
         const count = state.favorites.length;
         elements.favoriteCountBadge.textContent = count;
@@ -346,52 +199,77 @@ function updateFavoritesBadge() {
     }
 }
 
-// Processar Envio do Formulário de Busca
-function handleSearchSubmit() {
-    const origin = elements.originInput ? elements.originInput.value.trim().toUpperCase() : '';
-    const destination = elements.destinationInput ? elements.destinationInput.value.trim().toUpperCase() : '';
-    const departure = elements.departureInput ? elements.departureInput.value : '';
-    const returnDate = elements.returnInput ? elements.returnInput.value : '';
-
-    if (!origin || !destination) {
-        alert('Por favor, preencha os campos de origem e destino.');
+function filterFavorites() {
+    if (state.favorites.length === 0 && !state.showOnlyFavorites) {
+        alert('Você ainda não tem ofertas salvas nos favoritos!');
         return;
     }
-
-    const searchUrl = generateTravelpayoutsUrl(origin, destination, departure, returnDate);
-    window.open(searchUrl, '_blank');
-}
-
-// Gerar URL de Afiliado (Travelpayouts / Aviasales em PT-BR e R$)
-function generateTravelpayoutsUrl(origin, destination, departureDate, returnDate) {
-    const originIata = extractIataCode(origin) || 'GRU';
-    const destinationIata = extractIataCode(destination) || 'GIG';
-
-    const formattedDep = formatDateForUrl(departureDate);
-    const formattedRet = formatDateForUrl(returnDate);
-
-    let routePath = `${originIata}${formattedDep}${destinationIata}`;
-    if (formattedRet && (!elements.typeOneWay || !elements.typeOneWay.checked)) {
-        routePath += `${formattedRet}`;
+    state.showOnlyFavorites = !state.showOnlyFavorites;
+    
+    if (elements.favoritesButton) {
+        elements.favoritesButton.classList.toggle('active', state.showOnlyFavorites);
     }
-    routePath += '1'; // 1 Passageiro
-
-    return `https://www.aviasales.com/search/${routePath}?marker=${state.travelPayoutsMarker}&currency=BRL`;
+    
+    renderTrips();
 }
 
-// Extrair Código IATA (3 Letras)
-function extractIataCode(str) {
-    if (!str) return '';
-    const match = str.match(/\b[A-Z]{3}\b/);
-    if (match) return match[0];
-    if (str.length === 3) return str.toUpperCase();
-    return str.substring(0, 3).toUpperCase();
+// Inicialização de Eventos
+function initEventListeners() {
+    // Alternar exibição do campo de volta
+    if (elements.typeOneWay && elements.typeRoundTrip && elements.returnField) {
+        elements.typeOneWay.addEventListener('change', () => {
+            elements.returnField.style.display = 'none';
+            elements.returnInput.required = false;
+        });
+        elements.typeRoundTrip.addEventListener('change', () => {
+            elements.returnField.style.display = 'block';
+            elements.returnInput.required = true;
+        });
+    }
+
+    // Formulário de busca
+    if (elements.searchForm) {
+        elements.searchForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const origin = elements.originInput.value;
+            const destination = elements.destinationInput.value;
+            const departure = elements.departureInput.value;
+            const returnDate = elements.returnInput.value;
+            const passengers = elements.passengersSelect.value;
+
+            const url = generateTravelpayoutsUrl(origin, destination, departure, returnDate, passengers);
+            window.open(url, '_blank');
+        });
+    }
+
+    // Controle do Slider de Orçamento
+    if (elements.budgetSlider && elements.budgetValue) {
+        elements.budgetSlider.addEventListener('input', (e) => {
+            state.maxBudget = Number(e.target.value);
+            elements.budgetValue.textContent = `R$ ${state.maxBudget.toLocaleString('pt-BR')}`;
+            renderTrips();
+        });
+    }
+
+    // Filtros de Categoria
+    document.querySelectorAll('[data-trip-type]').forEach(button => {
+        button.addEventListener('click', (e) => {
+            document.querySelectorAll('[data-trip-type]').forEach(btn => btn.classList.remove('active'));
+            e.target.classList.add('active');
+            state.activeFilter = e.target.getAttribute('data-trip-type');
+            renderTrips();
+        });
+    });
+
+    // Botão de Favoritos no Header
+    if (elements.favoritesButton) {
+        elements.favoritesButton.addEventListener('click', filterFavorites);
+    }
 }
 
-// Formatar Data (YYYY-MM-DD para DDMM)
-function formatDateForUrl(dateStr) {
-    if (!dateStr) return '';
-    const parts = dateStr.split('-');
-    if (parts.length !== 3) return '';
-    return `${parts[2]}${parts[1]}`;
-}
+// Inicialização do App
+document.addEventListener('DOMContentLoaded', () => {
+    updateFavoriteBadge();
+    initEventListeners();
+    renderTrips();
+});
