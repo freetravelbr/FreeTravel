@@ -1,4 +1,3 @@
-// Estado da Aplicação
 const state = {
     allTrips: [
         {
@@ -39,6 +38,45 @@ const state = {
             returnDate: '2026-12-11',
             image: 'https://images.unsplash.com/photo-1544986581-efac024faf62?auto=format&fit=crop&w=600&q=80',
             badge: null
+        },
+        {
+            id: 'trip-4',
+            title: 'Miami saindo de São Paulo',
+            category: 'Praia',
+            price: 2850,
+            days: 7,
+            originCode: 'GRU',
+            destinationCode: 'MIA',
+            departureDate: '2026-11-10',
+            returnDate: '2026-11-17',
+            image: 'https://images.unsplash.com/photo-1506968604616-1b9365053641?auto=format&fit=crop&w=600&q=80',
+            badge: 'Popular'
+        },
+        {
+            id: 'trip-5',
+            title: 'Roma saindo de São Paulo',
+            category: 'Cidade',
+            price: 3400,
+            days: 8,
+            originCode: 'GRU',
+            destinationCode: 'FCO',
+            departureDate: '2026-11-15',
+            returnDate: '2026-11-23',
+            image: 'https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=600&q=80',
+            badge: 'Destaque'
+        },
+        {
+            id: 'trip-6',
+            title: 'Cairo (Egito) saindo de São Paulo',
+            category: 'Natureza',
+            price: 4200,
+            days: 10,
+            originCode: 'GRU',
+            destinationCode: 'CAI',
+            departureDate: '2026-12-01',
+            returnDate: '2026-12-11',
+            image: 'https://images.unsplash.com/photo-1503177119275-0aa32b3a9368?auto=format&fit=crop&w=600&q=80',
+            badge: 'Exótico'
         }
     ],
     filteredTrips: [],
