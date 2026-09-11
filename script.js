@@ -37,8 +37,8 @@ const state = {
             destinationCode: 'BRC',
             departureDate: '2026-12-05',
             returnDate: '2026-12-11',
-            image: 'https://images.unsplash.com/photo-1544986581-efac024faf62?w=600&auto=format&fit=crop&q=80',
-            badge: null
+            image: 'https://images.pexels.com/photos/13257073/pexels-photo-13257073.jpeg',
+            badge: ' Neve'
         },
         {
             id: 'trip-4',
