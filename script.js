@@ -50,7 +50,7 @@ const state = {
             destinationCode: 'MIA',
             departureDate: '2026-11-10',
             returnDate: '2026-11-17',
-            image: 'https://unsplash.com/es/fotos/fotografia-aerea-de-la-ciudad-durante-el-dia-mWN686Fsbgs',
+            image: 'https://images.pexels.com/photos/5903958/pexels-photo-5903958.jpeg',
             badge: 'Popular'
         },
         {
