@@ -88,24 +88,37 @@ const state = {
     travelPayoutsMarker: '771005'
 };
 
-// Mapeamento dos Elementos do DOM
-const elements = {
-    searchForm: document.getElementById('searchForm'),
-    originInput: document.getElementById('origin'),
-    destinationInput: document.getElementById('destination'),
-    departureInput: document.getElementById('departure'),
-    returnInput: document.getElementById('return'),
-    passengersSelect: document.getElementById('passengers'),
-    returnField: document.getElementById('returnField'),
-    typeRoundTrip: document.getElementById('typeRoundTrip'),
-    typeOneWay: document.getElementById('typeOneWay'),
-    tripGrid: document.getElementById('tripGrid'),
-    resultCount: document.getElementById('resultCount'),
-    budgetSlider: document.getElementById('budgetSlider'),
-    budgetValue: document.getElementById('budgetValue'),
-    favoriteCountBadge: document.querySelector('[data-favorite-count]'),
-    favoritesButton: document.querySelector('[data-action="show-favorites"]')
+// Dicionário para relacionar os nomes de data-destination com os códigos IATA
+const iataMap = {
+    'Rio de Janeiro': 'GIG',
+    'Buenos Aires': 'EZE',
+    'Madrid': 'MAD',
+    'Bariloche': 'BRC',
+    'Paris': 'CDG'
 };
+
+// Mapeamento dos Elementos do DOM
+function getElements() {
+    return {
+        searchForm: document.getElementById('searchForm'),
+        originInput: document.getElementById('origin'),
+        destinationInput: document.getElementById('destination'),
+        departureInput: document.getElementById('departure'),
+        returnInput: document.getElementById('return'),
+        passengersSelect: document.getElementById('passengers'),
+        returnField: document.getElementById('returnField'),
+        typeRoundTrip: document.getElementById('typeRoundTrip'),
+        typeOneWay: document.getElementById('typeOneWay'),
+        tripGrid: document.getElementById('tripGrid'),
+        resultCount: document.getElementById('resultCount'),
+        budgetSlider: document.getElementById('budgetSlider'),
+        budgetValue: document.getElementById('budgetValue'),
+        favoriteCountBadge: document.querySelector('[data-favorite-count]'),
+        favoritesButton: document.querySelector('[data-action="show-favorites"]')
+    };
+}
+
+let elements = getElements();
 
 // Utilitários de Formatação
 function extractIataCode(inputString) {
@@ -139,27 +152,51 @@ function generateTravelpayoutsUrl(origin, destination, departureDate, returnDate
     return `https://www.aviasales.com/search/${routePath}?marker=${state.travelPayoutsMarker}&currency=BRL`;
 }
 
-// Preenche o formulário de busca e rola até o topo (Solução UX)
+// Ação ao Clicar no Destino Inspiracional (Sobe a página e preenche o destino)
 function selectDestinationInForm(destinationName, destinationIata) {
+    elements = getElements();
+
+    // 1. Preenche o input de destino
     if (elements.destinationInput) {
         elements.destinationInput.value = `${destinationName} (${destinationIata})`;
+        elements.destinationInput.dispatchEvent(new Event('input', { bubbles: true }));
+        elements.destinationInput.dispatchEvent(new Event('change', { bubbles: true }));
     }
 
-    if (elements.searchForm) {
-        elements.searchForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    } else {
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
+    // 2. Rola a página suavemente até o topo
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
 
+    // 3. Foca na data de partida após subir a rolagem
     setTimeout(() => {
         if (elements.departureInput) {
             elements.departureInput.focus();
+        } else if (elements.destinationInput) {
+            elements.destinationInput.focus();
         }
     }, 400);
 }
 
+// Configura os ouvintes de clique nos cards de destino baseados no atributo data-destination
+function setupDestinationCards() {
+    const destinationButtons = document.querySelectorAll('[data-destination]');
+    
+    destinationButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            e.preventDefault();
+            const cityName = button.getAttribute('data-destination');
+            const iataCode = iataMap[cityName] || 'GIG';
+            
+            selectDestinationInForm(cityName, iataCode);
+        });
+    });
+}
+
 // Renderização dos Cards de Ofertas
 function renderTrips() {
+    elements = getElements();
     if (!elements.tripGrid) return;
 
     state.filteredTrips = state.allTrips.filter(trip => {
@@ -251,6 +288,7 @@ function toggleFavorite(tripId) {
 }
 
 function updateFavoriteBadge() {
+    elements = getElements();
     if (elements.favoriteCountBadge) {
         const count = state.favorites.length;
         elements.favoriteCountBadge.textContent = count;
@@ -272,58 +310,29 @@ function filterFavorites() {
     renderTrips();
 }
 
-// Ativa os cliques nos cards da seção "Destinos que inspiram"
-function setupDestinationCards() {
-    const cards = document.querySelectorAll('.destination-card, [class*="destination"]');
-    
-    cards.forEach(card => {
-        const text = card.textContent || '';
-        let iataCode = 'GIG';
-        let cityName = 'Rio de Janeiro';
-        
-        if (text.includes('Rio de Janeiro') || text.includes('GIG')) {
-            iataCode = 'GIG';
-            cityName = 'Rio de Janeiro';
-        } else if (text.includes('Buenos Aires') || text.includes('EZE')) {
-            iataCode = 'EZE';
-            cityName = 'Buenos Aires';
-        } else if (text.includes('Madrid') || text.includes('MAD')) {
-            iataCode = 'MAD';
-            cityName = 'Madrid';
-        } else if (text.includes('Bariloche') || text.includes('BRC')) {
-            iataCode = 'BRC';
-            cityName = 'Bariloche';
-        } else if (text.includes('Paris') || text.includes('CDG')) {
-            iataCode = 'CDG';
-            cityName = 'Paris';
-        }
-
-        card.style.cursor = 'pointer';
-        card.addEventListener('click', () => selectDestinationInForm(cityName, iataCode));
-    });
-}
-
 // Inicialização de Eventos
 function initEventListeners() {
+    elements = getElements();
+
     if (elements.typeOneWay && elements.typeRoundTrip && elements.returnField) {
         elements.typeOneWay.addEventListener('change', () => {
             elements.returnField.style.display = 'none';
-            elements.returnInput.required = false;
+            if (elements.returnInput) elements.returnInput.required = false;
         });
         elements.typeRoundTrip.addEventListener('change', () => {
             elements.returnField.style.display = 'block';
-            elements.returnInput.required = true;
+            if (elements.returnInput) elements.returnInput.required = true;
         });
     }
 
     if (elements.searchForm) {
         elements.searchForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            const origin = elements.originInput.value;
-            const destination = elements.destinationInput.value;
-            const departure = elements.departureInput.value;
-            const returnDate = elements.returnInput.value;
-            const passengers = elements.passengersSelect.value;
+            const origin = elements.originInput ? elements.originInput.value : 'GRU';
+            const destination = elements.destinationInput ? elements.destinationInput.value : '';
+            const departure = elements.departureInput ? elements.departureInput.value : '';
+            const returnDate = elements.returnInput ? elements.returnInput.value : '';
+            const passengers = elements.passengersSelect ? elements.passengersSelect.value : 1;
 
             const url = generateTravelpayoutsUrl(origin, destination, departure, returnDate, passengers);
             window.open(url, '_blank');
@@ -354,6 +363,7 @@ function initEventListeners() {
 
 // Inicialização
 document.addEventListener('DOMContentLoaded', () => {
+    elements = getElements();
     updateFavoriteBadge();
     initEventListeners();
     renderTrips();
