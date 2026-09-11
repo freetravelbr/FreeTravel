@@ -139,11 +139,23 @@ function generateTravelpayoutsUrl(origin, destination, departureDate, returnDate
     return `https://www.aviasales.com/search/${routePath}?marker=${state.travelPayoutsMarker}&currency=BRL`;
 }
 
-// Redirecionamento direto para a seção "Destinos"
-function openDestinationUrl(destinationIata) {
-    const originIata = 'GRU'; // Origem padrão para buscas de destino
-    const url = `https://www.aviasales.com/search/${originIata}${destinationIata}1?marker=${state.travelPayoutsMarker}&currency=BRL`;
-    window.open(url, '_blank');
+// Preenche o formulário de busca e rola até o topo (Solução UX)
+function selectDestinationInForm(destinationName, destinationIata) {
+    if (elements.destinationInput) {
+        elements.destinationInput.value = `${destinationName} (${destinationIata})`;
+    }
+
+    if (elements.searchForm) {
+        elements.searchForm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    setTimeout(() => {
+        if (elements.departureInput) {
+            elements.departureInput.focus();
+        }
+    }, 400);
 }
 
 // Renderização dos Cards de Ofertas
@@ -262,21 +274,32 @@ function filterFavorites() {
 
 // Ativa os cliques nos cards da seção "Destinos que inspiram"
 function setupDestinationCards() {
-    // Mapeia os elementos baseados no texto do título/código IATA no HTML
     const cards = document.querySelectorAll('.destination-card, [class*="destination"]');
     
     cards.forEach(card => {
         const text = card.textContent || '';
-        let iataCode = 'GIG'; // Padrão
+        let iataCode = 'GIG';
+        let cityName = 'Rio de Janeiro';
         
-        if (text.includes('Rio de Janeiro') || text.includes('GIG')) iataCode = 'GIG';
-        else if (text.includes('Buenos Aires') || text.includes('EZE')) iataCode = 'EZE';
-        else if (text.includes('Madrid') || text.includes('MAD')) iataCode = 'MAD';
-        else if (text.includes('Bariloche') || text.includes('BRC')) iataCode = 'BRC';
-        else if (text.includes('Paris') || text.includes('CDG')) iataCode = 'CDG';
+        if (text.includes('Rio de Janeiro') || text.includes('GIG')) {
+            iataCode = 'GIG';
+            cityName = 'Rio de Janeiro';
+        } else if (text.includes('Buenos Aires') || text.includes('EZE')) {
+            iataCode = 'EZE';
+            cityName = 'Buenos Aires';
+        } else if (text.includes('Madrid') || text.includes('MAD')) {
+            iataCode = 'MAD';
+            cityName = 'Madrid';
+        } else if (text.includes('Bariloche') || text.includes('BRC')) {
+            iataCode = 'BRC';
+            cityName = 'Bariloche';
+        } else if (text.includes('Paris') || text.includes('CDG')) {
+            iataCode = 'CDG';
+            cityName = 'Paris';
+        }
 
         card.style.cursor = 'pointer';
-        card.addEventListener('click', () => openDestinationUrl(iataCode));
+        card.addEventListener('click', () => selectDestinationInForm(cityName, iataCode));
     });
 }
 
