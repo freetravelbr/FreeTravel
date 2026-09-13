@@ -24,7 +24,8 @@ const iataMap = {
     'Bariloche': 'BRC',
     'Paris': 'CDG',
     'Santiago': 'SCL',
-    'Lisboa': 'LIS'
+    'Lisboa': 'LIS',
+    'Tóquio': 'TYO'
 };
 
 // Mapeamento dos Elementos do DOM
@@ -57,11 +58,20 @@ function getElements() {
 
 let elements = getElements();
 
-// Utilitários
+// Utilitários de Data e IATA
 function extractIataCode(inputString) {
     if (!inputString) return '';
     const match = inputString.match(/\b[A-Z]{3}\b/i);
     return match ? match[0].toUpperCase() : inputString.trim().substring(0, 3).toUpperCase();
+}
+
+function getFutureDateString(daysAhead) {
+    const d = new Date();
+    d.setDate(d.getDate() + daysAhead);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
 }
 
 function formatDateForUrl(dateString) {
@@ -79,17 +89,24 @@ function showToast(message) {
     }, 3000);
 }
 
-// Gerador de URL de Afiliado
+// Gerador de URL de Afiliado (Garante formato de URL aceito pelo Aviasales)
 function generateTravelpayoutsUrl(origin, destination, departureDate, returnDate, passengers = 1) {
     const originIata = extractIataCode(origin) || 'GRU';
     const destinationIata = extractIataCode(destination) || 'GIG';
-    const formattedDep = departureDate ? formatDateForUrl(departureDate) : '';
-    const formattedRet = returnDate ? formatDateForUrl(returnDate) : '';
     const isOneWay = elements.typeOneWay && elements.typeOneWay.checked;
 
-    let routePath = `${originIata}${formattedDep}${destinationIata}`;
-    if (formattedRet && !isOneWay) routePath += `${formattedRet}`;
-    routePath += `${passengers}`;
+    // Se o usuário não informou data de ida, cria uma data padrão (daqui a 30 dias)
+    const depDate = departureDate || getFutureDateString(30);
+    const formattedDep = formatDateForUrl(depDate);
+
+    // Se for ida e volta e não informou data de volta, cria uma data padrão (daqui a 37 dias)
+    let formattedRet = '';
+    if (!isOneWay) {
+        const retDate = returnDate || getFutureDateString(37);
+        formattedRet = formatDateForUrl(retDate);
+    }
+
+    let routePath = `${originIata}${formattedDep}${destinationIata}${formattedRet}${passengers}`;
 
     return `https://www.aviasales.com/search/${routePath}?marker=${state.travelPayoutsMarker}&currency=BRL`;
 }
@@ -102,14 +119,13 @@ function renderFeaturedDestination() {
         title: "Tóquio, Japão",
         badge: "OFERTA ESPECIAL",
         description: "Conheça a metrópole onde a tradição milenar encontra a tecnologia futurista. Pacotes completos com hospedagem e voo incluso.",
-        price: "R$ 4.890",
-        oldPrice: "R$ 6.200",
+        price: "R$ 6.890",
+        oldPrice: "R$ 8.200",
         image: "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=1200&q=80",
         originCode: "GRU",
         destinationCode: "TYO"
     };
 
-    // Gera a URL direta com sua tag de afiliado
     const directUrl = generateTravelpayoutsUrl(featuredData.originCode, featuredData.destinationCode, '', '');
 
     elements.featuredContainer.innerHTML = `
@@ -131,7 +147,7 @@ function renderFeaturedDestination() {
     `;
 }
 
-// Ações do Formulário e Cards
+// Preenchimento de destino via Cards
 function selectDestinationInForm(destinationName, destinationIata) {
     elements = getElements();
     if (elements.destinationInput) {
@@ -156,6 +172,7 @@ function setupDestinationCards() {
     });
 }
 
+// Renderização das Ofertas em Grid
 function renderTrips() {
     elements = getElements();
     if (!elements.tripGrid) return;
@@ -262,7 +279,7 @@ function initEventListeners() {
         elements.menuToggle.addEventListener("click", () => elements.mainNav.classList.toggle("open"));
     }
 
-    // Modal
+    // Modal Login
     const openModal = (modal) => { if(modal) { modal.classList.add("open"); document.body.classList.add("modal-open"); }};
     const closeModal = (modal) => { if(modal) { modal.classList.remove("open"); document.body.classList.remove("modal-open"); }};
     
@@ -274,25 +291,22 @@ function initEventListeners() {
     if (elements.typeOneWay && elements.typeRoundTrip && elements.returnField) {
         elements.typeOneWay.addEventListener('change', () => {
             elements.returnField.style.display = 'none';
-            if (elements.returnInput) {
-                elements.returnInput.required = false;
-                elements.returnInput.value = '';
-            }
+            if (elements.returnInput) elements.returnInput.value = '';
         });
         elements.typeRoundTrip.addEventListener('change', () => {
             elements.returnField.style.display = 'block';
-            if (elements.returnInput) elements.returnInput.required = true;
         });
     }
 
-    // Submissão do Form
+    // Submissão do Formulário de Pesquisa
     if (elements.searchForm) {
         elements.searchForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            const origin = elements.originInput ? elements.originInput.value : 'GRU';
+            
+            const origin = elements.originInput ? elements.originInput.value : '';
             const destination = elements.destinationInput ? elements.destinationInput.value : '';
             
-            if (!origin || !destination) {
+            if (!origin.trim() || !destination.trim()) {
                 showToast("Por favor, preencha a origem e o destino.");
                 return;
             }
@@ -301,13 +315,17 @@ function initEventListeners() {
             const returnDate = elements.returnInput ? elements.returnInput.value : '';
             const passengers = elements.passengersSelect ? elements.passengersSelect.value : 1;
 
-            showToast("Buscando as melhores opções...");
+            showToast("Buscando as melhores ofertas...");
+            
             const url = generateTravelpayoutsUrl(origin, destination, departure, returnDate, passengers);
-            setTimeout(() => window.open(url, '_blank'), 600); // Aguarda um momento para mostrar o toast
+            
+            setTimeout(() => {
+                window.open(url, '_blank');
+            }, 400);
         });
     }
 
-    // Filtros e Orçamento
+    // Filtros de Orçamento e Categoria
     if (elements.budgetSlider && elements.budgetValue) {
         elements.budgetSlider.addEventListener('input', (e) => {
             state.maxBudget = Number(e.target.value);
@@ -330,7 +348,7 @@ function initEventListeners() {
     }
 }
 
-// Inicialização
+// Inicialização Geral da Aplicação
 document.addEventListener('DOMContentLoaded', () => {
     elements = getElements();
     updateFavoriteBadge();
