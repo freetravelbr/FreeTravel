@@ -1,99 +1,14 @@
 // Estado da Aplicação
 const state = {
     allTrips: [
-        {
-            id: 'trip-1',
-            title: 'Rio de Janeiro saindo de São Paulo',
-            category: 'Praia',
-            price: 450,
-            days: 5,
-            originCode: 'GRU',
-            destinationCode: 'GIG',
-            departureDate: '2026-10-15',
-            returnDate: '2026-10-20',
-            image: 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=600&auto=format&fit=crop&q=80',
-            badge: 'Imperdível'
-        },
-        {
-            id: 'trip-2',
-            title: 'Buenos Aires saindo de São Paulo',
-            category: 'Cidade',
-            price: 1200,
-            days: 7,
-            originCode: 'GRU',
-            destinationCode: 'EZE',
-            departureDate: '2026-11-01',
-            returnDate: '2026-11-08',
-            image: 'https://images.unsplash.com/photo-1589909202802-8f4aadce1849?w=600&auto=format&fit=crop&q=80',
-            badge: 'Mais Vendido'
-        },
-        {
-            id: 'trip-3',
-            title: 'Bariloche saindo de Buenos Aires',
-            category: 'Natureza',
-            price: 1800,
-            days: 6,
-            originCode: 'EZE',
-            destinationCode: 'BRC',
-            departureDate: '2026-12-05',
-            returnDate: '2026-12-11',
-            image: 'https://images.pexels.com/photos/13257073/pexels-photo-13257073.jpeg',
-            badge: 'Neve'
-        },
-        {
-            id: 'trip-4',
-            title: 'Miami saindo de São Paulo',
-            category: 'Praia',
-            price: 2850,
-            days: 7,
-            originCode: 'GRU',
-            destinationCode: 'MIA',
-            departureDate: '2026-11-10',
-            returnDate: '2026-11-17',
-            image: 'https://images.pexels.com/photos/5903958/pexels-photo-5903958.jpeg',
-            badge: 'Popular'
-        },
-        {
-            id: 'trip-5',
-            title: 'Roma saindo de São Paulo',
-            category: 'Cidade',
-            price: 3400,
-            days: 8,
-            originCode: 'GRU',
-            destinationCode: 'FCO',
-            departureDate: '2026-11-15',
-            returnDate: '2026-11-23',
-            image: 'https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=600&auto=format&fit=crop&q=80',
-            badge: 'Destaque'
-        },
-        {
-            id: 'trip-6',
-            title: 'Cairo (Egito) saindo de São Paulo',
-            category: 'Natureza',
-            price: 4200,
-            days: 10,
-            originCode: 'GRU',
-            destinationCode: 'CAI',
-            departureDate: '2026-12-01',
-            returnDate: '2026-12-11',
-            image: 'https://images.unsplash.com/photo-1503177119275-0aa32b3a9368?w=600&auto=format&fit=crop&q=80',
-            badge: 'Exótico'
-        },
-        {
-            id: 'trip-7',
-            title: 'Lisboa saindo de São Paulo',
-            category: 'Cidade',
-            price: 4500,
-            days: 10,
-            originCode: 'GRU',
-            destinationCode: 'LIS',
-            departureDate: '2026-12-01',
-            returnDate: '2026-12-11',
-            image: 'https://images.pexels.com/photos/29743111/pexels-photo-29743111.jpeg',
-            badge: 'Europa'
-        }
-    ], // Corrigido: Fechamento do array allTrips
-
+        { id: 'trip-1', title: 'Rio de Janeiro saindo de São Paulo', category: 'Praia', price: 450, days: 5, originCode: 'GRU', destinationCode: 'GIG', departureDate: '2026-10-15', returnDate: '2026-10-20', image: 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=600&auto=format&fit=crop&q=80', badge: 'Imperdível' },
+        { id: 'trip-2', title: 'Buenos Aires saindo de São Paulo', category: 'Cidade', price: 1200, days: 7, originCode: 'GRU', destinationCode: 'EZE', departureDate: '2026-11-01', returnDate: '2026-11-08', image: 'https://images.unsplash.com/photo-1589909202802-8f4aadce1849?w=600&auto=format&fit=crop&q=80', badge: 'Mais Vendido' },
+        { id: 'trip-3', title: 'Bariloche saindo de Buenos Aires', category: 'Natureza', price: 1800, days: 6, originCode: 'EZE', destinationCode: 'BRC', departureDate: '2026-12-05', returnDate: '2026-12-11', image: 'https://images.pexels.com/photos/13257073/pexels-photo-13257073.jpeg', badge: 'Neve' },
+        { id: 'trip-4', title: 'Miami saindo de São Paulo', category: 'Praia', price: 2850, days: 7, originCode: 'GRU', destinationCode: 'MIA', departureDate: '2026-11-10', returnDate: '2026-11-17', image: 'https://images.pexels.com/photos/5903958/pexels-photo-5903958.jpeg', badge: 'Popular' },
+        { id: 'trip-5', title: 'Roma saindo de São Paulo', category: 'Cidade', price: 3400, days: 8, originCode: 'GRU', destinationCode: 'FCO', departureDate: '2026-11-15', returnDate: '2026-11-23', image: 'https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=600&auto=format&fit=crop&q=80', badge: 'Destaque' },
+        { id: 'trip-6', title: 'Cairo (Egito) saindo de São Paulo', category: 'Natureza', price: 4200, days: 10, originCode: 'GRU', destinationCode: 'CAI', departureDate: '2026-12-01', returnDate: '2026-12-11', image: 'https://images.unsplash.com/photo-1503177119275-0aa32b3a9368?w=600&auto=format&fit=crop&q=80', badge: 'Exótico' },
+        { id: 'trip-7', title: 'Lisboa saindo de São Paulo', category: 'Cidade', price: 4500, days: 10, originCode: 'GRU', destinationCode: 'LIS', departureDate: '2026-12-01', returnDate: '2026-12-11', image: 'https://images.pexels.com/photos/29743111/pexels-photo-29743111.jpeg', badge: 'Europa' }
+    ],
     filteredTrips: [],
     favorites: JSON.parse(localStorage.getItem('freetravel_favorites') || '[]'),
     activeFilter: 'Todos',
@@ -102,7 +17,6 @@ const state = {
     travelPayoutsMarker: '771005'
 };
 
-// Dicionário para relacionar os nomes de data-destination com os códigos IATA
 const iataMap = {
     'Rio de Janeiro': 'GIG',
     'Buenos Aires': 'EZE',
@@ -112,6 +26,7 @@ const iataMap = {
     'Santiago': 'SCL',
     'Lisboa': 'LIS'
 };
+
 // Mapeamento dos Elementos do DOM
 function getElements() {
     return {
@@ -129,13 +44,20 @@ function getElements() {
         budgetSlider: document.getElementById('budgetSlider'),
         budgetValue: document.getElementById('budgetValue'),
         favoriteCountBadge: document.querySelector('[data-favorite-count]'),
-        favoritesButton: document.querySelector('[data-action="show-favorites"]')
+        favoritesButton: document.querySelector('[data-action="show-favorites"]'),
+        toast: document.getElementById('ftToast'),
+        featuredContainer: document.getElementById('featuredDestinationContainer'),
+        menuToggle: document.getElementById('menuToggle'),
+        mainNav: document.getElementById('mainNav'),
+        loginBtn: document.querySelector('.login-btn'),
+        loginModal: document.getElementById('loginModal'),
+        closeButtons: document.querySelectorAll('.ft-modal-close, .ft-modal-backdrop')
     };
 }
 
 let elements = getElements();
 
-// Utilitários de Formatação
+// Utilitários
 function extractIataCode(inputString) {
     if (!inputString) return '';
     const match = inputString.match(/\b[A-Z]{3}\b/i);
@@ -148,7 +70,16 @@ function formatDateForUrl(dateString) {
     return `${day}${month}`;
 }
 
-// Gerador de URL de Afiliado (Travelpayouts / Aviasales)
+function showToast(message) {
+    if (!elements.toast) return;
+    elements.toast.textContent = message;
+    elements.toast.classList.add("show");
+    setTimeout(() => {
+        elements.toast.classList.remove("show");
+    }, 3000);
+}
+
+// Gerador de URL de Afiliado
 function generateTravelpayoutsUrl(origin, destination, departureDate, returnDate, passengers = 1) {
     const originIata = extractIataCode(origin) || 'GRU';
     const destinationIata = extractIataCode(destination) || 'GIG';
@@ -157,59 +88,66 @@ function generateTravelpayoutsUrl(origin, destination, departureDate, returnDate
     const isOneWay = elements.typeOneWay && elements.typeOneWay.checked;
 
     let routePath = `${originIata}${formattedDep}${destinationIata}`;
-    
-    if (formattedRet && !isOneWay) {
-        routePath += `${formattedRet}`;
-    }
-    
+    if (formattedRet && !isOneWay) routePath += `${formattedRet}`;
     routePath += `${passengers}`;
 
     return `https://www.aviasales.com/search/${routePath}?marker=${state.travelPayoutsMarker}&currency=BRL`;
 }
 
-// Ação ao Clicar no Destino Inspiracional (Sobe a página e preenche o destino)
+// Destino em Destaque
+function renderFeaturedDestination() {
+    if (!elements.featuredContainer) return;
+
+    const featuredData = {
+        title: "Tóquio, Japão",
+        badge: "OFERTA ESPECIAL",
+        description: "Conheça a metrópole onde a tradição milenar encontra a tecnologia futurista. Pacotes completos com hospedagem e voo incluso.",
+        price: "R$ 4.890",
+        oldPrice: "R$ 6.200",
+        image: "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=1200&q=80"
+    };
+
+    elements.featuredContainer.innerHTML = `
+      <section style="position: relative; border-radius: 20px; overflow: hidden; background: linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 100%), url('${featuredData.image}') center/cover no-repeat; color: #ffffff; padding: 60px 40px; min-height: 380px; display: flex; align-items: center; box-shadow: 0 14px 40px rgba(0,0,0,0.12);">
+        <div style="max-width: 580px;">
+          <span style="display: inline-block; background: #f5c400; color: #090909; font-size: 11px; font-weight: 900; padding: 4px 10px; border-radius: 6px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">${featuredData.badge}</span>
+          <h2 style="font-size: 2.4rem; font-weight: 900; line-height: 1.1; margin-bottom: 10px;">${featuredData.title}</h2>
+          <p style="font-size: 1rem; color: #e0e0e0; margin-bottom: 20px; line-height: 1.5;">${featuredData.description}</p>
+          <div style="display: flex; align-items: baseline; gap: 12px; margin-bottom: 24px;">
+            <span style="font-size: 1.8rem; font-weight: 900; color: #f5c400;">${featuredData.price}</span>
+            <span style="font-size: 1rem; text-decoration: line-through; color: #aaaaaa;">${featuredData.oldPrice}</span>
+          </div>
+          <button onclick="document.getElementById('searchForm').scrollIntoView({behavior: 'smooth'})" style="background: #f5c400; color: #111; padding: 12px 24px; font-weight: bold; border: none; border-radius: 8px; cursor: pointer;">Buscar Voos</button>
+        </div>
+      </section>
+    `;
+}
+
+// Ações do Formulário e Cards
 function selectDestinationInForm(destinationName, destinationIata) {
     elements = getElements();
-
-    // 1. Preenche o input de destino
     if (elements.destinationInput) {
         elements.destinationInput.value = `${destinationName} (${destinationIata})`;
         elements.destinationInput.dispatchEvent(new Event('input', { bubbles: true }));
         elements.destinationInput.dispatchEvent(new Event('change', { bubbles: true }));
     }
-
-    // 2. Rola a página suavemente até o topo
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
-
-    // 3. Foca na data de partida após subir a rolagem
+    window.scrollTo({ top: 0, behavior: 'smooth' });
     setTimeout(() => {
-        if (elements.departureInput) {
-            elements.departureInput.focus();
-        } else if (elements.destinationInput) {
-            elements.destinationInput.focus();
-        }
+        if (elements.departureInput) elements.departureInput.focus();
     }, 400);
 }
 
-// Configura os ouvintes de clique nos cards de destino baseados no atributo data-destination
 function setupDestinationCards() {
-    const destinationButtons = document.querySelectorAll('[data-destination]');
-    
-    destinationButtons.forEach(button => {
+    document.querySelectorAll('[data-destination]').forEach(button => {
         button.addEventListener('click', (e) => {
             e.preventDefault();
             const cityName = button.getAttribute('data-destination');
             const iataCode = iataMap[cityName] || 'GIG';
-            
             selectDestinationInForm(cityName, iataCode);
         });
     });
 }
 
-// Renderização dos Cards de Ofertas
 function renderTrips() {
     elements = getElements();
     if (!elements.tripGrid) return;
@@ -218,7 +156,6 @@ function renderTrips() {
         const matchesCategory = state.activeFilter === 'Todos' || trip.category === state.activeFilter;
         const matchesBudget = trip.price <= state.maxBudget;
         const matchesFavorites = state.showOnlyFavorites ? state.favorites.includes(trip.id) : true;
-        
         return matchesCategory && matchesBudget && matchesFavorites;
     });
 
@@ -231,32 +168,20 @@ function renderTrips() {
             <div style="grid-column: 1 / -1; text-align: center; padding: 40px 20px; color: #666;">
                 <p style="font-size: 1.2rem; margin-bottom: 10px;">Nenhuma oferta encontrada.</p>
                 <small>Tente alterar os filtros de categoria ou ajustar o orçamento.</small>
-            </div>
-        `;
+            </div>`;
         return;
     }
 
     elements.tripGrid.innerHTML = state.filteredTrips.map(trip => {
         const isFav = state.favorites.includes(trip.id);
-        const affiliateUrl = generateTravelpayoutsUrl(
-            trip.originCode,
-            trip.destinationCode,
-            trip.departureDate,
-            trip.returnDate
-        );
+        const affiliateUrl = generateTravelpayoutsUrl(trip.originCode, trip.destinationCode, trip.departureDate, trip.returnDate);
 
         return `
             <article class="trip-card" data-id="${trip.id}" style="background: #ffffff; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.08); min-height: 380px;">
                 <div style="position: relative; width: 100%; height: 200px; overflow: hidden; background-color: #e0e0e0; flex-shrink: 0;">
                     <img src="${trip.image}" alt="" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block; border: 0;">
                     ${trip.badge ? `<span style="position: absolute; top: 12px; left: 12px; background: #111111; color: #ffffff; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; z-index: 2;">${trip.badge}</span>` : ''}
-                    <button 
-                        type="button" 
-                        class="favorite-toggle-btn ${isFav ? 'active' : ''}" 
-                        onclick="toggleFavorite('${trip.id}')"
-                        style="position: absolute; top: 12px; right: 12px; background: #ffffff; border: none; border-radius: 50%; width: 34px; height: 34px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.2); font-size: 1.1rem; color: ${isFav ? '#e63946' : '#777777'}; z-index: 2;"
-                        title="${isFav ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}"
-                    >
+                    <button type="button" class="favorite-toggle-btn ${isFav ? 'active' : ''}" onclick="toggleFavorite('${trip.id}')" style="position: absolute; top: 12px; right: 12px; background: #ffffff; border: none; border-radius: 50%; width: 34px; height: 34px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.2); font-size: 1.1rem; color: ${isFav ? '#e63946' : '#777777'}; z-index: 2;" title="${isFav ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}">
                         ${isFav ? '♥' : '♡'}
                     </button>
                 </div>
@@ -273,12 +198,7 @@ function renderTrips() {
                             <small style="display: block; color: #777777; font-size: 0.75rem;">A partir de</small>
                             <strong style="font-size: 1.25rem; color: #000000; font-weight: 800;">R$ ${trip.price.toLocaleString('pt-BR')}</strong>
                         </div>
-                        <a 
-                            href="${affiliateUrl}" 
-                            target="_blank" 
-                            rel="noopener noreferrer" 
-                            style="background-color: #ffcc00; color: #111111; font-weight: 700; padding: 8px 14px; font-size: 0.85rem; text-decoration: none; border-radius: 6px; display: inline-block;"
-                        >
+                        <a href="${affiliateUrl}" target="_blank" rel="noopener noreferrer" style="background-color: #ffcc00; color: #111111; font-weight: 700; padding: 8px 14px; font-size: 0.85rem; text-decoration: none; border-radius: 6px; display: inline-block;">
                             Ver Oferta →
                         </a>
                     </div>
@@ -288,19 +208,21 @@ function renderTrips() {
     }).join('');
 }
 
-// Gerenciamento de Favoritos
-function toggleFavorite(tripId) {
+// Favoritos
+window.toggleFavorite = function(tripId) {
     const index = state.favorites.indexOf(tripId);
     if (index === -1) {
         state.favorites.push(tripId);
+        showToast("Adicionado aos seus favoritos!");
     } else {
         state.favorites.splice(index, 1);
+        showToast("Removido dos favoritos.");
     }
     
     localStorage.setItem('freetravel_favorites', JSON.stringify(state.favorites));
     updateFavoriteBadge();
     renderTrips();
-}
+};
 
 function updateFavoriteBadge() {
     elements = getElements();
@@ -313,26 +235,41 @@ function updateFavoriteBadge() {
 
 function filterFavorites() {
     if (state.favorites.length === 0 && !state.showOnlyFavorites) {
-        alert('Você ainda não tem ofertas salvas nos favoritos!');
+        showToast('Você ainda não tem ofertas salvas nos favoritos!');
         return;
     }
     state.showOnlyFavorites = !state.showOnlyFavorites;
-    
     if (elements.favoritesButton) {
         elements.favoritesButton.classList.toggle('active', state.showOnlyFavorites);
     }
-    
     renderTrips();
 }
 
-// Inicialização de Eventos
+// Eventos e UI Geral
 function initEventListeners() {
     elements = getElements();
 
+    // Menu Mobile
+    if (elements.menuToggle && elements.mainNav) {
+        elements.menuToggle.addEventListener("click", () => elements.mainNav.classList.toggle("open"));
+    }
+
+    // Modal
+    const openModal = (modal) => { if(modal) { modal.classList.add("open"); document.body.classList.add("modal-open"); }};
+    const closeModal = (modal) => { if(modal) { modal.classList.remove("open"); document.body.classList.remove("modal-open"); }};
+    
+    if (elements.loginBtn) elements.loginBtn.addEventListener("click", () => openModal(elements.loginModal));
+    elements.closeButtons.forEach(btn => btn.addEventListener("click", () => closeModal(elements.loginModal)));
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(elements.loginModal) });
+
+    // Alternância Ida e Volta
     if (elements.typeOneWay && elements.typeRoundTrip && elements.returnField) {
         elements.typeOneWay.addEventListener('change', () => {
             elements.returnField.style.display = 'none';
-            if (elements.returnInput) elements.returnInput.required = false;
+            if (elements.returnInput) {
+                elements.returnInput.required = false;
+                elements.returnInput.value = '';
+            }
         });
         elements.typeRoundTrip.addEventListener('change', () => {
             elements.returnField.style.display = 'block';
@@ -340,20 +277,29 @@ function initEventListeners() {
         });
     }
 
+    // Submissão do Form
     if (elements.searchForm) {
         elements.searchForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const origin = elements.originInput ? elements.originInput.value : 'GRU';
             const destination = elements.destinationInput ? elements.destinationInput.value : '';
+            
+            if (!origin || !destination) {
+                showToast("Por favor, preencha a origem e o destino.");
+                return;
+            }
+
             const departure = elements.departureInput ? elements.departureInput.value : '';
             const returnDate = elements.returnInput ? elements.returnInput.value : '';
             const passengers = elements.passengersSelect ? elements.passengersSelect.value : 1;
 
+            showToast("Buscando as melhores opções...");
             const url = generateTravelpayoutsUrl(origin, destination, departure, returnDate, passengers);
-            window.open(url, '_blank');
+            setTimeout(() => window.open(url, '_blank'), 600); // Aguarda um momento para mostrar o toast
         });
     }
 
+    // Filtros e Orçamento
     if (elements.budgetSlider && elements.budgetValue) {
         elements.budgetSlider.addEventListener('input', (e) => {
             state.maxBudget = Number(e.target.value);
@@ -381,6 +327,7 @@ document.addEventListener('DOMContentLoaded', () => {
     elements = getElements();
     updateFavoriteBadge();
     initEventListeners();
+    renderFeaturedDestination();
     renderTrips();
     setupDestinationCards();
 });
