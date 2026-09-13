@@ -109,20 +109,23 @@ function renderFeaturedDestination() {
         destinationCode: "TYO"
     };
 
-    // Gera a URL direta do Aviasales para Tóquio
+    // Gera a URL direta com sua tag de afiliado
     const directUrl = generateTravelpayoutsUrl(featuredData.originCode, featuredData.destinationCode, '', '');
 
     elements.featuredContainer.innerHTML = `
-      <section style="position: relative; border-radius: 20px; overflow: hidden; background: linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 100%), url('${featuredData.image}') center/cover no-repeat; color: #ffffff; padding: 60px 40px; min-height: 380px; display: flex; align-items: center; box-shadow: 0 14px 40px rgba(0,0,0,0.12);">
+      <section style="position: relative; border-radius: 20px; overflow: hidden; background: linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.35) 100%), url('${featuredData.image}') center/cover no-repeat; color: #ffffff; padding: 60px 40px; min-height: 380px; display: flex; align-items: center; box-shadow: 0 14px 40px rgba(0,0,0,0.12);">
         <div style="max-width: 580px;">
-          <span style="display: inline-block; background: #f5c400; color: #090909; font-size: 11px; font-weight: 900; padding: 4px 10px; border-radius: 6px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">${featuredData.badge}</span>
-          <h2 style="font-size: 2.4rem; font-weight: 900; line-height: 1.1; margin-bottom: 10px;">${featuredData.title}</h2>
-          <p style="font-size: 1rem; color: #e0e0e0; margin-bottom: 20px; line-height: 1.5;">${featuredData.description}</p>
-          <div style="display: flex; align-items: baseline; gap: 12px; margin-bottom: 24px;">
-            <span style="font-size: 1.8rem; font-weight: 900; color: #f5c400;">${featuredData.price}</span>
-            <span style="font-size: 1rem; text-decoration: line-through; color: #aaaaaa;">${featuredData.oldPrice}</span>
+          <span style="display: inline-block; background: #f5c400; color: #090909; font-size: 11px; font-weight: 900; padding: 5px 12px; border-radius: 6px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px;">${featuredData.badge}</span>
+          <h2 style="font-size: 2.4rem; font-weight: 900; line-height: 1.1; margin-bottom: 10px; color: #ffffff;">${featuredData.title}</h2>
+          <p style="font-size: 1rem; color: #e0e0e0; margin-bottom: 22px; line-height: 1.5;">${featuredData.description}</p>
+          <div style="display: flex; align-items: baseline; gap: 12px; margin-bottom: 26px;">
+            <span style="font-size: 2rem; font-weight: 900; color: #f5c400;">${featuredData.price}</span>
+            <span style="font-size: 1.1rem; text-decoration: line-through; color: #aaaaaa;">${featuredData.oldPrice}</span>
           </div>
-          <a href="${directUrl}" target="_blank" rel="noopener noreferrer" style="display: inline-block; background: #f5c400; color: #111; padding: 12px 24px; font-weight: bold; text-decoration: none; border-radius: 8px;">Ver Oferta no Aviasales →</a>
+          <a href="${directUrl}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 8px; background: #f5c400; color: #090909; font-size: 0.95rem; font-weight: 800; padding: 14px 28px; text-decoration: none; border-radius: 10px; box-shadow: 0 4px 15px rgba(245, 196, 0, 0.3); transition: all 0.2s ease-in-out;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(245, 196, 0, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(245, 196, 0, 0.3)';">
+            Garantir Esta Oferta
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </a>
         </div>
       </section>
     `;
