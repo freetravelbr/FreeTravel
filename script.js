@@ -83,7 +83,7 @@ const state = {
             id: 'trip-7',
             title: 'Lisboa saindo de São Paulo',
             category: 'Cidade',
-            price: 4200,
+            price: 4500,
             days: 10,
             originCode: 'GRU',
             destinationCode: 'LIS',
