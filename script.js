@@ -78,7 +78,7 @@ const state = {
             returnDate: '2026-12-11',
             image: 'https://images.unsplash.com/photo-1503177119275-0aa32b3a9368?w=600&auto=format&fit=crop&q=80',
             badge: 'Exótico'
-        }
+        },
     {
     id: 'trip-7',
     title: 'Lisboa saindo de São Paulo',
@@ -91,7 +91,7 @@ const state = {
     returnDate: '2026-12-11',
     image: 'https://images.pexels.com/photos/29743111/pexels-photo-29743111.jpeg',
     badge: 'Europa'
-}
+},
     
     filteredTrips: [],
     favorites: JSON.parse(localStorage.getItem('freetravel_favorites') || '[]'),
