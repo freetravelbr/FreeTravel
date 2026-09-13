@@ -1,6 +1,6 @@
 /* =========================================================
    FREE TRAVEL — style.css
-   Versão Final Atualizada e Corrigida
+   Versão Final Atualizada com Destino do Mês
    ========================================================= */
 
 /* =========================================================
@@ -366,7 +366,7 @@ a {
 }
 
 /* =========================================================
-   SEARCH FORM & BUTTON (CORRIGIDO EM LINHA ÚNICA)
+   SEARCH FORM & BUTTON
    ========================================================= */
 
 .search-form {
@@ -875,75 +875,21 @@ a {
 }
 
 /* =========================================================
-   BUDGET & HOW IT WORKS & CTA
+   DESTINO DO MÊS (FEATURED SECTION)
    ========================================================= */
 
-.budget-section {
-  padding: 30px 0 88px;
+.featured-section {
+  padding: 60px 0 88px;
   background: var(--white);
 }
 
-.budget-card {
-  display: grid;
-  grid-template-columns: 1fr 1.1fr;
-  align-items: center;
-  gap: 60px;
-  padding: 42px;
-  border-radius: 20px;
-  background: var(--black);
-  color: var(--white);
+#featuredDestinationContainer section {
+  box-sizing: border-box;
 }
 
-.budget-copy h2 {
-  margin-top: 7px;
-  font-size: 35px;
-  line-height: 1.05;
-}
-
-.budget-copy p {
-  max-width: 500px;
-  margin-top: 12px;
-  color: #aaa;
-  font-size: 14px;
-}
-
-.budget-control {
-  padding: 25px;
-  border-radius: 14px;
-  background: #171717;
-  border: 1px solid #292929;
-}
-
-.budget-value {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  margin-bottom: 20px;
-}
-
-.budget-value span {
-  color: #999;
-  font-size: 12px;
-}
-
-.budget-value strong {
-  color: var(--yellow);
-  font-size: 30px;
-}
-
-#budgetSlider {
-  width: 100%;
-  accent-color: var(--yellow);
-  cursor: pointer;
-}
-
-.budget-range-labels {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 8px;
-  color: #777;
-  font-size: 10px;
-}
+/* =========================================================
+   HOW IT WORKS & CTA
+   ========================================================= */
 
 .how-section {
   background: var(--bg);
@@ -1355,7 +1301,7 @@ a {
 }
 
 /* =========================================================
-   RESPONSIVO — MOBILE (MAX 760PX)
+   RESPONSIVO — MOBILE (MAX 760PX & 600PX)
    ========================================================= */
 
 @media (max-width: 760px) {
@@ -1455,12 +1401,6 @@ a {
     height: 220px;
   }
 
-  .budget-card {
-    grid-template-columns: 1fr;
-    gap: 30px;
-    padding: 24px;
-  }
-
   .steps-grid {
     grid-template-columns: 1fr;
   }
@@ -1481,5 +1421,21 @@ a {
     text-align: center;
     gap: 10px;
     padding: 15px 0;
+  }
+}
+
+@media (max-width: 600px) {
+  #featuredDestinationContainer section {
+    padding: 24px 16px !important;
+    min-height: auto !important;
+  }
+
+  #featuredDestinationContainer h2 {
+    font-size: 1.6rem !important;
+  }
+
+  #featuredDestinationContainer a {
+    width: 100%;
+    text-align: center;
   }
 }
