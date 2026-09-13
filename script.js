@@ -38,7 +38,7 @@ const state = {
             departureDate: '2026-12-05',
             returnDate: '2026-12-11',
             image: 'https://images.pexels.com/photos/13257073/pexels-photo-13257073.jpeg',
-            badge: ' Neve'
+            badge: 'Neve'
         },
         {
             id: 'trip-4',
@@ -79,20 +79,21 @@ const state = {
             image: 'https://images.unsplash.com/photo-1503177119275-0aa32b3a9368?w=600&auto=format&fit=crop&q=80',
             badge: 'Exótico'
         },
-    {
-    id: 'trip-7',
-    title: 'Lisboa saindo de São Paulo',
-    category: 'Cidade',
-    price: 4200,
-    days: 10,
-    originCode: 'GRU',        // São Paulo (Guarulhos)
-    destinationCode: 'LIS',   // Lisboa 
-    departureDate: '2026-12-01',
-    returnDate: '2026-12-11',
-    image: 'https://images.pexels.com/photos/29743111/pexels-photo-29743111.jpeg',
-    badge: 'Europa'
-},
-    
+        {
+            id: 'trip-7',
+            title: 'Lisboa saindo de São Paulo',
+            category: 'Cidade',
+            price: 4200,
+            days: 10,
+            originCode: 'GRU',
+            destinationCode: 'LIS',
+            departureDate: '2026-12-01',
+            returnDate: '2026-12-11',
+            image: 'https://images.pexels.com/photos/29743111/pexels-photo-29743111.jpeg',
+            badge: 'Europa'
+        }
+    ], // Corrigido: Fechamento do array allTrips
+
     filteredTrips: [],
     favorites: JSON.parse(localStorage.getItem('freetravel_favorites') || '[]'),
     activeFilter: 'Todos',
@@ -107,9 +108,10 @@ const iataMap = {
     'Buenos Aires': 'EZE',
     'Madrid': 'MAD',
     'Bariloche': 'BRC',
-    'Paris': 'CDG'
+    'Paris': 'CDG',
+    'Santiago': 'SCL',
+    'Lisboa': 'LIS'
 };
-
 // Mapeamento dos Elementos do DOM
 function getElements() {
     return {
