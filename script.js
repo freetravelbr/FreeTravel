@@ -104,8 +104,13 @@ function renderFeaturedDestination() {
         description: "Conheça a metrópole onde a tradição milenar encontra a tecnologia futurista. Pacotes completos com hospedagem e voo incluso.",
         price: "R$ 4.890",
         oldPrice: "R$ 6.200",
-        image: "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=1200&q=80"
+        image: "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=1200&q=80",
+        originCode: "GRU",
+        destinationCode: "TYO"
     };
+
+    // Gera a URL direta do Aviasales para Tóquio
+    const directUrl = generateTravelpayoutsUrl(featuredData.originCode, featuredData.destinationCode, '', '');
 
     elements.featuredContainer.innerHTML = `
       <section style="position: relative; border-radius: 20px; overflow: hidden; background: linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 100%), url('${featuredData.image}') center/cover no-repeat; color: #ffffff; padding: 60px 40px; min-height: 380px; display: flex; align-items: center; box-shadow: 0 14px 40px rgba(0,0,0,0.12);">
@@ -117,7 +122,7 @@ function renderFeaturedDestination() {
             <span style="font-size: 1.8rem; font-weight: 900; color: #f5c400;">${featuredData.price}</span>
             <span style="font-size: 1rem; text-decoration: line-through; color: #aaaaaa;">${featuredData.oldPrice}</span>
           </div>
-          <button onclick="document.getElementById('searchForm').scrollIntoView({behavior: 'smooth'})" style="background: #f5c400; color: #111; padding: 12px 24px; font-weight: bold; border: none; border-radius: 8px; cursor: pointer;">Buscar Voos</button>
+          <a href="${directUrl}" target="_blank" rel="noopener noreferrer" style="display: inline-block; background: #f5c400; color: #111; padding: 12px 24px; font-weight: bold; text-decoration: none; border-radius: 8px;">Ver Oferta no Aviasales →</a>
         </div>
       </section>
     `;
