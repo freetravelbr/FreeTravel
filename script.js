@@ -128,7 +128,8 @@ function generateHotellookUrl(destinationInput, checkInDate, checkOutDate, guest
     const checkOut = checkOutDate || getFutureDateString(35);
 
     // 3. Estrutura oficial do Aviasales Hotels
-    return `https://www.aviasales.com/hotels/search?destination=${encodeURIComponent(locationQuery)}&checkIn=${checkIn}&checkOut=${checkOut}&adults=${guests}&marker=${state.travelPayoutsMarker}&currency=BRL`;
+    return `// 3. Monta a URL oficial do Aviasales Hotels com os parâmetros de pesquisa
+    return `https://www.aviasales.com/hotels?destination=${encodeURIComponent(locationQuery)}&checkIn=${checkIn}&checkOut=${checkOut}&adults=${guests}&marker=${state.travelPayoutsMarker}&currency=BRL`;
 }
 
 // Destino em Destaque
