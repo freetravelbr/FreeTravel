@@ -115,12 +115,20 @@ function generateTravelpayoutsUrl(origin, destination, departureDate, returnDate
 }
 
 function generateKiwiHotelUrl(destination) {
+    // Se houver um destino preenchido, podemos passar o destino como parâmetro de busca na Kiwi
+    // Caso contrário, direciona diretamente para o seu link encurtado oficial da Kiwi
     const cleanDestination = destination ? encodeURIComponent(destination.trim()) : '';
-    const kiwiHotelUrl = cleanDestination 
-        ? `https://www.kiwi.com/br/hotel/search/${cleanDestination}`
-        : `https://www.kiwi.com/br/hotel/`;
+    
+    // URL base do seu link de afiliado Kiwi
+    const baseAffiliateUrl = 'https://kiwi.tpk.mx/6UCv5d6M';
 
-    return `https://tp.media/r?p=3830&subid=freetravel_hotels&marker=${state.travelPayoutsMarker}&custom_url=${encodeURIComponent(kiwiHotelUrl)}`;
+    if (cleanDestination) {
+        // Redireciona para a página de busca da Kiwi utilizando o seu shortlink como base
+        return `${baseAffiliateUrl}?search=${cleanDestination}`;
+    }
+
+    return baseAffiliateUrl;
+}
 }
 
 // Destino em Destaque
