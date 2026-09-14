@@ -114,8 +114,7 @@ function generateTravelpayoutsUrl(origin, destination, departureDate, returnDate
     return `https://www.aviasales.com/search/${routePath}?marker=${state.travelPayoutsMarker}&currency=BRL`;
 }
 
-
-// Gerador de URL do Aviasales Hotels (Substitui o Hotellook antigo)
+// Gerador de URL do Aviasales Hotels (URL Atualizada e Segura)
 function generateHotellookUrl(destinationInput, checkInDate, checkOutDate, guests = 2) {
     // 1. Extrai o código IATA ou limpa o nome do destino
     const destinationIata = extractIataCode(destinationInput);
@@ -128,8 +127,8 @@ function generateHotellookUrl(destinationInput, checkInDate, checkOutDate, guest
     const checkIn = checkInDate || getFutureDateString(30);
     const checkOut = checkOutDate || getFutureDateString(35);
 
-    // 3. Estrutura atualizada e segura do Aviasales Hotels
-    return `https://hotels.aviasales.com/search?destination=${encodeURIComponent(locationQuery)}&checkIn=${checkIn}&checkOut=${checkOut}&adults=${guests}&marker=${state.travelPayoutsMarker}&currency=BRL`;
+    // 3. Estrutura oficial do Aviasales Hotels
+    return `https://www.aviasales.com/hotels/search?destination=${encodeURIComponent(locationQuery)}&checkIn=${checkIn}&checkOut=${checkOut}&adults=${guests}&marker=${state.travelPayoutsMarker}&currency=BRL`;
 }
 
 // Destino em Destaque
