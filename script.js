@@ -12,7 +12,8 @@ const state = {
     filteredTrips: [],
     favorites: JSON.parse(localStorage.getItem('freetravel_favorites') || '[]'),
     activeFilter: 'Todos',
-    maxBudget: 5000,
+    activeTab: 'flights',
+    maxBudget: 10000,
     showOnlyFavorites: false,
     travelPayoutsMarker: '771005'
 };
@@ -38,6 +39,7 @@ function getElements() {
         returnInput: document.getElementById('return'),
         passengersSelect: document.getElementById('passengers'),
         returnField: document.getElementById('returnField'),
+        originField: document.getElementById('origin')?.closest('.search-field'),
         typeRoundTrip: document.getElementById('typeRoundTrip'),
         typeOneWay: document.getElementById('typeOneWay'),
         tripGrid: document.getElementById('tripGrid'),
@@ -46,19 +48,19 @@ function getElements() {
         budgetValue: document.getElementById('budgetValue'),
         favoriteCountBadge: document.querySelector('[data-favorite-count]'),
         favoritesButton: document.querySelector('[data-action="show-favorites"]'),
-        toast: document.getElementById('ftToast'),
+        showAllBtn: document.querySelector('[data-action="show-all"]'),
+        goSearchBtn: document.querySelector('[data-action="go-search"]'),
         featuredContainer: document.getElementById('featuredDestinationContainer'),
-        menuToggle: document.getElementById('menuToggle'),
+        menuToggle: document.querySelector('[data-menu-toggle]'),
         mainNav: document.getElementById('mainNav'),
         loginBtn: document.querySelector('.login-btn'),
-        loginModal: document.getElementById('loginModal'),
-        closeButtons: document.querySelectorAll('.ft-modal-close, .ft-modal-backdrop')
+        searchTabs: document.querySelectorAll('.search-tab')
     };
 }
 
 let elements = getElements();
 
-// Utilitários de Data e IATA
+// Utilitários
 function extractIataCode(inputString) {
     if (!inputString) return '';
     const match = inputString.match(/\b[A-Z]{3}\b/i);
@@ -81,15 +83,19 @@ function formatDateForUrl(dateString) {
 }
 
 function showToast(message) {
-    if (!elements.toast) return;
-    elements.toast.textContent = message;
-    elements.toast.classList.add("show");
-    setTimeout(() => {
-        elements.toast.classList.remove("show");
-    }, 3000);
+    let toast = document.getElementById('ftToast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'ftToast';
+        toast.style.cssText = 'position: fixed; bottom: 20px; right: 20px; background: #111; color: #fff; padding: 12px 24px; border-radius: 8px; font-size: 0.9rem; z-index: 9999; box-shadow: 0 4px 12px rgba(0,0,0,0.15); opacity: 0; transition: opacity 0.3s ease;';
+        document.body.appendChild(toast);
+    }
+    toast.textContent = message;
+    toast.style.opacity = '1';
+    setTimeout(() => { toast.style.opacity = '0'; }, 3200);
 }
 
-// Gerador de URL de Afiliado para Voos (Aviasales)
+// Geradores de URL Afiliada
 function generateTravelpayoutsUrl(origin, destination, departureDate, returnDate, passengers = 1) {
     const originIata = extractIataCode(origin) || 'GRU';
     const destinationIata = extractIataCode(destination) || 'GIG';
@@ -104,12 +110,10 @@ function generateTravelpayoutsUrl(origin, destination, departureDate, returnDate
         formattedRet = formatDateForUrl(retDate);
     }
 
-    let routePath = `${originIata}${formattedDep}${destinationIata}${formattedRet}${passengers}`;
-
+    const routePath = `${originIata}${formattedDep}${destinationIata}${formattedRet}${passengers}`;
     return `https://www.aviasales.com/search/${routePath}?marker=${state.travelPayoutsMarker}&currency=BRL`;
 }
 
-// Gerador de URL de Afiliado para Hotéis (Kiwi via Travelpayouts)
 function generateKiwiHotelUrl(destination) {
     const cleanDestination = destination ? encodeURIComponent(destination.trim()) : '';
     const kiwiHotelUrl = cleanDestination 
@@ -155,15 +159,16 @@ function renderFeaturedDestination() {
     `;
 }
 
-// Preenchimento de destino via Cards
+// Seleção de Destino
 function selectDestinationInForm(destinationName, destinationIata) {
     elements = getElements();
     if (elements.destinationInput) {
         elements.destinationInput.value = `${destinationName} (${destinationIata})`;
-        elements.destinationInput.dispatchEvent(new Event('input', { bubbles: true }));
-        elements.destinationInput.dispatchEvent(new Event('change', { bubbles: true }));
     }
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    const homeSection = document.getElementById('home');
+    if (homeSection) {
+        homeSection.scrollIntoView({ behavior: 'smooth' });
+    }
     setTimeout(() => {
         if (elements.departureInput) elements.departureInput.focus();
     }, 400);
@@ -180,7 +185,7 @@ function setupDestinationCards() {
     });
 }
 
-// Renderização das Ofertas em Grid
+// Renderização do Grid de Ofertas
 function renderTrips() {
     elements = getElements();
     if (!elements.tripGrid) return;
@@ -200,7 +205,7 @@ function renderTrips() {
         elements.tripGrid.innerHTML = `
             <div style="grid-column: 1 / -1; text-align: center; padding: 40px 20px; color: #666;">
                 <p style="font-size: 1.2rem; margin-bottom: 10px;">Nenhuma oferta encontrada.</p>
-                <small>Tente alterar os filtros de categoria ou ajustar o orçamento.</small>
+                <small>Tente alterar os filtros de categoria ou remover os favoritos.</small>
             </div>`;
         return;
     }
@@ -212,9 +217,9 @@ function renderTrips() {
         return `
             <article class="trip-card" data-id="${trip.id}" style="background: #ffffff; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 12px rgba(0,0,0,0.08); min-height: 380px;">
                 <div style="position: relative; width: 100%; height: 200px; overflow: hidden; background-color: #e0e0e0; flex-shrink: 0;">
-                    <img src="${trip.image}" alt="" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block; border: 0;">
+                    <img src="${trip.image}" alt="${trip.title}" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block; border: 0;">
                     ${trip.badge ? `<span style="position: absolute; top: 12px; left: 12px; background: #111111; color: #ffffff; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; z-index: 2;">${trip.badge}</span>` : ''}
-                    <button type="button" class="favorite-toggle-btn ${isFav ? 'active' : ''}" onclick="toggleFavorite('${trip.id}')" style="position: absolute; top: 12px; right: 12px; background: #ffffff; border: none; border-radius: 50%; width: 34px; height: 34px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.2); font-size: 1.1rem; color: ${isFav ? '#e63946' : '#777777'}; z-index: 2;" title="${isFav ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}">
+                    <button type="button" onclick="toggleFavorite('${trip.id}')" style="position: absolute; top: 12px; right: 12px; background: #ffffff; border: none; border-radius: 50%; width: 34px; height: 34px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.2); font-size: 1.1rem; color: ${isFav ? '#e63946' : '#777777'}; z-index: 2;" title="${isFav ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}">
                         ${isFav ? '♥' : '♡'}
                     </button>
                 </div>
@@ -246,7 +251,7 @@ window.toggleFavorite = function(tripId) {
     const index = state.favorites.indexOf(tripId);
     if (index === -1) {
         state.favorites.push(tripId);
-        showToast("Adicionado aos seus favoritos!");
+        showToast("Adicionado aos favoritos!");
     } else {
         state.favorites.splice(index, 1);
         showToast("Removido dos favoritos.");
@@ -268,7 +273,7 @@ function updateFavoriteBadge() {
 
 function filterFavorites() {
     if (state.favorites.length === 0 && !state.showOnlyFavorites) {
-        showToast('Você ainda não tem ofertas salvas nos favoritos!');
+        showToast('Você ainda não possui ofertas salvas nos favoritos.');
         return;
     }
     state.showOnlyFavorites = !state.showOnlyFavorites;
@@ -282,52 +287,60 @@ function filterFavorites() {
 function initEventListeners() {
     elements = getElements();
 
-    // Controle das Abas (Voos vs Hotéis)
-    const tabButtons = document.querySelectorAll('.search-tab-btn, [data-tab]');
-    let activeTab = 'flights';
+    // Controle das Abas da Busca (Voos, Hotéis, Pacotes)
+    if (elements.searchTabs.length > 0) {
+        elements.searchTabs.forEach((tab, index) => {
+            tab.addEventListener('click', () => {
+                elements.searchTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
 
-    tabButtons.forEach(button => {
-        button.addEventListener('click', (e) => {
-            tabButtons.forEach(btn => btn.classList.remove('active'));
-            e.target.classList.add('active');
-            
-            activeTab = e.target.getAttribute('data-tab') || 'flights';
+                // Mapeia o tipo de busca
+                const tabTypes = ['flights', 'hotels', 'packages'];
+                state.activeTab = tabTypes[index] || 'flights';
 
-            // Oculta/Exibe campos do formulário para busca de Hotéis
-            if (elements.originInput && elements.originInput.parentElement) {
-                elements.originInput.parentElement.style.display = activeTab === 'hotels' ? 'none' : 'block';
-            }
-            if (elements.returnField) {
-                elements.returnField.style.display = activeTab === 'hotels' ? 'none' : 'block';
-            }
+                // Oculta/Exibe a Origem dependendo do contexto
+                const originWrapper = elements.originInput?.closest('.search-field');
+                const returnWrapper = elements.returnField;
+                const submitBtn = elements.searchForm?.querySelector('.search-button');
+
+                if (state.activeTab === 'hotels') {
+                    if (originWrapper) originWrapper.style.display = 'none';
+                    if (returnWrapper) returnWrapper.style.display = 'none';
+                    if (elements.originInput) elements.originInput.removeAttribute('required');
+                    if (submitBtn) submitBtn.innerHTML = '<span class="search-button-icon">⌕</span> Buscar Hotéis';
+                } else {
+                    if (originWrapper) originWrapper.style.display = 'block';
+                    if (returnWrapper && !elements.typeOneWay?.checked) returnWrapper.style.display = 'block';
+                    if (elements.originInput) elements.originInput.setAttribute('required', 'required');
+                    if (submitBtn) submitBtn.innerHTML = '<span class="search-button-icon">⌕</span> Buscar Voos';
+                }
+            });
         });
-    });
+    }
 
     // Menu Mobile
     if (elements.menuToggle && elements.mainNav) {
-        elements.menuToggle.addEventListener("click", () => elements.mainNav.classList.toggle("open"));
+        elements.menuToggle.addEventListener("click", () => {
+            const expanded = elements.menuToggle.getAttribute('aria-expanded') === 'true';
+            elements.menuToggle.setAttribute('aria-expanded', !expanded);
+            elements.mainNav.classList.toggle("open");
+        });
     }
 
-    // Modal Login
-    const openModal = (modal) => { if(modal) { modal.classList.add("open"); document.body.classList.add("modal-open"); }};
-    const closeModal = (modal) => { if(modal) { modal.classList.remove("open"); document.body.classList.remove("modal-open"); }};
-    
-    if (elements.loginBtn) elements.loginBtn.addEventListener("click", () => openModal(elements.loginModal));
-    elements.closeButtons.forEach(btn => btn.addEventListener("click", () => closeModal(elements.loginModal)));
-    document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeModal(elements.loginModal) });
-
-    // Alternância Ida e Volta
-    if (elements.typeOneWay && elements.typeRoundTrip && elements.returnField) {
+    // Alternância Ida e Volta / Somente Ida
+    if (elements.typeOneWay && elements.typeRoundTrip) {
         elements.typeOneWay.addEventListener('change', () => {
-            elements.returnField.style.display = 'none';
+            if (elements.returnField) elements.returnField.style.display = 'none';
             if (elements.returnInput) elements.returnInput.value = '';
         });
         elements.typeRoundTrip.addEventListener('change', () => {
-            if (activeTab !== 'hotels') elements.returnField.style.display = 'block';
+            if (elements.returnField && state.activeTab !== 'hotels') {
+                elements.returnField.style.display = 'block';
+            }
         });
     }
 
-    // Submissão do Formulário de Pesquisa (Voos e Hotéis)
+    // Envio do Formulário de Busca
     if (elements.searchForm) {
         elements.searchForm.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -335,25 +348,22 @@ function initEventListeners() {
             const destination = elements.destinationInput ? elements.destinationInput.value : '';
 
             if (!destination.trim()) {
-                showToast("Por favor, preencha a cidade de destino.");
+                showToast("Por favor, preencha o destino.");
                 return;
             }
 
-            // Busca de Hotéis na Kiwi
-            if (activeTab === 'hotels') {
-                showToast("Buscando opções de hospedagem na Kiwi...");
+            // Ação para Hotéis (Kiwi)
+            if (state.activeTab === 'hotels') {
+                showToast("Buscando opções de hotéis na Kiwi...");
                 const hotelUrl = generateKiwiHotelUrl(destination);
-                
-                setTimeout(() => {
-                    window.open(hotelUrl, '_blank');
-                }, 400);
+                setTimeout(() => { window.open(hotelUrl, '_blank'); }, 400);
                 return;
             }
 
-            // Busca de Voos no Aviasales
+            // Ação para Voos / Pacotes (Aviasales)
             const origin = elements.originInput ? elements.originInput.value : '';
             if (!origin.trim()) {
-                showToast("Por favor, preencha a cidade de origem.");
+                showToast("Por favor, preencha a origem.");
                 return;
             }
 
@@ -364,21 +374,11 @@ function initEventListeners() {
             showToast("Buscando as melhores ofertas...");
             const flightUrl = generateTravelpayoutsUrl(origin, destination, departure, returnDate, passengers);
             
-            setTimeout(() => {
-                window.open(flightUrl, '_blank');
-            }, 400);
+            setTimeout(() => { window.open(flightUrl, '_blank'); }, 400);
         });
     }
 
-    // Filtros de Orçamento e Categoria
-    if (elements.budgetSlider && elements.budgetValue) {
-        elements.budgetSlider.addEventListener('input', (e) => {
-            state.maxBudget = Number(e.target.value);
-            elements.budgetValue.textContent = `R$ ${state.maxBudget.toLocaleString('pt-BR')}`;
-            renderTrips();
-        });
-    }
-
+    // Filtros de Categoria de Oferta
     document.querySelectorAll('[data-trip-type]').forEach(button => {
         button.addEventListener('click', (e) => {
             document.querySelectorAll('[data-trip-type]').forEach(btn => btn.classList.remove('active'));
@@ -388,12 +388,33 @@ function initEventListeners() {
         });
     });
 
+    // Botão Ver Todas
+    if (elements.showAllBtn) {
+        elements.showAllBtn.addEventListener('click', () => {
+            state.activeFilter = 'Todos';
+            state.showOnlyFavorites = false;
+            document.querySelectorAll('[data-trip-type]').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('data-trip-type') === 'Todos');
+            });
+            renderTrips();
+        });
+    }
+
+    // Botão Ir para Busca (CTA)
+    if (elements.goSearchBtn) {
+        elements.goSearchBtn.addEventListener('click', () => {
+            const homeSection = document.getElementById('home');
+            if (homeSection) homeSection.scrollIntoView({ behavior: 'smooth' });
+        });
+    }
+
+    // Botão Favoritos no Header
     if (elements.favoritesButton) {
         elements.favoritesButton.addEventListener('click', filterFavorites);
     }
 }
 
-// Inicialização Geral da Aplicação
+// Inicialização
 document.addEventListener('DOMContentLoaded', () => {
     elements = getElements();
     updateFavoriteBadge();
