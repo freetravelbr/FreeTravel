@@ -114,24 +114,23 @@ function generateTravelpayoutsUrl(origin, destination, departureDate, returnDate
     return `https://www.aviasales.com/search/${routePath}?marker=${state.travelPayoutsMarker}&currency=BRL`;
 }
 
-// Gerador de URL para o Kiwi Hotels com parâmetro de Afiliado Travelpayouts
-function generateKiwiHotelUrl(destinationInput, checkInDate, checkOutDate, guests = 2) {
-    // 1. Extrai a cidade limpa (remove códigos entre parênteses como " (EZE)")
-    let cleanDestination = destinationInput ? destinationInput.replace(/\s*\([A-Z]{3}\)/i, '').trim() : '';
-    
-    // 2. Define datas padrão (caso o usuário não tenha preenchido)
-    const checkIn = checkInDate || getFutureDateString(30);  // +30 dias
-    const checkOut = checkOutDate || getFutureDateString(35); // +35 dias
+function generateKiwiHotelUrl(destinationInput, checkInDate, checkOutDate, guests = 1) {
+    // Limpa a string tirando códigos IATA entre parênteses para ter apenas o nome da cidade
+    const cleanDestination = destinationInput ? destinationInput.replace(/\s*\([A-Z]{3}\)/i, '').trim() : '';
 
-    // 3. Constrói a URL do Kiwi Hotels com os parâmetros aceitos pela plataforma
-    let kiwiBaseUrl = `https://hotels.kiwi.com/Hotel/Search?destination=${encodeURIComponent(cleanDestination)}&checkIn=${checkIn}&checkOut=${checkOut}&guests=${guests}&lang=pt-BR&curr=BRL`;
+    if (!cleanDestination) {
+        return 'https://kiwi.tpk.mx/6UCv5d6M';
+    }
 
-    // 4. Encapsula na URL de Afiliado Travelpayouts para garantir a comissão (Marker 771005)
-    // O Travelpayouts usa a estrutura 'c111.travelpayouts.com/click' para links customizados
-    const affiliateUrl = `https://c111.travelpayouts.com/click?shmarker=${state.travelPayoutsMarker}&promo_id=3791&source_type=customlink&type=click&custom_url=${encodeURIComponent(kiwiBaseUrl)}`;
+    // Datas fallback
+    const checkIn = checkInDate || getFutureDateString(30);
+    const checkOut = checkOutDate || getFutureDateString(35);
 
-    return affiliateUrl;
+    // Constrói URL direta de busca no Kiwi Hotels (parâmetros padronizados)
+    const targetUrl = `https://hotels.kiwi.com/Hotel/Search?destination=${encodeURIComponent(cleanDestination)}&checkin=${checkIn}&checkout=${checkOut}&guests=${guests}&lang=pt-BR&curr=BRL`;
 
+    // Redirecionador universal da Travelpayouts com seu marcador de afiliado
+    return `https://tp.st/r?p=3791&m=${state.travelPayoutsMarker}&u=${encodeURIComponent(targetUrl)}`;
 }
 
 // Destino em Destaque
@@ -312,34 +311,28 @@ function initEventListeners() {
                 const returnWrapper = elements.returnField;
                 const submitBtn = elements.searchForm?.querySelector('.search-button');
 
-                // Captura os rótulos (labels) correspondentes
                 const depLabel = elements.departureInput?.closest('.search-field')?.querySelector('label');
                 const retLabel = elements.returnInput?.closest('.search-field')?.querySelector('label');
                 const passLabel = elements.passengersSelect?.closest('.search-field')?.querySelector('label');
                 const tripTypesWrapper = document.querySelector('.trip-types');
 
                 if (state.activeTab === 'hotels') {
-                    // Oculta a Origem e exibe Check-in / Check-out
                     if (originWrapper) originWrapper.style.display = 'none';
                     if (returnWrapper) returnWrapper.style.display = 'block';
                     if (tripTypesWrapper) tripTypesWrapper.style.display = 'none';
 
-                    // Altera os rótulos dos campos para Hotéis
                     if (depLabel) depLabel.textContent = 'CHECK-IN';
                     if (retLabel) retLabel.textContent = 'CHECK-OUT';
                     if (passLabel) passLabel.textContent = 'HÓSPEDES';
 
-                    // Ajusta validações do formulário
                     if (elements.originInput) elements.originInput.removeAttribute('required');
                     if (elements.returnInput) elements.returnInput.setAttribute('required', 'required');
 
                     if (submitBtn) submitBtn.innerHTML = '<span class="search-button-icon">⌕</span> Buscar Hotéis';
                 } else {
-                    // Restaura exibição para Voos / Pacotes
                     if (originWrapper) originWrapper.style.display = 'block';
                     if (tripTypesWrapper) tripTypesWrapper.style.display = 'flex';
 
-                    // Restaura os rótulos dos campos para Voos
                     if (depLabel) depLabel.textContent = 'IDA';
                     if (retLabel) retLabel.textContent = 'VOLTA';
                     if (passLabel) passLabel.textContent = 'PASSAGEIROS';
@@ -402,9 +395,10 @@ function initEventListeners() {
             if (state.activeTab === 'hotels') {
                 const checkIn = elements.departureInput ? elements.departureInput.value : '';
                 const checkOut = elements.returnInput ? elements.returnInput.value : '';
+                const guests = elements.passengersSelect ? elements.passengersSelect.value : 1;
 
                 showToast("Buscando opções de hotéis...");
-                const hotelUrl = generateKiwiHotelUrl(destination, checkIn, checkOut);
+                const hotelUrl = generateKiwiHotelUrl(destination, checkIn, checkOut, guests);
                 setTimeout(() => { window.open(hotelUrl, '_blank'); }, 400);
                 return;
             }
