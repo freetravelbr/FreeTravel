@@ -111,16 +111,16 @@ function generateTravelpayoutsUrl(origin, destination, departureDate, returnDate
     return `https://www.aviasales.com/search/${routePath}?marker=${state.travelPayoutsMarker}&currency=BRL`;
 }
 
-// Destino em Destaque
+// Destino em Destaque (Texto focado exclusivamente em Voos/Passagens)
 function renderFeaturedDestination() {
     if (!elements.featuredContainer) return;
 
     const featuredData = {
         title: "Tóquio, Japão",
-        badge: "OFERTA ESPECIAL",
-        description: "Conheça a metrópole onde a tradição milenar encontra a tecnologia futurista. Pacotes completos com hospedagem e voo incluso.",
-        price: "R$ 6.890",
-        oldPrice: "R$ 8.200",
+        badge: "VOO EM DESTAQUE",
+        description: "Encontre as melhores tarifas de passagens aéreas para explorar a metrópole onde a tradição encontra o futuro.",
+        price: "R$ 8.699",
+        oldPrice: "R$ 10.499",
         image: "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=1200&q=80",
         originCode: "GRU",
         destinationCode: "TYO"
@@ -138,8 +138,8 @@ function renderFeaturedDestination() {
             <span style="font-size: 2rem; font-weight: 900; color: #f5c400;">${featuredData.price}</span>
             <span style="font-size: 1.1rem; text-decoration: line-through; color: #aaaaaa;">${featuredData.oldPrice}</span>
           </div>
-          <a href="${directUrl}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 8px; background: #f5c400; color: #090909; font-size: 0.95rem; font-weight: 800; padding: 14px 28px; text-decoration: none; border-radius: 10px; box-shadow: 0 4px 15px rgba(245, 196, 0, 0.3); transition: all 0.2s ease-in-out;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 20px rgba(245, 196, 0, 0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(245, 196, 0, 0.3)';">
-            Garantir Esta Oferta
+          <a href="${directUrl}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 8px; background: #f5c400; color: #090909; font-size: 0.95rem; font-weight: 800; padding: 14px 28px; text-decoration: none; border-radius: 10px; box-shadow: 0 4px 15px rgba(245, 196, 0, 0.3); transition: all 0.2s ease-in-out;">
+            Buscar Voos Promocionais
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
           </a>
         </div>
