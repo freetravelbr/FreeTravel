@@ -114,21 +114,22 @@ function generateTravelpayoutsUrl(origin, destination, departureDate, returnDate
     return `https://www.aviasales.com/search/${routePath}?marker=${state.travelPayoutsMarker}&currency=BRL`;
 }
 
-// Gerador de URL do Hotellook (Rede Aviasales para Hotéis)
+
+// Gerador de URL do Aviasales Hotels (Substitui o Hotellook antigo)
 function generateHotellookUrl(destinationInput, checkInDate, checkOutDate, guests = 2) {
-    // 1. Limpa a string de entrada mantendo o nome da cidade ou extraindo IATA
+    // 1. Extrai o código IATA ou limpa o nome do destino
     const destinationIata = extractIataCode(destinationInput);
     const cleanDestination = destinationInput ? destinationInput.replace(/\s*\([A-Z]{3}\)/i, '').trim() : 'Madrid';
     
-    // Se tiver código IATA válido (3 letras), usa ele; caso contrário, usa o nome da cidade sanitizado
+    // Prioriza IATA (ex: MAD) se disponível, ou o nome da cidade
     const locationQuery = (destinationIata && destinationIata.length === 3) ? destinationIata : cleanDestination;
 
-    // 2. Garante datas padrão no formato YYYY-MM-DD
+    // 2. Garante datas no formato YYYY-MM-DD
     const checkIn = checkInDate || getFutureDateString(30);
     const checkOut = checkOutDate || getFutureDateString(35);
 
-    // 3. Estrutura oficial de busca do Hotellook / Aviasales Hotels
-    return `https://hotellook.com/search?destination=${encodeURIComponent(locationQuery)}&checkIn=${checkIn}&checkOut=${checkOut}&adults=${guests}&marker=${state.travelPayoutsMarker}&currency=BRL`;
+    // 3. Estrutura atualizada e segura do Aviasales Hotels
+    return `https://hotels.aviasales.com/search?destination=${encodeURIComponent(locationQuery)}&checkIn=${checkIn}&checkOut=${checkOut}&adults=${guests}&marker=${state.travelPayoutsMarker}&currency=BRL`;
 }
 
 // Destino em Destaque
