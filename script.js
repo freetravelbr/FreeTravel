@@ -114,17 +114,24 @@ function generateTravelpayoutsUrl(origin, destination, departureDate, returnDate
     return `https://www.aviasales.com/search/${routePath}?marker=${state.travelPayoutsMarker}&currency=BRL`;
 }
 
-function generateKiwiHotelUrl(destination, checkInDate, checkOutDate) {
-    const cleanDestination = destination ? encodeURIComponent(destination.trim()) : '';
+// Gerador de URL para o Kiwi Hotels com parâmetro de Afiliado Travelpayouts
+function generateKiwiHotelUrl(destinationInput, checkInDate, checkOutDate, guests = 2) {
+    // 1. Extrai a cidade limpa (remove códigos entre parênteses como " (EZE)")
+    let cleanDestination = destinationInput ? destinationInput.replace(/\s*\([A-Z]{3}\)/i, '').trim() : '';
     
-    if (cleanDestination) {
-        let url = `https://hotels.kiwi.com/Hotel/Search?location=${cleanDestination}&lang=pt-BR&curr=BRL`;
-        if (checkInDate) url += `&checkin=${checkInDate}`;
-        if (checkOutDate) url += `&checkout=${checkOutDate}`;
-        return url;
-    }
+    // 2. Define datas padrão (caso o usuário não tenha preenchido)
+    const checkIn = checkInDate || getFutureDateString(30);  // +30 dias
+    const checkOut = checkOutDate || getFutureDateString(35); // +35 dias
 
-    return 'https://hotels.kiwi.com/?lang=pt-BR&curr=BRL';
+    // 3. Constrói a URL do Kiwi Hotels com os parâmetros aceitos pela plataforma
+    let kiwiBaseUrl = `https://hotels.kiwi.com/Hotel/Search?destination=${encodeURIComponent(cleanDestination)}&checkIn=${checkIn}&checkOut=${checkOut}&guests=${guests}&lang=pt-BR&curr=BRL`;
+
+    // 4. Encapsula na URL de Afiliado Travelpayouts para garantir a comissão (Marker 771005)
+    // O Travelpayouts usa a estrutura 'c111.travelpayouts.com/click' para links customizados
+    const affiliateUrl = `https://c111.travelpayouts.com/click?shmarker=${state.travelPayoutsMarker}&promo_id=3791&source_type=customlink&type=click&custom_url=${encodeURIComponent(kiwiBaseUrl)}`;
+
+    return affiliateUrl;
+
 }
 
 // Destino em Destaque
