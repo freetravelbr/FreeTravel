@@ -79,11 +79,11 @@
   </header>
 
 
-  <!-- ================= HERO ================= -->
+  <!-- ================= HERO & MAIN ================= -->
 
-  <main>
+  <main id="home">
 
-    <section class="hero" id="home">
+    <section class="hero">
 
       <div class="hero-overlay"></div>
 
@@ -117,6 +117,7 @@
             <button
               class="search-tab active"
               type="button"
+              data-tab="flights"
             >
               ✈ Voos
             </button>
@@ -124,6 +125,7 @@
             <button
               class="search-tab"
               type="button"
+              data-tab="hotels"
             >
               🏨 Hotéis
             </button>
@@ -131,6 +133,7 @@
             <button
               class="search-tab"
               type="button"
+              data-tab="packages"
             >
               🌎 Pacotes
             </button>
@@ -154,8 +157,8 @@
             id="searchForm"
           >
 
-            <!-- CAMPO: ORIGEM (IATA) -->
-            <div class="search-field">
+            <!-- CAMPO: ORIGEM -->
+            <div class="search-field" id="originField">
 
               <label for="origin">
                 Origem
@@ -163,16 +166,14 @@
 
               <div class="input-wrap">
 
-                <span class="input-icon">
-                  📍
-                </span>
+                <span class="input-icon">📍</span>
 
                 <input
                   id="origin"
                   name="origin"
                   type="text"
                   placeholder="Cidade ou Aeroporto (Ex: GRU, BSB)"
-                  autocomplete="on"
+                  autocomplete="off"
                   required
                 >
 
@@ -180,7 +181,7 @@
 
             </div>
 
-            <!-- CAMPO: DESTINO (IATA) -->
+            <!-- CAMPO: DESTINO -->
             <div class="search-field">
 
               <label for="destination">
@@ -189,16 +190,14 @@
 
               <div class="input-wrap">
 
-                <span class="input-icon">
-                  📍
-                </span>
+                <span class="input-icon">📍</span>
 
                 <input
                   id="destination"
                   name="destination"
                   type="text"
                   placeholder="Cidade ou Aeroporto (Ex: GIG, EZE, MIA)"
-                  autocomplete="on"
+                  autocomplete="off"
                   required
                 >
 
@@ -215,9 +214,7 @@
 
               <div class="input-wrap">
 
-                <span class="input-icon">
-                  📅
-                </span>
+                <span class="input-icon">📅</span>
 
                 <input
                   id="departure"
@@ -239,9 +236,7 @@
 
               <div class="input-wrap">
 
-                <span class="input-icon">
-                  📅
-                </span>
+                <span class="input-icon">📅</span>
 
                 <input
                   id="return"
@@ -263,9 +258,7 @@
 
               <div class="input-wrap">
 
-                <span class="input-icon">
-                  👤
-                </span>
+                <span class="input-icon">👤</span>
 
                 <select
                   id="passengers"
@@ -289,7 +282,7 @@
               type="submit"
             >
               <span class="search-button-icon">⌕</span>
-              Buscar Aeroportos
+              Buscar
             </button>
 
           </form>
@@ -308,50 +301,35 @@
       <div class="container trust-inner">
 
         <div class="trust-item">
-
           <span>✓</span>
-
           <div>
             <strong>Melhores ofertas</strong>
             <small>Compare antes de reservar</small>
           </div>
-
         </div>
 
-
         <div class="trust-item">
-
           <span>★</span>
-
           <div>
             <strong>Destinos selecionados</strong>
             <small>Opções para todos os bolsos</small>
           </div>
-
         </div>
 
-
         <div class="trust-item">
-
           <span>⚡</span>
-
           <div>
             <strong>Busca rápida</strong>
             <small>Encontre sua viagem facilmente</small>
           </div>
-
         </div>
 
-
         <div class="trust-item">
-
           <span>🔒</span>
-
           <div>
             <strong>Experiência segura</strong>
             <small>Você escolhe onde reservar</small>
           </div>
-
         </div>
 
       </div>
@@ -366,7 +344,6 @@
 
         <div style="background: #ffffff; border: 1px solid #e5e7eb; border-radius: 16px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px;">
           
-          <!-- Texto Explicativo -->
           <div style="flex: 1; min-width: 280px;">
             <div style="display: inline-block; background: #000000; color: #ffffff; font-size: 0.75rem; font-weight: 700; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px;">
               Internet Internacional • Saily
@@ -382,7 +359,6 @@
             </a>
           </div>
 
-          <!-- QR Code Container -->
           <div style="display: flex; flex-direction: column; align-items: center; background: #fafafa; border: 1px dashed #d1d5db; padding: 16px; border-radius: 12px; min-width: 140px; text-align: center;">
             <a href="https://saily.tpk.mx/jM4eFUO4" target="_blank" rel="noopener noreferrer">
               <img src="tp-qr-code.jpg" alt="QR Code Saily eSIM" style="width: 110px; height: 110px; border-radius: 8px; display: block; border: 1px solid #e5e7eb;">
@@ -401,96 +377,39 @@
 
     <!-- ================= OFERTAS ================= -->
 
-    <section
-      class="section offers-section"
-      id="ofertas"
-    >
+    <section class="section offers-section" id="ofertas">
 
       <div class="container">
 
         <div class="section-heading">
 
           <div>
-
-            <span class="section-kicker">
-              OFERTAS EM DESTAQUE
-            </span>
-
-            <h2>
-              Viaje mais pagando menos.
-            </h2>
-
-            <p>
-              Descubra destinos incríveis selecionados
-              para você.
-            </p>
-
+            <span class="section-kicker">OFERTAS EM DESTAQUE</span>
+            <h2>Viaje mais pagando menos.</h2>
+            <p>Descubra destinos incríveis selecionados para você.</p>
           </div>
 
-          <button
-            class="outline-btn"
-            type="button"
-            data-action="show-all"
-          >
-            Ver todas
-            <span>→</span>
+          <button class="outline-btn" type="button" data-action="show-all">
+            Ver todas <span>→</span>
           </button>
 
         </div>
 
 
-        <!-- ================= FILTROS ================= -->
+        <!-- FILTROS -->
 
         <div class="filter-row">
-
-          <button
-            class="filter-btn active"
-            type="button"
-            data-trip-type="Todos"
-          >
-            Todos
-          </button>
-
-          <button
-            class="filter-btn"
-            type="button"
-            data-trip-type="Praia"
-          >
-            🏖 Praia
-          </button>
-
-          <button
-            class="filter-btn"
-            type="button"
-            data-trip-type="Cidade"
-          >
-            🏙 Cidade
-          </button>
-
-          <button
-            class="filter-btn"
-            type="button"
-            data-trip-type="Natureza"
-          >
-            🌲 Natureza
-          </button>
-
+          <button class="filter-btn active" type="button" data-trip-type="Todos">Todos</button>
+          <button class="filter-btn" type="button" data-trip-type="Praia">🏖 Praia</button>
+          <button class="filter-btn" type="button" data-trip-type="Cidade">🏙 Cidade</button>
+          <button class="filter-btn" type="button" data-trip-type="Natureza">🌲 Natureza</button>
         </div>
 
-
-        <div
-          class="results-info"
-          id="resultCount"
-        >
+        <div class="results-info" id="resultCount">
           Carregando ofertas...
         </div>
 
-
-        <div
-          class="trip-grid"
-          id="tripGrid"
-        >
-        </div>
+        <div class="trip-grid" id="tripGrid"></div>
 
       </div>
 
@@ -499,188 +418,67 @@
 
     <!-- ================= DESTINOS ================= -->
 
-    <section
-      class="section destinations-section"
-      id="destinos"
-    >
+    <section class="section destinations-section" id="destinos">
 
       <div class="container">
 
         <div class="section-heading centered">
-
-          <span class="section-kicker">
-            EXPLORE O MUNDO
-          </span>
-
-          <h2>
-            Destinos que inspiram.
-          </h2>
-
-          <p>
-            Escolha um destino e comece a planejar
-            sua próxima aventura.
-          </p>
-
+          <span class="section-kicker">EXPLORE O MUNDO</span>
+          <h2>Destinos que inspiram.</h2>
+          <p>Escolha um destino e comece a planejar sua próxima aventura.</p>
         </div>
-
 
         <div class="destination-grid">
 
-
-          <button
-            class="destination-card destination-large"
-            type="button"
-            data-destination="Rio de Janeiro"
-          >
-
-            <img
-              src="https://images.unsplash.com/photo-1483729558449-99ef09a8c325?auto=format&fit=crop&w=1400&q=85"
-              alt="Rio de Janeiro"
-              loading="lazy"
-            >
-
+          <button class="destination-card destination-large" type="button" data-destination="Rio de Janeiro">
+            <img src="https://images.unsplash.com/photo-1483729558449-99ef09a8c325?auto=format&fit=crop&w=1400&q=85" alt="Rio de Janeiro" loading="lazy">
             <div class="destination-overlay"></div>
-
             <div class="destination-content">
-
               <small>BRASIL</small>
-
-              <strong>
-                Rio de Janeiro (GIG / SDU)
-              </strong>
-
-              <span>
-                Praias, montanhas e muita energia.
-              </span>
-
+              <strong>Rio de Janeiro (GIG / SDU)</strong>
+              <span>Praias, montanhas e muita energia.</span>
             </div>
-
           </button>
 
-
-          <button
-            class="destination-card"
-            type="button"
-            data-destination="Buenos Aires"
-          >
-
-            <img
-              src="https://images.unsplash.com/photo-1589909202802-8f4aadce1849?auto=format&fit=crop&w=1000&q=85"
-              alt="Buenos Aires"
-              loading="lazy"
-            >
-
+          <button class="destination-card" type="button" data-destination="Buenos Aires">
+            <img src="https://images.unsplash.com/photo-1589909202802-8f4aadce1849?auto=format&fit=crop&w=1000&q=85" alt="Buenos Aires" loading="lazy">
             <div class="destination-overlay"></div>
-
             <div class="destination-content">
-
               <small>ARGENTINA</small>
-
-              <strong>
-                Buenos Aires (EZE / AEP)
-              </strong>
-
-              <span>
-                Cultura, gastronomia e tango.
-              </span>
-
+              <strong>Buenos Aires (EZE / AEP)</strong>
+              <span>Cultura, gastronomia e tango.</span>
             </div>
-
           </button>
 
-
-          <button
-            class="destination-card"
-            type="button"
-            data-destination="Madrid"
-          >
-
-            <img
-              src="https://images.unsplash.com/photo-1539037116277-4db20889f2d4?auto=format&fit=crop&w=1000&q=85"
-              alt="Madrid"
-              loading="lazy"
-            >
-
+          <button class="destination-card" type="button" data-destination="Madrid">
+            <img src="https://images.unsplash.com/photo-1539037116277-4db20889f2d4?auto=format&fit=crop&w=1000&q=85" alt="Madrid" loading="lazy">
             <div class="destination-overlay"></div>
-
             <div class="destination-content">
-
               <small>ESPANHA</small>
-
-              <strong>
-                Madrid (MAD)
-              </strong>
-
-              <span>
-                História, arte e gastronomia.
-              </span>
-
+              <strong>Madrid (MAD)</strong>
+              <span>História, arte e gastronomia.</span>
             </div>
-
           </button>
 
-
-          <button
-            class="destination-card"
-            type="button"
-            data-destination="Bariloche"
-          >
-
-            <img
-              src="https://images.unsplash.com/photo-1544986581-efac024faf62?auto=format&fit=crop&w=1000&q=85"
-              alt="Bariloche"
-              loading="lazy"
-            >
-
+          <button class="destination-card" type="button" data-destination="Bariloche">
+            <img src="https://images.unsplash.com/photo-1544986581-efac024faf62?auto=format&fit=crop&w=1000&q=85" alt="Bariloche" loading="lazy">
             <div class="destination-overlay"></div>
-
             <div class="destination-content">
-
               <small>ARGENTINA</small>
-
-              <strong>
-                Bariloche (BRC)
-              </strong>
-
-              <span>
-                Lagos, montanhas e neve.
-              </span>
-
+              <strong>Bariloche (BRC)</strong>
+              <span>Lagos, montanhas e neve.</span>
             </div>
-
           </button>
 
-
-          <button
-            class="destination-card"
-            type="button"
-            data-destination="Paris"
-          >
-
-            <img
-              src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1000&q=85"
-              alt="Paris"
-              loading="lazy"
-            >
-
+          <button class="destination-card" type="button" data-destination="Paris">
+            <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=1000&q=85" alt="Paris" loading="lazy">
             <div class="destination-overlay"></div>
-
             <div class="destination-content">
-
               <small>FRANÇA</small>
-
-              <strong>
-                Paris (CDG / ORY)
-              </strong>
-
-              <span>
-                Arte, romance e arquitetura.
-              </span>
-
+              <strong>Paris (CDG / ORY)</strong>
+              <span>Arte, romance e arquitetura.</span>
             </div>
-
           </button>
-
 
         </div>
 
@@ -692,112 +490,46 @@
     <!-- ================= DESTINO DO MÊS ================= -->
 
     <section class="featured-section" id="destino-do-mes">
-
       <div class="container">
-
-        <!-- O JavaScript irá injetar a oferta em destaque aqui -->
         <div id="featuredDestinationContainer"></div>
-
       </div>
-
     </section>
 
 
     <!-- ================= COMO FUNCIONA ================= -->
 
-    <section
-      class="section how-section"
-      id="como-funciona"
-    >
+    <section class="section how-section" id="como-funciona">
 
       <div class="container">
 
         <div class="section-heading centered">
-
-          <span class="section-kicker">
-            SIMPLES ASSIM
-          </span>
-
-          <h2>
-            Como funciona?
-          </h2>
-
-          <p>
-            O Free Travel ajuda você a encontrar
-            oportunidades de viagem sem complicação.
-          </p>
-
+          <span class="section-kicker">SIMPLES ASSIM</span>
+          <h2>Como funciona?</h2>
+          <p>O Free Travel ajuda você a encontrar oportunidades de viagem sem complicação.</p>
         </div>
-
 
         <div class="steps-grid">
 
-
           <article class="step-card">
-
-            <span class="step-number">
-              01
-            </span>
-
-            <div class="step-icon">
-              🔎
-            </div>
-
-            <h3>
-              Pesquise
-            </h3>
-
-            <p>
-              Informe o aeroporto IATA de origem/destino e encontre
-              diferentes opções de voos.
-            </p>
-
+            <span class="step-number">01</span>
+            <div class="step-icon">🔎</div>
+            <h3>Pesquise</h3>
+            <p>Informe o aeroporto IATA de origem/destino e encontre diferentes opções de voos.</p>
           </article>
 
-
           <article class="step-card">
-
-            <span class="step-number">
-              02
-            </span>
-
-            <div class="step-icon">
-              ⚖
-            </div>
-
-            <h3>
-              Compare
-            </h3>
-
-            <p>
-              Compare preços e escolha a alternativa
-              que melhor combina com você.
-            </p>
-
+            <span class="step-number">02</span>
+            <div class="step-icon">⚖</div>
+            <h3>Compare</h3>
+            <p>Compare preços e escolha a alternativa que melhor combina com você.</p>
           </article>
 
-
           <article class="step-card">
-
-            <span class="step-number">
-              03
-            </span>
-
-            <div class="step-icon">
-              ✈
-            </div>
-
-            <h3>
-              Viaje
-            </h3>
-
-            <p>
-              Escolha sua oferta e siga para
-              a reserva com o parceiro.
-            </p>
-
+            <span class="step-number">03</span>
+            <div class="step-icon">✈</div>
+            <h3>Viaje</h3>
+            <p>Escolha sua oferta e siga para a reserva com o parceiro.</p>
           </article>
-
 
         </div>
 
@@ -815,28 +547,12 @@
         <div class="cta-card">
 
           <div>
-
-            <span class="section-kicker">
-              FREE TRAVEL
-            </span>
-
-            <h2>
-              Sua próxima aventura
-              está mais perto.
-            </h2>
-
-            <p>
-              Encontre uma viagem que combina
-              com seu orçamento.
-            </p>
-
+            <span class="section-kicker">FREE TRAVEL</span>
+            <h2>Sua próxima aventura está mais perto.</h2>
+            <p>Encontre uma viagem que combina com seu orçamento.</p>
           </div>
 
-          <button
-            class="primary-btn"
-            type="button"
-            data-action="go-search"
-          >
+          <button class="primary-btn" type="button" data-action="go-search">
             Encontrar minha viagem →
           </button>
 
@@ -852,54 +568,52 @@
   <!-- ================= FOOTER ================= -->
 
   <footer style="background-color: #0d0d0d; color: #ffffff; padding: 40px 20px 20px 20px; font-family: sans-serif;">
+
     <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 40px;">
-        
-        <!-- Marca / Coluna 1 -->
-        <div style="flex: 1; min-width: 250px;">
-            <a href="index.html" style="text-decoration: none; color: #ffffff; font-size: 1.5rem; font-weight: bold; display: flex; align-items: center; gap: 8px;">
-                <span style="color: #f2bc07;">✈</span>
-                <span>FREE <strong style="color: #f2bc07;">TRAVEL</strong></span>
-            </a>
-            <p style="color: #a0a0a0; font-size: 0.9rem; margin-top: 10px;">Viaje por um preço justo.</p>
-        </div>
 
-        <!-- Coluna 2: Navegação -->
-        <div style="flex: 1; min-width: 150px;">
-            <h4 style="color: #ffffff; margin-bottom: 15px; font-size: 1.1rem;">Free Travel</h4>
-            <ul style="list-style: none; padding: 0; margin: 0;">
-                <li style="margin-bottom: 8px;"><a href="index.html" style="color: #a0a0a0; text-decoration: none;">Início</a></li>
-                <li style="margin-bottom: 8px;"><a href="index.html#ofertas" style="color: #a0a0a0; text-decoration: none;">Ofertas</a></li>
-                <li style="margin-bottom: 8px;"><a href="index.html#destinos" style="color: #a0a0a0; text-decoration: none;">Destinos</a></li>
-                <li style="margin-bottom: 8px;"><a href="index.html#esim" style="color: #a0a0a0; text-decoration: none;">eSIM Saily</a></li>
-                <li style="margin-bottom: 8px;"><a href="index.html#como-funciona" style="color: #a0a0a0; text-decoration: none;">Como funciona</a></li>
-            </ul>
-        </div>
+      <div style="flex: 1; min-width: 250px;">
+        <a href="#home" style="text-decoration: none; color: #ffffff; font-size: 1.5rem; font-weight: bold; display: flex; align-items: center; gap: 8px;">
+          <span style="color: #f2bc07;">✈</span>
+          <span>FREE <strong style="color: #f2bc07;">TRAVEL</strong></span>
+        </a>
+        <p style="color: #a0a0a0; font-size: 0.9rem; margin-top: 10px;">Viaje por um preço justo.</p>
+      </div>
 
-        <!-- Coluna 3: Ajuda -->
-        <div style="flex: 1; min-width: 150px;">
-            <h4 style="color: #ffffff; margin-bottom: 15px; font-size: 1.1rem;">Ajuda</h4>
-            <ul style="list-style: none; padding: 0; margin: 0;">
-                <li style="margin-bottom: 8px;"><a href="central-de-ajuda.html" style="color: #a0a0a0; text-decoration: none;">Central de ajuda</a></li>
-                <li style="margin-bottom: 8px;"><a href="termos-de-uso.html" style="color: #a0a0a0; text-decoration: none;">Termos de uso</a></li>
-                <li style="margin-bottom: 8px;"><a href="politica-de-privacidade.html" style="color: #a0a0a0; text-decoration: none;">Privacidade</a></li>
-                <li style="margin-bottom: 8px;"><a href="mailto:freetravelbr@aol.com" style="color: #a0a0a0; text-decoration: none;">Fale conosco</a></li>
-            </ul>
-        </div>
+      <div style="flex: 1; min-width: 150px;">
+        <h4 style="color: #ffffff; margin-bottom: 15px; font-size: 1.1rem;">Free Travel</h4>
+        <ul style="list-style: none; padding: 0; margin: 0;">
+          <li style="margin-bottom: 8px;"><a href="#home" style="color: #a0a0a0; text-decoration: none;">Início</a></li>
+          <li style="margin-bottom: 8px;"><a href="#ofertas" style="color: #a0a0a0; text-decoration: none;">Ofertas</a></li>
+          <li style="margin-bottom: 8px;"><a href="#destinos" style="color: #a0a0a0; text-decoration: none;">Destinos</a></li>
+          <li style="margin-bottom: 8px;"><a href="#esim" style="color: #a0a0a0; text-decoration: none;">eSIM Saily</a></li>
+          <li style="margin-bottom: 8px;"><a href="#como-funciona" style="color: #a0a0a0; text-decoration: none;">Como funciona</a></li>
+        </ul>
+      </div>
+
+      <div style="flex: 1; min-width: 150px;">
+        <h4 style="color: #ffffff; margin-bottom: 15px; font-size: 1.1rem;">Ajuda</h4>
+        <ul style="list-style: none; padding: 0; margin: 0;">
+          <li style="margin-bottom: 8px;"><a href="central-de-ajuda.html" style="color: #a0a0a0; text-decoration: none;">Central de ajuda</a></li>
+          <li style="margin-bottom: 8px;"><a href="termos-de-uso.html" style="color: #a0a0a0; text-decoration: none;">Termos de uso</a></li>
+          <li style="margin-bottom: 8px;"><a href="politica-de-privacidade.html" style="color: #a0a0a0; text-decoration: none;">Privacidade</a></li>
+          <li style="margin-bottom: 8px;"><a href="mailto:freetravelbr@aol.com" style="color: #a0a0a0; text-decoration: none;">Fale conosco</a></li>
+        </ul>
+      </div>
 
     </div>
 
-    <!-- Linha Inferior -->
     <div style="max-width: 1200px; margin: 30px auto 0 auto; padding-top: 20px; border-top: 1px solid #222; display: flex; justify-content: space-between; flex-wrap: wrap; color: #666; font-size: 0.85rem;">
-        <p>© 2026 Free Travel. Todos os direitos reservados.</p>
-        <p>Viaje mais. Pague menos.</p>
+      <p>© 2026 Free Travel. Todos os direitos reservados.</p>
+      <p>Viaje mais. Pague menos.</p>
     </div>
+
   </footer> 
 
   <!-- ================= JAVASCRIPT ================= -->
   <script src="script.js" defer></script>
 
   <!-- WIDGET INTEGRATION (AUTOCOMPLETE/IATA BUSCA) -->
-  <script charset="utf-8" src="//tp.media/content?promo_id=4054&shmarker=123456&campaign_id=100&target_host=www.aviasales.com&locale=pt&currency=brl" async></script>
+  <script charset="utf-8" src="https://tp.media/content?promo_id=4054&shmarker=123456&campaign_id=100&target_host=www.aviasales.com&locale=pt&currency=brl" async></script>
 
 </body>
 </html>
