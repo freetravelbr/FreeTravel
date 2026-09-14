@@ -114,21 +114,19 @@ function generateTravelpayoutsUrl(origin, destination, departureDate, returnDate
     return `https://www.aviasales.com/search/${routePath}?marker=${state.travelPayoutsMarker}&currency=BRL`;
 }
 
-// Gerador de URL do Aviasales Hotels (URL Atualizada e Segura)
+// Gerador de URL do Aviasales Hotels (Com filtros aplicados)
 function generateHotellookUrl(destinationInput, checkInDate, checkOutDate, guests = 2) {
-    // 1. Extrai o código IATA ou limpa o nome do destino
+    // 1. Extrai o código IATA ou limpa o nome da cidade
     const destinationIata = extractIataCode(destinationInput);
     const cleanDestination = destinationInput ? destinationInput.replace(/\s*\([A-Z]{3}\)/i, '').trim() : 'Madrid';
     
-    // Prioriza IATA (ex: MAD) se disponível, ou o nome da cidade
     const locationQuery = (destinationIata && destinationIata.length === 3) ? destinationIata : cleanDestination;
 
     // 2. Garante datas no formato YYYY-MM-DD
     const checkIn = checkInDate || getFutureDateString(30);
     const checkOut = checkOutDate || getFutureDateString(35);
 
-    // 3. Estrutura oficial do Aviasales Hotels
-    return `// 3. Monta a URL oficial do Aviasales Hotels com os parâmetros de pesquisa
+    // 3. Monta a URL oficial do Aviasales Hotels com os parâmetros de pesquisa
     return `https://www.aviasales.com/hotels?destination=${encodeURIComponent(locationQuery)}&checkIn=${checkIn}&checkOut=${checkOut}&adults=${guests}&marker=${state.travelPayoutsMarker}&currency=BRL`;
 }
 
