@@ -39,7 +39,7 @@ function getElements() {
         returnInput: document.getElementById('return'),
         passengersSelect: document.getElementById('passengers'),
         returnField: document.getElementById('returnField'),
-        originField: document.getElementById('origin')?.closest('.search-field'),
+        originField: document.getElementById('originField') || document.getElementById('origin')?.closest('.search-field'),
         typeRoundTrip: document.getElementById('typeRoundTrip'),
         typeOneWay: document.getElementById('typeOneWay'),
         tripGrid: document.getElementById('tripGrid'),
@@ -294,12 +294,10 @@ function initEventListeners() {
                 elements.searchTabs.forEach(t => t.classList.remove('active'));
                 tab.classList.add('active');
 
-                // Mapeia o tipo de busca
                 const tabTypes = ['flights', 'hotels', 'packages'];
                 state.activeTab = tabTypes[index] || 'flights';
 
-                // Oculta/Exibe a Origem dependendo do contexto
-                const originWrapper = elements.originInput?.closest('.search-field');
+                const originWrapper = elements.originField;
                 const returnWrapper = elements.returnField;
                 const submitBtn = elements.searchForm?.querySelector('.search-button');
 
@@ -307,11 +305,20 @@ function initEventListeners() {
                     if (originWrapper) originWrapper.style.display = 'none';
                     if (returnWrapper) returnWrapper.style.display = 'none';
                     if (elements.originInput) elements.originInput.removeAttribute('required');
+                    if (elements.returnInput) elements.returnInput.removeAttribute('required');
                     if (submitBtn) submitBtn.innerHTML = '<span class="search-button-icon">⌕</span> Buscar Hotéis';
                 } else {
                     if (originWrapper) originWrapper.style.display = 'block';
-                    if (returnWrapper && !elements.typeOneWay?.checked) returnWrapper.style.display = 'block';
                     if (elements.originInput) elements.originInput.setAttribute('required', 'required');
+
+                    if (elements.typeOneWay?.checked) {
+                        if (returnWrapper) returnWrapper.style.display = 'none';
+                        if (elements.returnInput) elements.returnInput.removeAttribute('required');
+                    } else {
+                        if (returnWrapper) returnWrapper.style.display = 'block';
+                        if (elements.returnInput) elements.returnInput.setAttribute('required', 'required');
+                    }
+
                     if (submitBtn) submitBtn.innerHTML = '<span class="search-button-icon">⌕</span> Buscar Voos';
                 }
             });
@@ -331,11 +338,15 @@ function initEventListeners() {
     if (elements.typeOneWay && elements.typeRoundTrip) {
         elements.typeOneWay.addEventListener('change', () => {
             if (elements.returnField) elements.returnField.style.display = 'none';
-            if (elements.returnInput) elements.returnInput.value = '';
+            if (elements.returnInput) {
+                elements.returnInput.value = '';
+                elements.returnInput.removeAttribute('required');
+            }
         });
         elements.typeRoundTrip.addEventListener('change', () => {
-            if (elements.returnField && state.activeTab !== 'hotels') {
-                elements.returnField.style.display = 'block';
+            if (state.activeTab !== 'hotels') {
+                if (elements.returnField) elements.returnField.style.display = 'block';
+                if (elements.returnInput) elements.returnInput.setAttribute('required', 'required');
             }
         });
     }
@@ -354,7 +365,7 @@ function initEventListeners() {
 
             // Ação para Hotéis (Kiwi)
             if (state.activeTab === 'hotels') {
-                showToast("Buscando opções de hotéis na Kiwi...");
+                showToast("Buscando opções de hotéis...");
                 const hotelUrl = generateKiwiHotelUrl(destination);
                 setTimeout(() => { window.open(hotelUrl, '_blank'); }, 400);
                 return;
