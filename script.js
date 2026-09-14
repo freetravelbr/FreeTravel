@@ -95,7 +95,7 @@ function showToast(message) {
     setTimeout(() => { toast.style.opacity = '0'; }, 3200);
 }
 
-// Geradores de URL Afiliada
+// Geradores de URL Afiliada (Aviasales para Voos)
 function generateTravelpayoutsUrl(origin, destination, departureDate, returnDate, passengers = 1) {
     const originIata = extractIataCode(origin) || 'GRU';
     const destinationIata = extractIataCode(destination) || 'GIG';
@@ -114,23 +114,21 @@ function generateTravelpayoutsUrl(origin, destination, departureDate, returnDate
     return `https://www.aviasales.com/search/${routePath}?marker=${state.travelPayoutsMarker}&currency=BRL`;
 }
 
-function generateKiwiHotelUrl(destinationInput, checkInDate, checkOutDate, guests = 1) {
-    // Limpa a string tirando códigos IATA entre parênteses para ter apenas o nome da cidade
-    const cleanDestination = destinationInput ? destinationInput.replace(/\s*\([A-Z]{3}\)/i, '').trim() : '';
+// Gerador de URL do Hotellook (Rede Aviasales para Hotéis)
+function generateHotellookUrl(destinationInput, checkInDate, checkOutDate, guests = 2) {
+    // 1. Limpa a string de entrada mantendo o nome da cidade ou extraindo IATA
+    const destinationIata = extractIataCode(destinationInput);
+    const cleanDestination = destinationInput ? destinationInput.replace(/\s*\([A-Z]{3}\)/i, '').trim() : 'Madrid';
+    
+    // Se tiver código IATA válido (3 letras), usa ele; caso contrário, usa o nome da cidade sanitizado
+    const locationQuery = (destinationIata && destinationIata.length === 3) ? destinationIata : cleanDestination;
 
-    if (!cleanDestination) {
-        return 'https://kiwi.tpk.mx/6UCv5d6M';
-    }
-
-    // Datas fallback
+    // 2. Garante datas padrão no formato YYYY-MM-DD
     const checkIn = checkInDate || getFutureDateString(30);
     const checkOut = checkOutDate || getFutureDateString(35);
 
-    // Constrói URL direta de busca no Kiwi Hotels (parâmetros padronizados)
-    const targetUrl = `https://hotels.kiwi.com/Hotel/Search?destination=${encodeURIComponent(cleanDestination)}&checkin=${checkIn}&checkout=${checkOut}&guests=${guests}&lang=pt-BR&curr=BRL`;
-
-    // Redirecionador universal da Travelpayouts com seu marcador de afiliado
-    return `https://tp.st/r?p=3791&m=${state.travelPayoutsMarker}&u=${encodeURIComponent(targetUrl)}`;
+    // 3. Estrutura oficial de busca do Hotellook / Aviasales Hotels
+    return `https://hotellook.com/search?destination=${encodeURIComponent(locationQuery)}&checkIn=${checkIn}&checkOut=${checkOut}&adults=${guests}&marker=${state.travelPayoutsMarker}&currency=BRL`;
 }
 
 // Destino em Destaque
@@ -391,14 +389,15 @@ function initEventListeners() {
                 return;
             }
 
-            // Ação para Hotéis (Kiwi)
+            // Ação para Hotéis (Hotellook / Rede Aviasales)
             if (state.activeTab === 'hotels') {
                 const checkIn = elements.departureInput ? elements.departureInput.value : '';
                 const checkOut = elements.returnInput ? elements.returnInput.value : '';
-                const guests = elements.passengersSelect ? elements.passengersSelect.value : 1;
+                const guests = elements.passengersSelect ? elements.passengersSelect.value : 2;
 
                 showToast("Buscando opções de hotéis...");
-                const hotelUrl = generateKiwiHotelUrl(destination, checkIn, checkOut, guests);
+                const hotelUrl = generateHotellookUrl(destination, checkIn, checkOut, guests);
+                
                 setTimeout(() => { window.open(hotelUrl, '_blank'); }, 400);
                 return;
             }
