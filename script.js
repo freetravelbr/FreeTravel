@@ -89,17 +89,15 @@ function showToast(message) {
     }, 3000);
 }
 
-// Gerador de URL de Afiliado (Garante formato de URL aceito pelo Aviasales)
+// Gerador de URL de Afiliado para Voos (Aviasales)
 function generateTravelpayoutsUrl(origin, destination, departureDate, returnDate, passengers = 1) {
     const originIata = extractIataCode(origin) || 'GRU';
     const destinationIata = extractIataCode(destination) || 'GIG';
     const isOneWay = elements.typeOneWay && elements.typeOneWay.checked;
 
-    // Se o usuário não informou data de ida, cria uma data padrão (daqui a 30 dias)
     const depDate = departureDate || getFutureDateString(30);
     const formattedDep = formatDateForUrl(depDate);
 
-    // Se for ida e volta e não informou data de volta, cria uma data padrão (daqui a 37 dias)
     let formattedRet = '';
     if (!isOneWay) {
         const retDate = returnDate || getFutureDateString(37);
@@ -111,7 +109,17 @@ function generateTravelpayoutsUrl(origin, destination, departureDate, returnDate
     return `https://www.aviasales.com/search/${routePath}?marker=${state.travelPayoutsMarker}&currency=BRL`;
 }
 
-// Destino em Destaque (Texto focado exclusivamente em Voos/Passagens)
+// Gerador de URL de Afiliado para Hotéis (Kiwi via Travelpayouts)
+function generateKiwiHotelUrl(destination) {
+    const cleanDestination = destination ? encodeURIComponent(destination.trim()) : '';
+    const kiwiHotelUrl = cleanDestination 
+        ? `https://www.kiwi.com/br/hotel/search/${cleanDestination}`
+        : `https://www.kiwi.com/br/hotel/`;
+
+    return `https://tp.media/r?p=3830&subid=freetravel_hotels&marker=${state.travelPayoutsMarker}&custom_url=${encodeURIComponent(kiwiHotelUrl)}`;
+}
+
+// Destino em Destaque
 function renderFeaturedDestination() {
     if (!elements.featuredContainer) return;
 
@@ -274,6 +282,27 @@ function filterFavorites() {
 function initEventListeners() {
     elements = getElements();
 
+    // Controle das Abas (Voos vs Hotéis)
+    const tabButtons = document.querySelectorAll('.search-tab-btn, [data-tab]');
+    let activeTab = 'flights';
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            e.target.classList.add('active');
+            
+            activeTab = e.target.getAttribute('data-tab') || 'flights';
+
+            // Oculta/Exibe campos do formulário para busca de Hotéis
+            if (elements.originInput && elements.originInput.parentElement) {
+                elements.originInput.parentElement.style.display = activeTab === 'hotels' ? 'none' : 'block';
+            }
+            if (elements.returnField) {
+                elements.returnField.style.display = activeTab === 'hotels' ? 'none' : 'block';
+            }
+        });
+    });
+
     // Menu Mobile
     if (elements.menuToggle && elements.mainNav) {
         elements.menuToggle.addEventListener("click", () => elements.mainNav.classList.toggle("open"));
@@ -294,20 +323,37 @@ function initEventListeners() {
             if (elements.returnInput) elements.returnInput.value = '';
         });
         elements.typeRoundTrip.addEventListener('change', () => {
-            elements.returnField.style.display = 'block';
+            if (activeTab !== 'hotels') elements.returnField.style.display = 'block';
         });
     }
 
-    // Submissão do Formulário de Pesquisa
+    // Submissão do Formulário de Pesquisa (Voos e Hotéis)
     if (elements.searchForm) {
         elements.searchForm.addEventListener('submit', (e) => {
             e.preventDefault();
             
-            const origin = elements.originInput ? elements.originInput.value : '';
             const destination = elements.destinationInput ? elements.destinationInput.value : '';
-            
-            if (!origin.trim() || !destination.trim()) {
-                showToast("Por favor, preencha a origem e o destino.");
+
+            if (!destination.trim()) {
+                showToast("Por favor, preencha a cidade de destino.");
+                return;
+            }
+
+            // Busca de Hotéis na Kiwi
+            if (activeTab === 'hotels') {
+                showToast("Buscando opções de hospedagem na Kiwi...");
+                const hotelUrl = generateKiwiHotelUrl(destination);
+                
+                setTimeout(() => {
+                    window.open(hotelUrl, '_blank');
+                }, 400);
+                return;
+            }
+
+            // Busca de Voos no Aviasales
+            const origin = elements.originInput ? elements.originInput.value : '';
+            if (!origin.trim()) {
+                showToast("Por favor, preencha a cidade de origem.");
                 return;
             }
 
@@ -316,11 +362,10 @@ function initEventListeners() {
             const passengers = elements.passengersSelect ? elements.passengersSelect.value : 1;
 
             showToast("Buscando as melhores ofertas...");
-            
-            const url = generateTravelpayoutsUrl(origin, destination, departure, returnDate, passengers);
+            const flightUrl = generateTravelpayoutsUrl(origin, destination, departure, returnDate, passengers);
             
             setTimeout(() => {
-                window.open(url, '_blank');
+                window.open(flightUrl, '_blank');
             }, 400);
         });
     }
