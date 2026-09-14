@@ -129,7 +129,6 @@ function generateKiwiHotelUrl(destination) {
 
     return baseAffiliateUrl;
 }
-}
 
 // Destino em Destaque
 function renderFeaturedDestination() {
