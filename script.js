@@ -114,20 +114,17 @@ function generateTravelpayoutsUrl(origin, destination, departureDate, returnDate
     return `https://www.aviasales.com/search/${routePath}?marker=${state.travelPayoutsMarker}&currency=BRL`;
 }
 
-function generateKiwiHotelUrl(destination) {
-    // Se houver um destino preenchido, podemos passar o destino como parâmetro de busca na Kiwi
-    // Caso contrário, direciona diretamente para o seu link encurtado oficial da Kiwi
+function generateKiwiHotelUrl(destination, checkInDate, checkOutDate) {
     const cleanDestination = destination ? encodeURIComponent(destination.trim()) : '';
     
-    // URL base do seu link de afiliado Kiwi
-    const baseAffiliateUrl = 'https://kiwi.tpk.mx/6UCv5d6M';
-
     if (cleanDestination) {
-        // Redireciona para a página de busca da Kiwi utilizando o seu shortlink como base
-        return `${baseAffiliateUrl}?search=${cleanDestination}`;
+        let url = `https://hotels.kiwi.com/Hotel/Search?location=${cleanDestination}&lang=pt-BR&curr=BRL`;
+        if (checkInDate) url += `&checkin=${checkInDate}`;
+        if (checkOutDate) url += `&checkout=${checkOutDate}`;
+        return url;
     }
 
-    return baseAffiliateUrl;
+    return 'https://hotels.kiwi.com/?lang=pt-BR&curr=BRL';
 }
 
 // Destino em Destaque
@@ -308,14 +305,38 @@ function initEventListeners() {
                 const returnWrapper = elements.returnField;
                 const submitBtn = elements.searchForm?.querySelector('.search-button');
 
+                // Captura os rótulos (labels) correspondentes
+                const depLabel = elements.departureInput?.closest('.search-field')?.querySelector('label');
+                const retLabel = elements.returnInput?.closest('.search-field')?.querySelector('label');
+                const passLabel = elements.passengersSelect?.closest('.search-field')?.querySelector('label');
+                const tripTypesWrapper = document.querySelector('.trip-types');
+
                 if (state.activeTab === 'hotels') {
+                    // Oculta a Origem e exibe Check-in / Check-out
                     if (originWrapper) originWrapper.style.display = 'none';
-                    if (returnWrapper) returnWrapper.style.display = 'none';
+                    if (returnWrapper) returnWrapper.style.display = 'block';
+                    if (tripTypesWrapper) tripTypesWrapper.style.display = 'none';
+
+                    // Altera os rótulos dos campos para Hotéis
+                    if (depLabel) depLabel.textContent = 'CHECK-IN';
+                    if (retLabel) retLabel.textContent = 'CHECK-OUT';
+                    if (passLabel) passLabel.textContent = 'HÓSPEDES';
+
+                    // Ajusta validações do formulário
                     if (elements.originInput) elements.originInput.removeAttribute('required');
-                    if (elements.returnInput) elements.returnInput.removeAttribute('required');
+                    if (elements.returnInput) elements.returnInput.setAttribute('required', 'required');
+
                     if (submitBtn) submitBtn.innerHTML = '<span class="search-button-icon">⌕</span> Buscar Hotéis';
                 } else {
+                    // Restaura exibição para Voos / Pacotes
                     if (originWrapper) originWrapper.style.display = 'block';
+                    if (tripTypesWrapper) tripTypesWrapper.style.display = 'flex';
+
+                    // Restaura os rótulos dos campos para Voos
+                    if (depLabel) depLabel.textContent = 'IDA';
+                    if (retLabel) retLabel.textContent = 'VOLTA';
+                    if (passLabel) passLabel.textContent = 'PASSAGEIROS';
+
                     if (elements.originInput) elements.originInput.setAttribute('required', 'required');
 
                     if (elements.typeOneWay?.checked) {
@@ -372,8 +393,11 @@ function initEventListeners() {
 
             // Ação para Hotéis (Kiwi)
             if (state.activeTab === 'hotels') {
+                const checkIn = elements.departureInput ? elements.departureInput.value : '';
+                const checkOut = elements.returnInput ? elements.returnInput.value : '';
+
                 showToast("Buscando opções de hotéis...");
-                const hotelUrl = generateKiwiHotelUrl(destination);
+                const hotelUrl = generateKiwiHotelUrl(destination, checkIn, checkOut);
                 setTimeout(() => { window.open(hotelUrl, '_blank'); }, 400);
                 return;
             }
