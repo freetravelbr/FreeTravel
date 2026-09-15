@@ -95,6 +95,21 @@ function showToast(message) {
     setTimeout(() => { toast.style.opacity = '0'; }, 3200);
 }
 
+// Atualiza o texto dos options do select (passageiro vs hóspede)
+function updatePassengersSelectOptions(unitTextSingular, unitTextPlural) {
+    if (!elements.passengersSelect) return;
+    const select = elements.passengersSelect;
+    const currentVal = select.value;
+    
+    Array.from(select.options).forEach(opt => {
+        const val = parseInt(opt.value, 10);
+        const label = val === 1 ? unitTextSingular : unitTextPlural;
+        opt.textContent = `${val} ${label}`;
+    });
+    
+    select.value = currentVal;
+}
+
 // Geradores de URL Afiliada (Aviasales para Voos)
 function generateTravelpayoutsUrl(origin, destination, departureDate, returnDate, passengers = 1) {
     const originIata = extractIataCode(origin) || 'GRU';
@@ -316,6 +331,8 @@ function initEventListeners() {
                     if (retLabel) retLabel.textContent = 'CHECK-OUT';
                     if (passLabel) passLabel.textContent = 'HÓSPEDES';
 
+                    updatePassengersSelectOptions('hóspede', 'hóspedes');
+
                     if (elements.originInput) elements.originInput.removeAttribute('required');
                     if (elements.returnInput) elements.returnInput.setAttribute('required', 'required');
 
@@ -327,6 +344,8 @@ function initEventListeners() {
                     if (depLabel) depLabel.textContent = 'IDA';
                     if (retLabel) retLabel.textContent = 'VOLTA';
                     if (passLabel) passLabel.textContent = 'PASSAGEIROS';
+
+                    updatePassengersSelectOptions('passageiro', 'passageiros');
 
                     if (elements.originInput) elements.originInput.setAttribute('required', 'required');
 
