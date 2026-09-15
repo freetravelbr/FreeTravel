@@ -1,4 +1,6 @@
-// Estado da Aplicação
+// ==========================================
+// ESTADO DA APLICAÇÃO
+// ==========================================
 const state = {
     allTrips: [
         { id: 'trip-1', title: 'Rio de Janeiro saindo de São Paulo', category: 'Praia', price: 450, days: 5, originCode: 'GRU', destinationCode: 'GIG', departureDate: '2026-10-15', returnDate: '2026-10-20', image: 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=600&auto=format&fit=crop&q=80', badge: 'Imperdível' },
@@ -26,10 +28,16 @@ const iataMap = {
     'Paris': 'CDG',
     'Santiago': 'SCL',
     'Lisboa': 'LIS',
-    'Tóquio': 'TYO'
+    'Tóquio': 'TYO',
+    'Miami': 'MIA',
+    'Roma': 'FCO',
+    'Cairo': 'CAI',
+    'São Paulo': 'GRU'
 };
 
-// Mapeamento dos Elementos do DOM
+// ==========================================
+// ELEMENTOS DO DOM
+// ==========================================
 function getElements() {
     return {
         searchForm: document.getElementById('searchForm'),
@@ -60,20 +68,31 @@ function getElements() {
 
 let elements = getElements();
 
-// Utilitários
+// ==========================================
+// UTILITÁRIOS
+// ==========================================
 function extractIataCode(inputString) {
     if (!inputString) return '';
-    const match = inputString.match(/\b[A-Z]{3}\b/i);
-    return match ? match[0].toUpperCase() : inputString.trim().substring(0, 3).toUpperCase();
+    
+    // Tenta encontrar padrão entre parênteses: Ex: "Rio de Janeiro (GIG)"
+    const match = inputString.match(/\(([^)]+)\)/);
+    if (match && match[1].length === 3) return match[1].toUpperCase();
+
+    // Tenta encontrar um código IATA isolado de 3 letras
+    const iataMatch = inputString.match(/\b[A-Z]{3}\b/i);
+    if (iataMatch) return iataMatch[0].toUpperCase();
+
+    // Busca no dicionário pelo nome da cidade
+    const cleanName = inputString.trim();
+    if (iataMap[cleanName]) return iataMap[cleanName];
+
+    return cleanName.substring(0, 3).toUpperCase();
 }
 
 function getFutureDateString(daysAhead) {
     const d = new Date();
     d.setDate(d.getDate() + daysAhead);
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
+    return d.toISOString().split('T')[0];
 }
 
 function formatDateForUrl(dateString) {
@@ -87,7 +106,7 @@ function showToast(message) {
     if (!toast) {
         toast = document.createElement('div');
         toast.id = 'ftToast';
-        toast.style.cssText = 'position: fixed; bottom: 20px; right: 20px; background: #111; color: #fff; padding: 12px 24px; border-radius: 8px; font-size: 0.9rem; z-index: 9999; box-shadow: 0 4px 12px rgba(0,0,0,0.15); opacity: 0; transition: opacity 0.3s ease;';
+        toast.style.cssText = 'position: fixed; bottom: 20px; right: 20px; background: #111; color: #fff; padding: 12px 24px; border-radius: 8px; font-size: 0.9rem; z-index: 9999; box-shadow: 0 4px 12px rgba(0,0,0,0.15); opacity: 0; transition: opacity 0.3s ease; font-family: sans-serif;';
         document.body.appendChild(toast);
     }
     toast.textContent = message;
@@ -95,7 +114,6 @@ function showToast(message) {
     setTimeout(() => { toast.style.opacity = '0'; }, 3200);
 }
 
-// Atualiza o texto dos options do select (passageiro vs hóspede)
 function updatePassengersSelectOptions(unitTextSingular, unitTextPlural) {
     if (!elements.passengersSelect) return;
     const select = elements.passengersSelect;
@@ -110,7 +128,30 @@ function updatePassengersSelectOptions(unitTextSingular, unitTextPlural) {
     select.value = currentVal;
 }
 
-// Geradores de URL Afiliada (Aviasales para Voos)
+// Configura datas mínimas para impedir datas passadas
+function setupDateLimits() {
+    elements = getElements();
+    const today = getFutureDateString(0);
+    
+    if (elements.departureInput) {
+        elements.departureInput.min = today;
+        elements.departureInput.addEventListener('change', () => {
+            if (elements.returnInput) {
+                elements.returnInput.min = elements.departureInput.value || today;
+                if (elements.returnInput.value && elements.returnInput.value < elements.departureInput.value) {
+                    elements.returnInput.value = elements.departureInput.value;
+                }
+            }
+        });
+    }
+    if (elements.returnInput) {
+        elements.returnInput.min = today;
+    }
+}
+
+// ==========================================
+// GERADORES DE URL AFILIADA
+// ==========================================
 function generateTravelpayoutsUrl(origin, destination, departureDate, returnDate, passengers = 1) {
     const originIata = extractIataCode(origin) || 'GRU';
     const destinationIata = extractIataCode(destination) || 'GIG';
@@ -120,7 +161,7 @@ function generateTravelpayoutsUrl(origin, destination, departureDate, returnDate
     const formattedDep = formatDateForUrl(depDate);
 
     let formattedRet = '';
-    if (!isOneWay) {
+    if (!isOneWay && state.activeTab !== 'hotels') {
         const retDate = returnDate || getFutureDateString(37);
         formattedRet = formatDateForUrl(retDate);
     }
@@ -129,9 +170,8 @@ function generateTravelpayoutsUrl(origin, destination, departureDate, returnDate
     return `https://www.aviasales.com/search/${routePath}?marker=${state.travelPayoutsMarker}&currency=BRL`;
 }
 
-// Gerador de URL de Hotéis via Booking.com (Travelpayouts)
 function generateHotellookUrl(destinationInput, checkInDate, checkOutDate, guests = 2) {
-    const cleanDestination = destinationInput ? destinationInput.replace(/\s*\([A-Z]{3}\)/i, '').trim() : 'Madrid';
+    const cleanDestination = destinationInput ? destinationInput.replace(/\s*\([A-Z]{3}\)/i, '').trim() : 'São Paulo';
     const checkIn = checkInDate || getFutureDateString(30);
     const checkOut = checkOutDate || getFutureDateString(35);
     const labelMarker = `affnetTP_hotel_${state.travelPayoutsMarker}`;
@@ -139,7 +179,9 @@ function generateHotellookUrl(destinationInput, checkInDate, checkOutDate, guest
     return `https://sp.booking.com/searchresults.pt-br.html?ss=${encodeURIComponent(cleanDestination)}&checkin=${checkIn}&checkout=${checkOut}&group_adults=${guests}&label=${labelMarker}&selected_currency=BRL&lang=pt-br`;
 }
 
-// Destino em Destaque
+// ==========================================
+// RENDERIZAÇÃO DE COMPONENTES
+// ==========================================
 function renderFeaturedDestination() {
     if (!elements.featuredContainer) return;
 
@@ -175,33 +217,6 @@ function renderFeaturedDestination() {
     `;
 }
 
-// Seleção de Destino
-function selectDestinationInForm(destinationName, destinationIata) {
-    elements = getElements();
-    if (elements.destinationInput) {
-        elements.destinationInput.value = `${destinationName} (${destinationIata})`;
-    }
-    const homeSection = document.getElementById('home');
-    if (homeSection) {
-        homeSection.scrollIntoView({ behavior: 'smooth' });
-    }
-    setTimeout(() => {
-        if (elements.departureInput) elements.departureInput.focus();
-    }, 400);
-}
-
-function setupDestinationCards() {
-    document.querySelectorAll('[data-destination]').forEach(button => {
-        button.addEventListener('click', (e) => {
-            e.preventDefault();
-            const cityName = button.getAttribute('data-destination');
-            const iataCode = iataMap[cityName] || 'GIG';
-            selectDestinationInForm(cityName, iataCode);
-        });
-    });
-}
-
-// Renderização do Grid de Ofertas
 function renderTrips() {
     elements = getElements();
     if (!elements.tripGrid) return;
@@ -221,7 +236,7 @@ function renderTrips() {
         elements.tripGrid.innerHTML = `
             <div style="grid-column: 1 / -1; text-align: center; padding: 40px 20px; color: #666;">
                 <p style="font-size: 1.2rem; margin-bottom: 10px;">Nenhuma oferta encontrada.</p>
-                <small>Tente alterar os filtros de categoria ou remover os favoritos.</small>
+                <small>Tente alterar os filtros de categoria ou ajuste o orçamento.</small>
             </div>`;
         return;
     }
@@ -235,7 +250,7 @@ function renderTrips() {
                 <div style="position: relative; width: 100%; height: 200px; overflow: hidden; background-color: #e0e0e0; flex-shrink: 0;">
                     <img src="${trip.image}" alt="${trip.title}" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; display: block; border: 0;">
                     ${trip.badge ? `<span style="position: absolute; top: 12px; left: 12px; background: #111111; color: #ffffff; padding: 4px 10px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; text-transform: uppercase; z-index: 2;">${trip.badge}</span>` : ''}
-                    <button type="button" onclick="toggleFavorite('${trip.id}')" style="position: absolute; top: 12px; right: 12px; background: #ffffff; border: none; border-radius: 50%; width: 34px; height: 34px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.2); font-size: 1.1rem; color: ${isFav ? '#e63946' : '#777777'}; z-index: 2;" title="${isFav ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}">
+                    <button type="button" onclick="toggleFavorite('${trip.id}')" aria-label="Favoritar oferta" style="position: absolute; top: 12px; right: 12px; background: #ffffff; border: none; border-radius: 50%; width: 34px; height: 34px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.2); font-size: 1.1rem; color: ${isFav ? '#e63946' : '#777777'}; z-index: 2;" title="${isFav ? 'Remover dos favoritos' : 'Adicionar aos favoritos'}">
                         ${isFav ? '♥' : '♡'}
                     </button>
                 </div>
@@ -262,7 +277,9 @@ function renderTrips() {
     }).join('');
 }
 
-// Favoritos
+// ==========================================
+// GERENCIAMENTO DE FAVORITOS
+// ==========================================
 window.toggleFavorite = function(tripId) {
     const index = state.favorites.indexOf(tripId);
     if (index === -1) {
@@ -283,7 +300,7 @@ function updateFavoriteBadge() {
     if (elements.favoriteCountBadge) {
         const count = state.favorites.length;
         elements.favoriteCountBadge.textContent = count;
-        elements.favoriteCountBadge.hidden = count === 0;
+        elements.favoriteCountBadge.style.display = count === 0 ? 'none' : 'inline-flex';
     }
 }
 
@@ -299,11 +316,41 @@ function filterFavorites() {
     renderTrips();
 }
 
-// Eventos e UI Geral
+// ==========================================
+// SELEÇÃO DE DESTINOS
+// ==========================================
+function selectDestinationInForm(destinationName, destinationIata) {
+    elements = getElements();
+    if (elements.destinationInput) {
+        elements.destinationInput.value = `${destinationName} (${destinationIata})`;
+    }
+    const homeSection = document.getElementById('home');
+    if (homeSection) {
+        homeSection.scrollIntoView({ behavior: 'smooth' });
+    }
+    setTimeout(() => {
+        if (elements.departureInput) elements.departureInput.focus();
+    }, 400);
+}
+
+function setupDestinationCards() {
+    document.querySelectorAll('[data-destination]').forEach(button => {
+        button.addEventListener('click', (e) => {
+            e.preventDefault();
+            const cityName = button.getAttribute('data-destination');
+            const iataCode = iataMap[cityName] || extractIataCode(cityName) || 'GIG';
+            selectDestinationInForm(cityName, iataCode);
+        });
+    });
+}
+
+// ==========================================
+// EVENTOS E EVENT LISTENERS
+// ==========================================
 function initEventListeners() {
     elements = getElements();
 
-    // Controle das Abas da Busca (Voos, Hotéis, Pacotes)
+    // Controle de Abas (Voos, Hotéis, Pacotes)
     if (elements.searchTabs.length > 0) {
         elements.searchTabs.forEach((tab, index) => {
             tab.addEventListener('click', () => {
@@ -363,6 +410,17 @@ function initEventListeners() {
         });
     }
 
+    // Controle de Slider de Orçamento
+    if (elements.budgetSlider) {
+        elements.budgetSlider.addEventListener('input', (e) => {
+            state.maxBudget = Number(e.target.value);
+            if (elements.budgetValue) {
+                elements.budgetValue.textContent = `R$ ${state.maxBudget.toLocaleString('pt-BR')}`;
+            }
+            renderTrips();
+        });
+    }
+
     // Menu Mobile
     if (elements.menuToggle && elements.mainNav) {
         elements.menuToggle.addEventListener("click", () => {
@@ -389,7 +447,7 @@ function initEventListeners() {
         });
     }
 
-    // Envio do Formulário de Busca
+    // Submissão do Formulário
     if (elements.searchForm) {
         elements.searchForm.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -406,12 +464,10 @@ function initEventListeners() {
 
             let redirectUrl = '';
 
-            // Ação para Hotéis (Booking.com via Travelpayouts)
             if (state.activeTab === 'hotels') {
                 showToast("Buscando os melhores hotéis...");
                 redirectUrl = generateHotellookUrl(destination, departure, returnDate, passengers);
             } else {
-                // Ação para Voos / Pacotes (Aviasales)
                 const origin = elements.originInput ? elements.originInput.value : '';
                 if (!origin.trim()) {
                     showToast("Por favor, preencha a origem.");
@@ -425,7 +481,7 @@ function initEventListeners() {
         });
     }
 
-    // Filtros de Categoria de Oferta
+    // Filtros por Categoria
     document.querySelectorAll('[data-trip-type]').forEach(button => {
         button.addEventListener('click', (e) => {
             document.querySelectorAll('[data-trip-type]').forEach(btn => btn.classList.remove('active'));
@@ -447,7 +503,7 @@ function initEventListeners() {
         });
     }
 
-    // Botão Ir para Busca (CTA)
+    // Botão Ir Para Busca
     if (elements.goSearchBtn) {
         elements.goSearchBtn.addEventListener('click', () => {
             const homeSection = document.getElementById('home');
@@ -455,15 +511,18 @@ function initEventListeners() {
         });
     }
 
-    // Botão Favoritos no Header
+    // Favoritos no Header
     if (elements.favoritesButton) {
         elements.favoritesButton.addEventListener('click', filterFavorites);
     }
 }
 
-// Inicialização
+// ==========================================
+// INICIALIZAÇÃO
+// ==========================================
 document.addEventListener('DOMContentLoaded', () => {
     elements = getElements();
+    setupDateLimits();
     updateFavoriteBadge();
     initEventListeners();
     renderFeaturedDestination();
