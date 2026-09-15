@@ -114,17 +114,14 @@ function generateTravelpayoutsUrl(origin, destination, departureDate, returnDate
     return `https://www.aviasales.com/search/${routePath}?marker=${state.travelPayoutsMarker}&currency=BRL`;
 }
 
-// Gerador de URL do Aviasales Hotels (Preenchimento Automático)
+// Gerador de URL de Hotéis via Booking.com (Travelpayouts)
 function generateHotellookUrl(destinationInput, checkInDate, checkOutDate, guests = 2) {
-    // 1. Obtém o código IATA de destino (ex: MAD para Madrid)
-    const destinationIata = extractIataCode(destinationInput) || 'MAD';
-
-    // 2. Garante datas no formato YYYY-MM-DD
+    const cleanDestination = destinationInput ? destinationInput.replace(/\s*\([A-Z]{3}\)/i, '').trim() : 'Madrid';
     const checkIn = checkInDate || getFutureDateString(30);
     const checkOut = checkOutDate || getFutureDateString(35);
+    const labelMarker = `affnetTP_hotel_${state.travelPayoutsMarker}`;
 
-    // 3. Estrutura com os parâmetros exatos aceitos pela Aviasales (check_in e check_out com underline)
-    return `https://www.aviasales.com/hotels?destination=${destinationIata}&check_in=${checkIn}&check_out=${checkOut}&adults=${guests}&marker=${state.travelPayoutsMarker}&currency=BRL`;
+    return `https://sp.booking.com/searchresults.pt-br.html?ss=${encodeURIComponent(cleanDestination)}&checkin=${checkIn}&checkout=${checkOut}&group_adults=${guests}&label=${labelMarker}&selected_currency=BRL&lang=pt-br`;
 }
 
 // Destino em Destaque
@@ -379,44 +376,33 @@ function initEventListeners() {
             e.preventDefault();
             
             const destination = elements.destinationInput ? elements.destinationInput.value : '';
+            const departure = elements.departureInput ? elements.departureInput.value : '';
+            const returnDate = elements.returnInput ? elements.returnInput.value : '';
+            const passengers = elements.passengersSelect ? elements.passengersSelect.value : 1;
 
             if (!destination.trim()) {
                 showToast("Por favor, preencha o destino.");
                 return;
             }
 
-            // Ação para Hotéis (Hotellook / Rede Aviasales)
-           
-            // Gerador de URL de Hotéis via Booking.com (Estrutura Oficial Aviasales/Travelpayouts)
-function generateHotellookUrl(destinationInput, checkInDate, checkOutDate, guests = 2) {
-    // 1. Limpa o nome do destino para consulta no Booking
-    const cleanDestination = destinationInput ? destinationInput.replace(/\s*\([A-Z]{3}\)/i, '').trim() : 'Madrid';
+            let redirectUrl = '';
 
-    // 2. Formata datas no padrão YYYY-MM-DD
-    const checkIn = checkInDate || getFutureDateString(30);
-    const checkOut = checkOutDate || getFutureDateString(35);
-
-    // 3. Constrói a URL do Booking.com repassando seu marcador Travelpayouts
-    const labelMarker = `affnetTP_hotel_${state.travelPayoutsMarker}`;
-
-    return `https://sp.booking.com/searchresults.pt-br.html?ss=${encodeURIComponent(cleanDestination)}&checkin=${checkIn}&checkout=${checkOut}&group_adults=${guests}&label=${labelMarker}&selected_currency=BRL&lang=pt-br`;
-}
-
-            // Ação para Voos / Pacotes (Aviasales)
-            const origin = elements.originInput ? elements.originInput.value : '';
-            if (!origin.trim()) {
-                showToast("Por favor, preencha a origem.");
-                return;
+            // Ação para Hotéis (Booking.com via Travelpayouts)
+            if (state.activeTab === 'hotels') {
+                showToast("Buscando os melhores hotéis...");
+                redirectUrl = generateHotellookUrl(destination, departure, returnDate, passengers);
+            } else {
+                // Ação para Voos / Pacotes (Aviasales)
+                const origin = elements.originInput ? elements.originInput.value : '';
+                if (!origin.trim()) {
+                    showToast("Por favor, preencha a origem.");
+                    return;
+                }
+                showToast("Buscando as melhores ofertas...");
+                redirectUrl = generateTravelpayoutsUrl(origin, destination, departure, returnDate, passengers);
             }
 
-            const departure = elements.departureInput ? elements.departureInput.value : '';
-            const returnDate = elements.returnInput ? elements.returnInput.value : '';
-            const passengers = elements.passengersSelect ? elements.passengersSelect.value : 1;
-
-            showToast("Buscando as melhores ofertas...");
-            const flightUrl = generateTravelpayoutsUrl(origin, destination, departure, returnDate, passengers);
-            
-            setTimeout(() => { window.open(flightUrl, '_blank'); }, 400);
+            setTimeout(() => { window.open(redirectUrl, '_blank'); }, 400);
         });
     }
 
