@@ -386,17 +386,21 @@ function initEventListeners() {
             }
 
             // Ação para Hotéis (Hotellook / Rede Aviasales)
-            if (state.activeTab === 'hotels') {
-                const checkIn = elements.departureInput ? elements.departureInput.value : '';
-                const checkOut = elements.returnInput ? elements.returnInput.value : '';
-                const guests = elements.passengersSelect ? elements.passengersSelect.value : 2;
+           
+            // Gerador de URL de Hotéis via Booking.com (Estrutura Oficial Aviasales/Travelpayouts)
+function generateHotellookUrl(destinationInput, checkInDate, checkOutDate, guests = 2) {
+    // 1. Limpa o nome do destino para consulta no Booking
+    const cleanDestination = destinationInput ? destinationInput.replace(/\s*\([A-Z]{3}\)/i, '').trim() : 'Madrid';
 
-                showToast("Buscando opções de hotéis...");
-                const hotelUrl = generateHotellookUrl(destination, checkIn, checkOut, guests);
-                
-                setTimeout(() => { window.open(hotelUrl, '_blank'); }, 400);
-                return;
-            }
+    // 2. Formata datas no padrão YYYY-MM-DD
+    const checkIn = checkInDate || getFutureDateString(30);
+    const checkOut = checkOutDate || getFutureDateString(35);
+
+    // 3. Constrói a URL do Booking.com repassando seu marcador Travelpayouts
+    const labelMarker = `affnetTP_hotel_${state.travelPayoutsMarker}`;
+
+    return `https://sp.booking.com/searchresults.pt-br.html?ss=${encodeURIComponent(cleanDestination)}&checkin=${checkIn}&checkout=${checkOut}&group_adults=${guests}&label=${labelMarker}&selected_currency=BRL&lang=pt-br`;
+}
 
             // Ação para Voos / Pacotes (Aviasales)
             const origin = elements.originInput ? elements.originInput.value : '';
