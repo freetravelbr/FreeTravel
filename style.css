@@ -1,29 +1,7 @@
 /* =========================================================
    FREE TRAVEL — style.css
-   Versão Final Atualizada com Destino do Mês
+   Versão Otimizada e Refatorada
    ========================================================= */
-
-/* =========================================================
-   AJUSTE GLOBAL ANTI-TRANSBORDAMENTO
-   ========================================================= */
-/* Esconde a aba Pacotes mantendo a estrutura pronta no HTML */
-.search-tab[data-tab="packages"],
-.search-tab:nth-child(3) {
-    display: none !important;
-}
-
-
-html, body {
-  max-width: 100%;
-  overflow-x: hidden;
-}
-
-#esim,
-.esim-section {
-  width: 100%;
-  max-width: 100vw;
-  overflow: hidden;
-}
 
 :root {
   --black: #090909;
@@ -42,10 +20,12 @@ html, body {
 }
 
 /* =========================================================
-   RESET
+   RESET & REGRAS GLOBAIS
    ========================================================= */
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -55,12 +35,19 @@ html {
   scroll-behavior: smooth;
 }
 
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 body {
   min-width: 320px;
   background: var(--bg);
   color: var(--text);
   font-family: Inter, Arial, Helvetica, sans-serif;
   line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body.modal-open {
@@ -69,7 +56,8 @@ body.modal-open {
 
 img {
   display: block;
-  width: 100%;
+  max-width: 100%;
+  height: auto;
 }
 
 button,
@@ -91,6 +79,18 @@ a {
 .container {
   width: min(calc(100% - 40px), var(--container));
   margin: 0 auto;
+}
+
+#esim,
+.esim-section {
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Ocultar aba Pacotes (Mantendo estrutura pronta no HTML) */
+.search-tab[data-tab="packages"],
+.search-tab:nth-child(3) {
+  display: none;
 }
 
 /* =========================================================
@@ -433,14 +433,14 @@ a {
 
 /* Estado desabilitado (Somente ida) */
 .disabled-input {
-  opacity: 0.4 !important;
-  background-color: #f2f2f2 !important;
-  cursor: not-allowed !important;
+  opacity: 0.5;
+  background-color: #f2f2f2;
+  cursor: not-allowed;
   pointer-events: none;
 }
 
 .disabled-input input {
-  cursor: not-allowed !important;
+  cursor: not-allowed;
 }
 
 .search-button {
@@ -536,7 +536,7 @@ a {
 
 .section-heading {
   display: flex;
-  align-items: end;
+  align-items: flex-end;
   justify-content: space-between;
   gap: 30px;
   margin-bottom: 32px;
@@ -740,7 +740,7 @@ a {
 
 .trip-bottom {
   display: flex;
-  align-items: end;
+  align-items: flex-end;
   justify-content: space-between;
   gap: 10px;
   padding-top: 14px;
@@ -1265,7 +1265,7 @@ a {
   pointer-events: none;
   font-size: 12px;
   font-weight: 800;
-  transition: 0.25s ease;
+  transition: opacity 0.25s ease, transform 0.25s ease;
 }
 
 .ft-toast.show {
@@ -1432,12 +1432,12 @@ a {
 
 @media (max-width: 600px) {
   #featuredDestinationContainer section {
-    padding: 24px 16px !important;
-    min-height: auto !important;
+    padding: 24px 16px;
+    min-height: auto;
   }
 
   #featuredDestinationContainer h2 {
-    font-size: 1.6rem !important;
+    font-size: 1.6rem;
   }
 
   #featuredDestinationContainer a {
