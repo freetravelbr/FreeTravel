@@ -39,15 +39,16 @@ const iataMap = {
 // ELEMENTOS DO DOM
 // ==========================================
 function getElements() {
+    const originInput = document.getElementById('origin');
     return {
         searchForm: document.getElementById('searchForm'),
-        originInput: document.getElementById('origin'),
+        originInput: originInput,
         destinationInput: document.getElementById('destination'),
         departureInput: document.getElementById('departure'),
         returnInput: document.getElementById('return'),
         passengersSelect: document.getElementById('passengers'),
         returnField: document.getElementById('returnField'),
-        originField: document.getElementById('originField') || document.getElementById('origin')?.closest('.search-field'),
+        originField: document.getElementById('originField') || (originInput ? originInput.closest('.search-field') : null),
         typeRoundTrip: document.getElementById('typeRoundTrip'),
         typeOneWay: document.getElementById('typeOneWay'),
         tripGrid: document.getElementById('tripGrid'),
@@ -68,21 +69,24 @@ function getElements() {
 
 let elements = getElements();
 
+// Helper para selecionar o container dos Radio Buttons de Tipo de Viagem
+function getTripTypesWrapper() {
+    return document.querySelector('.trip-types') || 
+           (elements.typeRoundTrip ? elements.typeRoundTrip.closest('div') : null);
+}
+
 // ==========================================
 // UTILITÁRIOS
 // ==========================================
 function extractIataCode(inputString) {
     if (!inputString) return '';
     
-    // Tenta encontrar padrão entre parênteses: Ex: "Rio de Janeiro (GIG)"
     const match = inputString.match(/\(([^)]+)\)/);
     if (match && match[1].length === 3) return match[1].toUpperCase();
 
-    // Tenta encontrar um código IATA isolado de 3 letras
     const iataMatch = inputString.match(/\b[A-Z]{3}\b/i);
     if (iataMatch) return iataMatch[0].toUpperCase();
 
-    // Busca no dicionário pelo nome da cidade
     const cleanName = inputString.trim();
     if (iataMap[cleanName]) return iataMap[cleanName];
 
@@ -128,7 +132,6 @@ function updatePassengersSelectOptions(unitTextSingular, unitTextPlural) {
     select.value = currentVal;
 }
 
-// Configura datas mínimas para impedir datas passadas
 function setupDateLimits() {
     elements = getElements();
     const today = getFutureDateString(0);
@@ -363,16 +366,18 @@ function initEventListeners() {
                 const originWrapper = elements.originField;
                 const returnWrapper = elements.returnField;
                 const submitBtn = elements.searchForm?.querySelector('.search-button');
+                const tripTypesWrapper = getTripTypesWrapper();
 
                 const depLabel = elements.departureInput?.closest('.search-field')?.querySelector('label');
                 const retLabel = elements.returnInput?.closest('.search-field')?.querySelector('label');
                 const passLabel = elements.passengersSelect?.closest('.search-field')?.querySelector('label');
-                const tripTypesWrapper = document.querySelector('.trip-types');
 
                 if (state.activeTab === 'hotels') {
+                    // OCULTA ORIGEM E OS RADIO BUTTONS DE IDA/VOLTA
                     if (originWrapper) originWrapper.style.display = 'none';
-                    if (returnWrapper) returnWrapper.style.display = 'block';
                     if (tripTypesWrapper) tripTypesWrapper.style.display = 'none';
+
+                    if (returnWrapper) returnWrapper.style.display = 'block';
 
                     if (depLabel) depLabel.textContent = 'CHECK-IN';
                     if (retLabel) retLabel.textContent = 'CHECK-OUT';
@@ -385,6 +390,7 @@ function initEventListeners() {
 
                     if (submitBtn) submitBtn.innerHTML = '<span class="search-button-icon">⌕</span> Buscar Hotéis';
                 } else {
+                    // EXIBE ORIGEM E OS RADIO BUTTONS DE IDA/VOLTA
                     if (originWrapper) originWrapper.style.display = 'block';
                     if (tripTypesWrapper) tripTypesWrapper.style.display = 'flex';
 
