@@ -831,8 +831,10 @@ a {
 .destination-card img {
   position: absolute;
   inset: 0;
+  width: 100%; /* FIX: Garante que a imagem ocupe toda a largura */
   height: 100%;
   object-fit: cover;
+  object-position: center; /* FIX: Centraliza a foto no container */
   transition: transform 0.4s ease;
 }
 
