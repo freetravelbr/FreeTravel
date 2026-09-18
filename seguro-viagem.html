@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seguro Viagem Internacional — Free Travel & Assist 365</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Header / Nav -->
+    <header>
+        <nav class="navbar">
+            <a href="/" class="logo">Free Travel</a>
+            <ul class="nav-links">
+                <li><a href="/">Voos & Hotéis</a></li>
+                <li><a href="/seguro-viagem.html" class="active">Seguro Viagem</a></li>
+                <li><a href="/qatar-offers.html">Ofertas Qatar</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Banner Superior de Desconto -->
+    <div class="top-promo-bar">
+        ⚡ <strong>5% OFF EXTRA</strong> em todos os planos com o código promo: <span class="badge-code">FREETRAVELBR</span>
+    </div>
+
+    <!-- 1. HERO SECTION COM BUSCADOR -->
+    <section class="hero-insurance">
+        <div class="hero-content">
+            <h1>Seguro de viagem para todo o mundo.</h1>
+            <p>Seja qual for o seu destino, viaje protegido com até <strong>55% OFF</strong> no cartão, Pix ou Paypal.</p>
+            
+            <div class="search-card">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Destino</label>
+                        <select id="dest-select">
+                            <option value="">¿Para onde?</option>
+                            <option value="europa">Europa / Schengen</option>
+                            <option value="eua">América do Norte (EUA / Canadá)</option>
+                            <option value="latam">América do Sul</option>
+                            <option value="mundo">Outros Destinos / Mundo</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Data de saída</label>
+                        <input type="date" id="date-start">
+                    </div>
+                    <div class="form-group">
+                        <label>Data de retorno</label>
+                        <input type="date" id="date-end">
+                    </div>
+                    <div class="form-group">
+                        <label>Passageiros</label>
+                        <select id="passengers">
+                            <option value="1">1 Pessoa</option>
+                            <option value="2">2 Pessoas</option>
+                            <option value="3">3+ Pessoas</option>
+                        </select>
+                    </div>
+                    <button class="btn-cotar" onclick="goToAssist365()">Cotar</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. BANNER DE APRESENTAÇÃO -->
+    <section class="about-section">
+        <div class="container flex-row">
+            <div class="about-img">
+                <img src="https://images.unsplash.com/photo-1527631746610-bca00a040d60?auto=format&fit=crop&w=600&q=80" alt="Viajantes felizes" class="rounded-img">
+            </div>
+            <div class="about-text">
+                <h2>Seu seguro de viagem, sempre ao seu lado</h2>
+                <ul class="feature-list">
+                    <li>
+                        <span class="icon-check">✓</span>
+                        <div>
+                            <strong>Cobrimos suas necessidades médicas</strong>
+                            <p>E também outros imprevistos que possam impactar sua experiência de viagem.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="icon-check">✓</span>
+                        <div>
+                            <strong>Proteção em todo o mundo</strong>
+                            <p>Evitando custos elevados e imprevistos hospitalares no exterior.</p>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="icon-check">✓</span>
+                        <div>
+                            <strong>Economia e tranquilidade</strong>
+                            <p>Garantia de assistência rápida em cada etapa da sua viagem.</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. O QUE ESTÁ INCLUÍDO (GRID DE COBERTURAS) -->
+    <section class="included-section">
+        <div class="container">
+            <h2>O que está incluído no nosso seguro de viagem?</h2>
+            
+            <div class="coverage-grid">
+                <div class="coverage-card">
+                    <div class="card-icon">➕</div>
+                    <h3>Assistência médica</h3>
+                </div>
+                <div class="coverage-card">
+                    <div class="card-icon">🫀</div>
+                    <h3>Doenças preexistentes</h3>
+                </div>
+                <div class="coverage-card">
+                    <div class="card-icon">🧳</div>
+                    <h3>Perda de bagagem</h3>
+                </div>
+                <div class="coverage-card">
+                    <div class="card-icon">💊</div>
+                    <h3>Medicamentos</h3>
+                </div>
+                <div class="coverage-card">
+                    <div class="card-icon">🩺</div>
+                    <h3>Médico online 24hs</h3>
+                </div>
+                <div class="coverage-card">
+                    <div class="card-icon">🌍</div>
+                    <h3>Cobertura mundial</h3>
+                </div>
+                <div class="coverage-card">
+                    <div class="card-icon">🦷</div>
+                    <h3>Odontologia</h3>
+                </div>
+                <div class="coverage-card">
+                    <div class="card-icon">🏥</div>
+                    <h3>Internações</h3>
+                </div>
+            </div>
+
+            <p class="subtitle-text">E muito mais, de acordo com o plano que melhor atende às suas necessidades.</p>
+            <button class="btn-primary" onclick="goToAssist365()">Cote e conheça os planos</button>
+        </div>
+    </section>
+
+    <!-- 4. COMO FUNCIONA -->
+    <section class="how-it-works">
+        <div class="container">
+            <h2>Como funciona o nosso seguro de viagem?</h2>
+            <p class="section-desc">Aproveite sua viagem com tranquilidade, estamos aqui para ajudar em qualquer imprevisto.</p>
+
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-icon">✈️</div>
+                    <p>Contrate a Assist 365 e comece sua viagem com tranquilidade, estamos prontos para acompanhar você.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon">⚠️</div>
+                    <p>Se surgir algum imprevisto, nossa central de emergências oferecerá orientação de acordo com as suas necessidades.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon">🎉</div>
+                    <p>Siga aproveitando sem preocupações, estamos ao seu lado.</p>
+                </div>
+            </div>
+
+            <button class="btn-light-green" onclick="goToAssist365()">Cote sua viagem agora!</button>
+        </div>
+    </section>
+
+    <!-- 5. MÉTODOS DE PAGAMENTO -->
+    <section class="payment-section">
+        <div class="container">
+            <h3>Pague no cartão, PIX ou Paypal</h3>
+            <div class="payment-badges">
+                <span class="pay-tag">VISA</span>
+                <span class="pay-tag">Mastercard</span>
+                <span class="pay-tag">AMEX</span>
+                <span class="pay-tag pix">PIX</span>
+                <span class="pay-tag paypal">PayPal</span>
+            </div>
+            <button class="btn-primary" onclick="goToAssist365()">Cote sua viagem</button>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>
