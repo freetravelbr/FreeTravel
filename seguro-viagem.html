@@ -1,190 +1,220 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seguro Viagem Internacional — Free Travel & Assist 365</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Seguro Viagem Internacional | Free Travel</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
 
-    <!-- Header / Nav -->
-    <header>
-        <nav class="navbar">
-            <a href="/" class="logo">Free Travel</a>
-            <ul class="nav-links">
-                <li><a href="/">Voos & Hotéis</a></li>
-                <li><a href="/seguro-viagem.html" class="active">Seguro Viagem</a></li>
-                <li><a href="/qatar-offers.html">Ofertas Qatar</a></li>
-            </ul>
-        </nav>
-    </header>
+  <!-- BARRA DE PROMOÇÃO SUPERIOR -->
+  <div class="top-promo-bar">
+    ⚡ <strong>5% OFF EXTRA</strong> em todos os planos com o cupom: <span class="badge-code">FREETRAVELBR</span>
+  </div>
 
-    <!-- Banner Superior de Desconto -->
-    <div class="top-promo-bar">
-        ⚡ <strong>5% OFF EXTRA</strong> em todos os planos com o código promo: <span class="badge-code">FREETRAVELBR</span>
+  <!-- HEADER OFICIAL -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">
+        <div class="logo-icon">✈</div>
+        <div class="logo-text">FREE <span>TRAVEL</span></div>
+      </a>
+
+      <nav class="main-nav">
+        <a href="index.html">Voos & Hotéis</a>
+        <a href="seguro-viagem.html" style="color: var(--yellow);">Seguro Viagem</a>
+        <a href="#coberturas">Coberturas</a>
+        <a href="#como-funciona">Como Funciona</a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="login-btn" onclick="document.getElementById('loginModal').classList.add('open')">Entrar</button>
+      </div>
     </div>
+  </header>
 
-    <!-- 1. HERO SECTION COM BUSCADOR -->
-    <section class="hero-insurance">
-        <div class="hero-content">
-            <h1>Seguro de viagem para todo o mundo.</h1>
-            <p>Seja qual for o seu destino, viaje protegido com até <strong>55% OFF</strong> no cartão, Pix ou Paypal.</p>
-            
-            <div class="search-card">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Destino</label>
-                        <select id="dest-select">
-                            <option value="">¿Para onde?</option>
-                            <option value="europa">Europa / Schengen</option>
-                            <option value="eua">América do Norte (EUA / Canadá)</option>
-                            <option value="latam">América do Sul</option>
-                            <option value="mundo">Outros Destinos / Mundo</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Data de saída</label>
-                        <input type="date" id="date-start">
-                    </div>
-                    <div class="form-group">
-                        <label>Data de retorno</label>
-                        <input type="date" id="date-end">
-                    </div>
-                    <div class="form-group">
-                        <label>Passageiros</label>
-                        <select id="passengers">
-                            <option value="1">1 Pessoa</option>
-                            <option value="2">2 Pessoas</option>
-                            <option value="3">3+ Pessoas</option>
-                        </select>
-                    </div>
-                    <button class="btn-cotar" onclick="goToAssist365()">Cotar</button>
-                </div>
-            </div>
+  <!-- HERO SECTION (SEM FORMULÁRIO QUEBRADO) -->
+  <section class="hero-insurance">
+    <div class="container" style="max-width: 900px; margin: 0 auto; text-align: center;">
+      
+      <span class="eyebrow" style="margin-bottom: 12px;">SUA VIAGEM 100% PROTEGIDA</span>
+      
+      <h1 style="font-size: clamp(32px, 5vw, 52px); color: var(--black); font-weight: 900; line-height: 1.1; margin-bottom: 16px;">
+        Seguro de Viagem para Todo o Mundo
+      </h1>
+      
+      <p style="font-size: 18px; color: #555; max-width: 680px; margin: 0 auto 36px auto;">
+        Seja qual for o seu destino, viaje sem preocupações e com até <strong>55% OFF</strong> pagando no cartão, Pix ou PayPal.
+      </p>
+
+      <!-- BOTÃO DE CHAMADA PRINCIPAL (CTA) -->
+      <div style="margin-bottom: 50px;">
+        <a href="https://assist-365.com?voucher=FREETRAVELBR&utm_source=web&utm_medium=affiliate" 
+           target="_blank" 
+           rel="noopener" 
+           class="search-button" 
+           style="display: inline-flex; font-size: 18px; padding: 18px 42px; border-radius: 50px; text-decoration: none; box-shadow: 0 10px 25px rgba(245, 196, 0, 0.4);">
+          🚀 Cotar Seguro Agora com Desconto
+        </a>
+        <small style="display: block; margin-top: 10px; color: #777; font-size: 12px;">
+          ✓ Cotação rápida e sem compromisso
+        </small>
+      </div>
+
+      <!-- CARDS DE BENEFÍCIOS -->
+      <div class="coverage-grid" style="margin-top: 0;">
+        <div class="coverage-card" style="text-align: left;">
+          <div class="card-icon">🏥</div>
+          <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 6px;">Atendimento Médico 24h</h3>
+          <p style="font-size: 13px; color: #666; margin: 0;">Consulta médica, internação hospitalar e medicamentos no exterior sem custos extras.</p>
         </div>
-    </section>
 
-    <!-- 2. BANNER DE APRESENTAÇÃO -->
-    <section class="about-section">
-        <div class="container flex-row">
-            <div class="about-img">
-                <img src="https://images.unsplash.com/photo-1527631746610-bca00a040d60?auto=format&fit=crop&w=600&q=80" alt="Viajantes felizes" class="rounded-img">
-            </div>
-            <div class="about-text">
-                <h2>Seu seguro de viagem, sempre ao seu lado</h2>
-                <ul class="feature-list">
-                    <li>
-                        <span class="icon-check">✓</span>
-                        <div>
-                            <strong>Cobrimos suas necessidades médicas</strong>
-                            <p>E também outros imprevistos que possam impactar sua experiência de viagem.</p>
-                        </div>
-                    </li>
-                    <li>
-                        <span class="icon-check">✓</span>
-                        <div>
-                            <strong>Proteção em todo o mundo</strong>
-                            <p>Evitando custos elevados e imprevistos hospitalares no exterior.</p>
-                        </div>
-                    </li>
-                    <li>
-                        <span class="icon-check">✓</span>
-                        <div>
-                            <strong>Economia e tranquilidade</strong>
-                            <p>Garantia de assistência rápida em cada etapa da sua viagem.</p>
-                        </div>
-                    </li>
-                </ul>
-            </div>
+        <div class="coverage-card" style="text-align: left;">
+          <div class="card-icon">🧳</div>
+          <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 6px;">Bagagem Segura</h3>
+          <p style="font-size: 13px; color: #666; margin: 0;">Suporte e reembolso garantido em caso de extravio, dano ou atraso da mala.</p>
         </div>
-    </section>
 
-    <!-- 3. O QUE ESTÁ INCLUÍDO (GRID DE COBERTURAS) -->
-    <section class="included-section">
-        <div class="container">
-            <h2>O que está incluído no nosso seguro de viagem?</h2>
-            
-            <div class="coverage-grid">
-                <div class="coverage-card">
-                    <div class="card-icon">➕</div>
-                    <h3>Assistência médica</h3>
-                </div>
-                <div class="coverage-card">
-                    <div class="card-icon">🫀</div>
-                    <h3>Doenças preexistentes</h3>
-                </div>
-                <div class="coverage-card">
-                    <div class="card-icon">🧳</div>
-                    <h3>Perda de bagagem</h3>
-                </div>
-                <div class="coverage-card">
-                    <div class="card-icon">💊</div>
-                    <h3>Medicamentos</h3>
-                </div>
-                <div class="coverage-card">
-                    <div class="card-icon">🩺</div>
-                    <h3>Médico online 24hs</h3>
-                </div>
-                <div class="coverage-card">
-                    <div class="card-icon">🌍</div>
-                    <h3>Cobertura mundial</h3>
-                </div>
-                <div class="coverage-card">
-                    <div class="card-icon">🦷</div>
-                    <h3>Odontologia</h3>
-                </div>
-                <div class="coverage-card">
-                    <div class="card-icon">🏥</div>
-                    <h3>Internações</h3>
-                </div>
-            </div>
-
-            <p class="subtitle-text">E muito mais, de acordo com o plano que melhor atende às suas necessidades.</p>
-            <button class="btn-primary" onclick="goToAssist365()">Cote e conheça os planos</button>
+        <div class="coverage-card" style="text-align: left;">
+          <div class="card-icon">⚡</div>
+          <h3 style="font-size: 18px; font-weight: 800; margin-bottom: 6px;">Emissão Imediata</h3>
+          <p style="font-size: 13px; color: #666; margin: 0;">Aprovou, recebeu! Sua apólice oficial chega no e-mail em poucos minutos.</p>
         </div>
-    </section>
+      </div>
 
-    <!-- 4. COMO FUNCIONA -->
-    <section class="how-it-works">
-        <div class="container">
-            <h2>Como funciona o nosso seguro de viagem?</h2>
-            <p class="section-desc">Aproveite sua viagem com tranquilidade, estamos aqui para ajudar em qualquer imprevisto.</p>
+    </div>
+  </section>
 
-            <div class="steps-grid">
-                <div class="step-card">
-                    <div class="step-icon">✈️</div>
-                    <p>Contrate a Assist 365 e comece sua viagem com tranquilidade, estamos prontos para acompanhar você.</p>
-                </div>
-                <div class="step-card">
-                    <div class="step-icon">⚠️</div>
-                    <p>Se surgir algum imprevisto, nossa central de emergências oferecerá orientação de acordo com as suas necessidades.</p>
-                </div>
-                <div class="step-card">
-                    <div class="step-icon">🎉</div>
-                    <p>Siga aproveitando sem preocupações, estamos ao seu lado.</p>
-                </div>
-            </div>
+  <!-- COBERTURAS INCLUÍDAS -->
+  <section class="included-section" id="coberturas">
+    <div class="container">
+      <div class="section-heading centered">
+        <span class="section-kicker">PROTEÇÃO COMPLETA</span>
+        <h2>O que está incluído no seu plano?</h2>
+        <p>Garantia de assistência em qualquer situação de emergência fora do país.</p>
+      </div>
 
-            <button class="btn-light-green" onclick="goToAssist365()">Cote sua viagem agora!</button>
+      <div class="coverage-grid">
+        <div class="coverage-card">
+          <div class="card-icon">🚑</div>
+          <h3>Translado Médico</h3>
+          <p>Transporte especializado de emergência até o hospital mais próximo.</p>
         </div>
-    </section>
-
-    <!-- 5. MÉTODOS DE PAGAMENTO -->
-    <section class="payment-section">
-        <div class="container">
-            <h3>Pague no cartão, PIX ou Paypal</h3>
-            <div class="payment-badges">
-                <span class="pay-tag">VISA</span>
-                <span class="pay-tag">Mastercard</span>
-                <span class="pay-tag">AMEX</span>
-                <span class="pay-tag pix">PIX</span>
-                <span class="pay-tag paypal">PayPal</span>
-            </div>
-            <button class="btn-primary" onclick="goToAssist365()">Cote sua viagem</button>
+        <div class="coverage-card">
+          <div class="card-icon">✈️</div>
+          <h3>Cancelamento de Viagem</h3>
+          <p>Reembolso de despesas não reembolsáveis em imprevistos graves.</p>
         </div>
-    </section>
+        <div class="coverage-card">
+          <div class="card-icon">🦷</div>
+          <h3>Odontologia de Urgência</h3>
+          <p>Tratamento dental emergencial coberto durante toda a estadia.</p>
+        </div>
+        <div class="coverage-card">
+          <div class="card-icon">⚖️</div>
+          <h3>Assistência Jurídica</h3>
+          <p>Suporte legal e adiantamento de fiança em viagens internacionais.</p>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    <script src="script.js"></script>
+  <!-- COMO FUNCIONA -->
+  <section class="how-it-works" id="como-funciona">
+    <div class="container">
+      <div class="section-heading centered">
+        <span class="section-kicker">PASSO A PASSO</span>
+        <h2>Como contratar em 3 passos</h2>
+      </div>
+
+      <div class="steps-grid">
+        <div class="step-card">
+          <span class="step-number">01</span>
+          <div class="step-icon">🔍</div>
+          <h3>1. Faça a Cotação</h3>
+          <p>Clique no botão e informe seu destino e as datas da sua viagem no cotador oficial.</p>
+        </div>
+
+        <div class="step-card">
+          <span class="step-number">02</span>
+          <div class="step-icon">📋</div>
+          <h3>2. Escolha o Plano</h3>
+          <p>Compare as opções de coberturas e selecione a que melhor atende suas necessidades.</p>
+        </div>
+
+        <div class="step-card">
+          <span class="step-number">03</span>
+          <div class="step-icon">✈️</div>
+          <h3>3. Viaje Tranquilo</h3>
+          <p>O cupom <strong>FREETRAVELBR</strong> já é aplicado automaticamente no checkout para garantir o desconto no e-mail.</p>
+        </div>
+      </div>
+
+      <div style="margin-top: 40px; text-align: center;">
+        <a href="https://assist-365.com?voucher=FREETRAVELBR&utm_source=web&utm_medium=affiliate" 
+           target="_blank" 
+           rel="noopener" 
+           class="search-button" 
+           style="padding: 16px 36px; text-decoration: none;">
+          Ir para a Cotação Agora
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- MEIOS DE PAGAMENTO -->
+  <section class="payment-section">
+    <div class="container">
+      <h3>Pagamento facilitado e seguro</h3>
+      <div class="payment-badges">
+        <span>💳 Cartão de Crédito</span> • 
+        <span>💚 Pix com Desconto</span> • 
+        <span>🅿️ PayPal</span>
+      </div>
+      <small style="color: #777;">Processamento 100% criptografado e seguro.</small>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-main">
+        <div class="footer-brand">
+          <a href="index.html" class="logo">
+            <div class="logo-icon">✈</div>
+            <div class="logo-text">FREE <span>TRAVEL</span></div>
+          </a>
+          <p>Seu buscador completo para voos, hotéis e seguro viagem com as melhores tarifas do mercado.</p>
+        </div>
+
+        <div class="footer-column">
+          <h4>Navegação</h4>
+          <a href="index.html">Voos & Hotéis</a>
+          <a href="seguro-viagem.html">Seguro Viagem</a>
+        </div>
+
+        <div class="footer-column">
+          <h4>Suporte</h4>
+          <a href="#">Central de Ajuda</a>
+          <a href="#">Termos de Uso</a>
+          <a href="#">Privacidade</a>
+        </div>
+
+        <div class="footer-column">
+          <h4>Contato</h4>
+          <a href="mailto:freetravelbr@aol.com">freetravelbr@aol.com</a>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 Free Travel. Todos os direitos reservados.</p>
+      </div>
+    </div>
+  </footer>
+
 </body>
 </html>
