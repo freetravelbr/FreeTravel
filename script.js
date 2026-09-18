@@ -522,6 +522,17 @@ function initEventListeners() {
         elements.favoritesButton.addEventListener('click', filterFavorites);
     }
 }
+// ===================================================
+// REDIRECIONAMENTO ASSIST 365 (SEGURO VIAGEM)
+// ===================================================
+
+const ASSIST365_CONFIG = {
+    affiliateUrl: "https://assist-365.com/ar/?utm_medium=affiliate&utm_source=web&voucher=FREETRAVELBR"
+};
+
+function goToAssist365() {
+    window.open(ASSIST365_CONFIG.affiliateUrl, '_blank');
+}
 
 // ==========================================
 // INICIALIZAÇÃO
