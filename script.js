@@ -175,11 +175,13 @@ function generateTravelpayoutsUrl(origin, destination, departureDate, returnDate
 
 function generateHotellookUrl(destinationInput, checkInDate, checkOutDate, guests = 2) {
     const cleanDestination = destinationInput ? destinationInput.replace(/\s*\([A-Z]{3}\)/i, '').trim() : 'São Paulo';
+    const expediaCamref = '1101l6tMJb'; // Seu código do Expedia Creator Program
+
+    // Se houver datas informadas, formatamos para o padrão de busca da Expedia
     const checkIn = checkInDate || getFutureDateString(30);
     const checkOut = checkOutDate || getFutureDateString(35);
-    const labelMarker = `affnetTP_hotel_${state.travelPayoutsMarker}`;
 
-    return `https://sp.booking.com/searchresults.pt-br.html?ss=${encodeURIComponent(cleanDestination)}&checkin=${checkIn}&checkout=${checkOut}&group_adults=${guests}&label=${labelMarker}&selected_currency=BRL&lang=pt-br`;
+    return `https://br.hoteis.com/Hotel-Search?destination=${encodeURIComponent(cleanDestination)}&startDate=${checkIn}&endDate=${checkOut}&rooms=1&adults=${guests}&camref=${expediaCamref}`;
 }
 
 // ==========================================
