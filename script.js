@@ -181,7 +181,7 @@ function generateHotellookUrl(destinationInput, checkInDate, checkOutDate, guest
     const checkIn = checkInDate || getFutureDateString(30);
     const checkOut = checkOutDate || getFutureDateString(35);
 
-    return `https://br.hoteis.com/Hotel-Search?destination=${encodeURIComponent(cleanDestination)}&startDate=${checkIn}&endDate=${checkOut}&rooms=1&adults=${guests}&camref=${expediaCamref}`;
+    return `https://hoteis.com/Hotel-Search?destination=${encodeURIComponent(cleanDestination)}&startDate=${checkIn}&endDate=${checkOut}&rooms=1&adults=${guests}&camref=${expediaCamref}`;
 }
 
 // ==========================================
