@@ -35,6 +35,10 @@ const iataMap = {
     'São Paulo': 'GRU'
 };
 
+const ASSIST365_CONFIG = {
+    affiliateUrl: "https://assist-365.com/ar/?utm_medium=affiliate&utm_source=web&voucher=FREETRAVELBR"
+};
+
 // ==========================================
 // ELEMENTOS DO DOM
 // ==========================================
@@ -76,8 +80,12 @@ function getTripTypesWrapper() {
 }
 
 // ==========================================
-// UTILITÁRIOS
+// UTILITÁRIOS E REDIRECIONAMENTOS
 // ==========================================
+function goToAssist365() {
+    window.open(ASSIST365_CONFIG.affiliateUrl, '_blank');
+}
+
 function extractIataCode(inputString) {
     if (!inputString) return '';
     
@@ -175,9 +183,8 @@ function generateTravelpayoutsUrl(origin, destination, departureDate, returnDate
 
 function generateHotellookUrl(destinationInput, checkInDate, checkOutDate, guests = 2) {
     const cleanDestination = destinationInput ? destinationInput.replace(/\s*\([A-Z]{3}\)/i, '').trim() : 'São Paulo';
-    const expediaCamref = '1101l6tMJb'; // Seu código do Expedia Creator Program
+    const expediaCamref = '1101l6tMJb';
 
-    // Se houver datas informadas, formatamos para o padrão de busca da Expedia
     const checkIn = checkInDate || getFutureDateString(30);
     const checkOut = checkOutDate || getFutureDateString(35);
 
@@ -375,7 +382,6 @@ function initEventListeners() {
                 const passLabel = elements.passengersSelect?.closest('.search-field')?.querySelector('label');
 
                 if (state.activeTab === 'hotels') {
-                    // OCULTA ORIGEM E OS RADIO BUTTONS DE IDA/VOLTA
                     if (originWrapper) originWrapper.style.display = 'none';
                     if (tripTypesWrapper) tripTypesWrapper.style.display = 'none';
 
@@ -392,7 +398,6 @@ function initEventListeners() {
 
                     if (submitBtn) submitBtn.innerHTML = '<span class="search-button-icon">⌕</span> Buscar Hotéis';
                 } else {
-                    // EXIBE ORIGEM E OS RADIO BUTTONS DE IDA/VOLTA
                     if (originWrapper) originWrapper.style.display = 'block';
                     if (tripTypesWrapper) tripTypesWrapper.style.display = 'flex';
 
@@ -523,17 +528,6 @@ function initEventListeners() {
     if (elements.favoritesButton) {
         elements.favoritesButton.addEventListener('click', filterFavorites);
     }
-}
-// ===================================================
-// REDIRECIONAMENTO ASSIST 365 (SEGURO VIAGEM)
-// ===================================================
-
-const ASSIST365_CONFIG = {
-    affiliateUrl: "https://assist-365.com/ar/?utm_medium=affiliate&utm_source=web&voucher=FREETRAVELBR"
-};
-
-function goToAssist365() {
-    window.open(ASSIST365_CONFIG.affiliateUrl, '_blank');
 }
 
 // ==========================================
