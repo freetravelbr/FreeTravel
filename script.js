@@ -71,24 +71,14 @@ function getElements() {
     };
 }
 
-let elements = getElements();
-
-// Helper para selecionar o container dos Radio Buttons de Tipo de Viagem
-function getTripTypesWrapper() {
-    return document.querySelector('.trip-types') || 
-           (elements.typeRoundTrip ? elements.typeRoundTrip.closest('div') : null);
-}
-
-// ==========================================
-// UTILITÁRIOS E REDIRECIONAMENTOS
-// ==========================================
+// Helper para redirecionamento Assist365
 function goToAssist365() {
     window.open(ASSIST365_CONFIG.affiliateUrl, '_blank');
 }
 
+// Helper para extrair código IATA
 function extractIataCode(inputString) {
     if (!inputString) return '';
-    
     const match = inputString.match(/\(([^)]+)\)/);
     if (match && match[1].length === 3) return match[1].toUpperCase();
 
@@ -126,44 +116,11 @@ function showToast(message) {
     setTimeout(() => { toast.style.opacity = '0'; }, 3200);
 }
 
-function updatePassengersSelectOptions(unitTextSingular, unitTextPlural) {
-    if (!elements.passengersSelect) return;
-    const select = elements.passengersSelect;
-    const currentVal = select.value;
-    
-    Array.from(select.options).forEach(opt => {
-        const val = parseInt(opt.value, 10);
-        const label = val === 1 ? unitTextSingular : unitTextPlural;
-        opt.textContent = `${val} ${label}`;
-    });
-    
-    select.value = currentVal;
-}
-
-function setupDateLimits() {
-    elements = getElements();
-    const today = getFutureDateString(0);
-    
-    if (elements.departureInput) {
-        elements.departureInput.min = today;
-        elements.departureInput.addEventListener('change', () => {
-            if (elements.returnInput) {
-                elements.returnInput.min = elements.departureInput.value || today;
-                if (elements.returnInput.value && elements.returnInput.value < elements.departureInput.value) {
-                    elements.returnInput.value = elements.departureInput.value;
-                }
-            }
-        });
-    }
-    if (elements.returnInput) {
-        elements.returnInput.min = today;
-    }
-}
-
 // ==========================================
 // GERADORES DE URL AFILIADA
 // ==========================================
 function generateTravelpayoutsUrl(origin, destination, departureDate, returnDate, passengers = 1) {
+    const elements = getElements();
     const originIata = extractIataCode(origin) || 'GRU';
     const destinationIata = extractIataCode(destination) || 'GIG';
     const isOneWay = elements.typeOneWay && elements.typeOneWay.checked;
@@ -195,6 +152,7 @@ function generateHotellookUrl(destinationInput, checkInDate, checkOutDate, guest
 // RENDERIZAÇÃO DE COMPONENTES
 // ==========================================
 function renderFeaturedDestination() {
+    const elements = getElements();
     if (!elements.featuredContainer) return;
 
     const featuredData = {
@@ -211,7 +169,7 @@ function renderFeaturedDestination() {
     const directUrl = generateTravelpayoutsUrl(featuredData.originCode, featuredData.destinationCode, '', '');
 
     elements.featuredContainer.innerHTML = `
-      <section style="position: relative; border-radius: 20px; overflow: hidden; background: linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.35) 100%), url('${featuredData.image}') center/cover no-repeat; color: #ffffff; padding: 60px 40px; min-height: 380px; display: flex; align-items: center; box-shadow: 0 14px 40px rgba(0,0,0,0.12);">
+      <section style="position: relative; border-radius: 20px; overflow: hidden; background: linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.35) 100%), url('${featuredData.image}') center/cover no-repeat; color: #ffffff; padding: 60px 40px; min-height: 380px; display: flex; align-items: center; box-shadow: 0 14px 40px rgba(0,0,0,0.12); margin: 40px 0;">
         <div style="max-width: 580px;">
           <span style="display: inline-block; background: #f5c400; color: #090909; font-size: 11px; font-weight: 900; padding: 5px 12px; border-radius: 6px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px;">${featuredData.badge}</span>
           <h2 style="font-size: 2.4rem; font-weight: 900; line-height: 1.1; margin-bottom: 10px; color: #ffffff;">${featuredData.title}</h2>
@@ -230,7 +188,7 @@ function renderFeaturedDestination() {
 }
 
 function renderTrips() {
-    elements = getElements();
+    const elements = getElements();
     if (!elements.tripGrid) return;
 
     state.filteredTrips = state.allTrips.filter(trip => {
@@ -308,7 +266,7 @@ window.toggleFavorite = function(tripId) {
 };
 
 function updateFavoriteBadge() {
-    elements = getElements();
+    const elements = getElements();
     if (elements.favoriteCountBadge) {
         const count = state.favorites.length;
         elements.favoriteCountBadge.textContent = count;
@@ -316,155 +274,25 @@ function updateFavoriteBadge() {
     }
 }
 
-function filterFavorites() {
-    if (state.favorites.length === 0 && !state.showOnlyFavorites) {
-        showToast('Você ainda não possui ofertas salvas nos favoritos.');
-        return;
-    }
-    state.showOnlyFavorites = !state.showOnlyFavorites;
-    if (elements.favoritesButton) {
-        elements.favoritesButton.classList.toggle('active', state.showOnlyFavorites);
-    }
-    renderTrips();
-}
-
 // ==========================================
-// SELEÇÃO DE DESTINOS
+// INICIALIZAÇÃO E EVENTOS
 // ==========================================
-function selectDestinationInForm(destinationName, destinationIata) {
-    elements = getElements();
-    if (elements.destinationInput) {
-        elements.destinationInput.value = `${destinationName} (${destinationIata})`;
-    }
-    const homeSection = document.getElementById('home');
-    if (homeSection) {
-        homeSection.scrollIntoView({ behavior: 'smooth' });
-    }
-    setTimeout(() => {
-        if (elements.departureInput) elements.departureInput.focus();
-    }, 400);
-}
+document.addEventListener('DOMContentLoaded', () => {
+    const elements = getElements();
 
-function setupDestinationCards() {
-    document.querySelectorAll('[data-destination]').forEach(button => {
-        button.addEventListener('click', (e) => {
+    // Evento para o botão "Encontrar minha viagem" no banner amarelo da imagem
+    if (elements.goSearchBtn) {
+        elements.goSearchBtn.addEventListener('click', (e) => {
             e.preventDefault();
-            const cityName = button.getAttribute('data-destination');
-            const iataCode = iataMap[cityName] || extractIataCode(cityName) || 'GIG';
-            selectDestinationInForm(cityName, iataCode);
-        });
-    });
-}
-
-// ==========================================
-// EVENTOS E EVENT LISTENERS
-// ==========================================
-function initEventListeners() {
-    elements = getElements();
-
-    // Controle de Abas (Voos, Hotéis, Pacotes)
-    if (elements.searchTabs.length > 0) {
-        elements.searchTabs.forEach((tab, index) => {
-            tab.addEventListener('click', () => {
-                elements.searchTabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-
-                const tabTypes = ['flights', 'hotels', 'packages'];
-                state.activeTab = tabTypes[index] || 'flights';
-
-                const originWrapper = elements.originField;
-                const returnWrapper = elements.returnField;
-                const submitBtn = elements.searchForm?.querySelector('.search-button');
-                const tripTypesWrapper = getTripTypesWrapper();
-
-                const depLabel = elements.departureInput?.closest('.search-field')?.querySelector('label');
-                const retLabel = elements.returnInput?.closest('.search-field')?.querySelector('label');
-                const passLabel = elements.passengersSelect?.closest('.search-field')?.querySelector('label');
-
-                if (state.activeTab === 'hotels') {
-                    if (originWrapper) originWrapper.style.display = 'none';
-                    if (tripTypesWrapper) tripTypesWrapper.style.display = 'none';
-
-                    if (returnWrapper) returnWrapper.style.display = 'block';
-
-                    if (depLabel) depLabel.textContent = 'CHECK-IN';
-                    if (retLabel) retLabel.textContent = 'CHECK-OUT';
-                    if (passLabel) passLabel.textContent = 'HÓSPEDES';
-
-                    updatePassengersSelectOptions('hóspede', 'hóspedes');
-
-                    if (elements.originInput) elements.originInput.removeAttribute('required');
-                    if (elements.returnInput) elements.returnInput.setAttribute('required', 'required');
-
-                    if (submitBtn) submitBtn.innerHTML = '<span class="search-button-icon">⌕</span> Buscar Hotéis';
-                } else {
-                    if (originWrapper) originWrapper.style.display = 'block';
-                    if (tripTypesWrapper) tripTypesWrapper.style.display = 'flex';
-
-                    if (depLabel) depLabel.textContent = 'IDA';
-                    if (retLabel) retLabel.textContent = 'VOLTA';
-                    if (passLabel) passLabel.textContent = 'PASSAGEIROS';
-
-                    updatePassengersSelectOptions('passageiro', 'passageiros');
-
-                    if (elements.originInput) elements.originInput.setAttribute('required', 'required');
-
-                    if (elements.typeOneWay?.checked) {
-                        if (returnWrapper) returnWrapper.style.display = 'none';
-                        if (elements.returnInput) elements.returnInput.removeAttribute('required');
-                    } else {
-                        if (returnWrapper) returnWrapper.style.display = 'block';
-                        if (elements.returnInput) elements.returnInput.setAttribute('required', 'required');
-                    }
-
-                    if (submitBtn) submitBtn.innerHTML = '<span class="search-button-icon">⌕</span> Buscar Voos';
-                }
-            });
+            const homeSection = document.getElementById('home') || document.querySelector('header') || document.body;
+            homeSection.scrollIntoView({ behavior: 'smooth' });
         });
     }
 
-    // Controle de Slider de Orçamento
-    if (elements.budgetSlider) {
-        elements.budgetSlider.addEventListener('input', (e) => {
-            state.maxBudget = Number(e.target.value);
-            if (elements.budgetValue) {
-                elements.budgetValue.textContent = `R$ ${state.maxBudget.toLocaleString('pt-BR')}`;
-            }
-            renderTrips();
-        });
-    }
-
-    // Menu Mobile
-    if (elements.menuToggle && elements.mainNav) {
-        elements.menuToggle.addEventListener("click", () => {
-            const expanded = elements.menuToggle.getAttribute('aria-expanded') === 'true';
-            elements.menuToggle.setAttribute('aria-expanded', !expanded);
-            elements.mainNav.classList.toggle("open");
-        });
-    }
-
-    // Alternância Ida e Volta / Somente Ida
-    if (elements.typeOneWay && elements.typeRoundTrip) {
-        elements.typeOneWay.addEventListener('change', () => {
-            if (elements.returnField) elements.returnField.style.display = 'none';
-            if (elements.returnInput) {
-                elements.returnInput.value = '';
-                elements.returnInput.removeAttribute('required');
-            }
-        });
-        elements.typeRoundTrip.addEventListener('change', () => {
-            if (state.activeTab !== 'hotels') {
-                if (elements.returnField) elements.returnField.style.display = 'block';
-                if (elements.returnInput) elements.returnInput.setAttribute('required', 'required');
-            }
-        });
-    }
-
-    // Submissão do Formulário
+    // Formulário de Pesquisa
     if (elements.searchForm) {
         elements.searchForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            
             const destination = elements.destinationInput ? elements.destinationInput.value : '';
             const departure = elements.departureInput ? elements.departureInput.value : '';
             const returnDate = elements.returnInput ? elements.returnInput.value : '';
@@ -475,70 +303,13 @@ function initEventListeners() {
                 return;
             }
 
-            let redirectUrl = '';
-
-            if (state.activeTab === 'hotels') {
-                showToast("Buscando os melhores hotéis...");
-                redirectUrl = generateHotellookUrl(destination, departure, returnDate, passengers);
-            } else {
-                const origin = elements.originInput ? elements.originInput.value : '';
-                if (!origin.trim()) {
-                    showToast("Por favor, preencha a origem.");
-                    return;
-                }
-                showToast("Buscando as melhores ofertas...");
-                redirectUrl = generateTravelpayoutsUrl(origin, destination, departure, returnDate, passengers);
-            }
-
-            setTimeout(() => { window.open(redirectUrl, '_blank'); }, 400);
+            const origin = elements.originInput ? elements.originInput.value : '';
+            const redirectUrl = generateTravelpayoutsUrl(origin, destination, departure, returnDate, passengers);
+            window.open(redirectUrl, '_blank');
         });
     }
 
-    // Filtros por Categoria
-    document.querySelectorAll('[data-trip-type]').forEach(button => {
-        button.addEventListener('click', (e) => {
-            document.querySelectorAll('[data-trip-type]').forEach(btn => btn.classList.remove('active'));
-            e.target.classList.add('active');
-            state.activeFilter = e.target.getAttribute('data-trip-type');
-            renderTrips();
-        });
-    });
-
-    // Botão Ver Todas
-    if (elements.showAllBtn) {
-        elements.showAllBtn.addEventListener('click', () => {
-            state.activeFilter = 'Todos';
-            state.showOnlyFavorites = false;
-            document.querySelectorAll('[data-trip-type]').forEach(btn => {
-                btn.classList.toggle('active', btn.getAttribute('data-trip-type') === 'Todos');
-            });
-            renderTrips();
-        });
-    }
-
-    // Botão Ir Para Busca
-    if (elements.goSearchBtn) {
-        elements.goSearchBtn.addEventListener('click', () => {
-            const homeSection = document.getElementById('home');
-            if (homeSection) homeSection.scrollIntoView({ behavior: 'smooth' });
-        });
-    }
-
-    // Favoritos no Header
-    if (elements.favoritesButton) {
-        elements.favoritesButton.addEventListener('click', filterFavorites);
-    }
-}
-
-// ==========================================
-// INICIALIZAÇÃO
-// ==========================================
-document.addEventListener('DOMContentLoaded', () => {
-    elements = getElements();
-    setupDateLimits();
     updateFavoriteBadge();
-    initEventListeners();
     renderFeaturedDestination();
     renderTrips();
-    setupDestinationCards();
 });
