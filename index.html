@@ -562,7 +562,23 @@
 
     </section>
 
-  </main>
+  
+<!-- SECCIÓN DEL BLOG -->
+<section id="blog" style="padding: 60px 20px; max-width: 1200px; margin: 0 auto;">
+    <h2 style="font-size: 2rem; font-weight: 800; margin-bottom: 10px; color: #111;">Dicas de Viagem & Artigos</h2>
+    <p style="color: #666; margin-bottom: 30px;">Fique por dentro das melhores dicas para planejar sua viagem economizando.</p>
+
+    <div id="blogGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px;">
+        <!-- Los posts se cargarán aquí automáticamente -->
+    </div>
+</section>
+</main>
+<!-- MODAL PARA LEER EL ARTÍCULO -->
+<div id="postModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 10000; overflow-y: auto; padding: 20px;">
+    <div style="background: #fff; max-width: 800px; margin: 40px auto; padding: 30px; border-radius: 12px; position: relative;">
+        <button id="closePostBtn" style="position: absolute; top: 15px; right: 20px; font-size: 1.8rem; background: none; border: none; cursor: pointer; color: #333;">&times;</button>
+        <div id="postContent"></div>
+    </div>
 
 
   <!-- ================= FOOTER ================= -->
@@ -610,7 +626,8 @@
   </footer> 
 
   <!-- ================= JAVASCRIPT ================= -->
-  <script src="script.js" defer></script>
+  <script src="posts.js" defer></script>
+<script src="script.js" defer></script>
 
   <!-- WIDGET INTEGRATION (AUTOCOMPLETE/IATA BUSCA) -->
   <script charset="utf-8" src="https://tp.media/content?promo_id=4054&shmarker=771005&campaign_id=100&target_host=www.aviasales.com&locale=pt&currency=brl" async></script>
