@@ -67,16 +67,19 @@ function getElements() {
         menuToggle: document.querySelector('[data-menu-toggle]'),
         mainNav: document.getElementById('mainNav'),
         loginBtn: document.querySelector('.login-btn'),
-        searchTabs: document.querySelectorAll('.search-tab')
+        searchTabs: document.querySelectorAll('.search-tab'),
+        blogGrid: document.getElementById('blogGrid'),
+        postModal: document.getElementById('postModal'),
+        closePostBtn: document.getElementById('closePostBtn'),
+        postContent: document.getElementById('postContent')
     };
 }
 
-// Helper para redirecionamento Assist365
+// Helpers Utilitários
 function goToAssist365() {
     window.open(ASSIST365_CONFIG.affiliateUrl, '_blank');
 }
 
-// Helper para extrair código IATA
 function extractIataCode(inputString) {
     if (!inputString) return '';
     const match = inputString.match(/\(([^)]+)\)/);
@@ -108,12 +111,12 @@ function showToast(message) {
     if (!toast) {
         toast = document.createElement('div');
         toast.id = 'ftToast';
-        toast.style.cssText = 'position: fixed; bottom: 20px; right: 20px; background: #111; color: #fff; padding: 12px 24px; border-radius: 8px; font-size: 0.9rem; z-index: 9999; box-shadow: 0 4px 12px rgba(0,0,0,0.15); opacity: 0; transition: opacity 0.3s ease; font-family: sans-serif;';
+        toast.className = 'ft-toast';
         document.body.appendChild(toast);
     }
     toast.textContent = message;
-    toast.style.opacity = '1';
-    setTimeout(() => { toast.style.opacity = '0'; }, 3200);
+    toast.classList.add('show');
+    setTimeout(() => { toast.classList.remove('show'); }, 3200);
 }
 
 // ==========================================
@@ -129,7 +132,7 @@ function generateTravelpayoutsUrl(origin, destination, departureDate, returnDate
     const formattedDep = formatDateForUrl(depDate);
 
     let formattedRet = '';
-    if (!isOneWay && state.activeTab !== 'hotels') {
+    if (!isOneWay) {
         const retDate = returnDate || getFutureDateString(37);
         formattedRet = formatDateForUrl(retDate);
     }
@@ -247,6 +250,44 @@ function renderTrips() {
     }).join('');
 }
 
+// Renderizar Posts do Blog
+function renderBlogPosts() {
+    const elements = getElements();
+    if (!elements.blogGrid || typeof blogPosts === 'undefined') return;
+
+    elements.blogGrid.innerHTML = blogPosts.map(post => `
+        <article style="background: #fff; border: 1px solid #e0e0e0; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+                <img src="${post.image}" alt="${post.title}" style="width: 100%; height: 180px; object-fit: cover;">
+                <div style="padding: 20px;">
+                    <small style="color: #888; font-size: 0.8rem;">${post.date} • ${post.author}</small>
+                    <h3 style="font-size: 1.15rem; margin: 8px 0; color: #111;">${post.title}</h3>
+                    <p style="color: #666; font-size: 0.9rem; line-height: 1.4;">${post.snippet}</p>
+                </div>
+            </div>
+            <div style="padding: 0 20px 20px 20px;">
+                <button onclick="openPostModal('${post.id}')" style="background: #f5c400; color: #111; border: none; padding: 10px 16px; font-weight: 700; border-radius: 6px; cursor: pointer; width: 100%;">Ler Artigo Completo</button>
+            </div>
+        </article>
+    `).join('');
+}
+
+window.openPostModal = function(postId) {
+    const elements = getElements();
+    const post = blogPosts.find(p => p.id === postId);
+    if (!post || !elements.postModal || !elements.postContent) return;
+
+    elements.postContent.innerHTML = `
+        <h2 style="font-size: 1.8rem; color: #111; margin-bottom: 10px;">${post.title}</h2>
+        <p style="color: #888; font-size: 0.85rem; margin-bottom: 20px;">Publicado em ${post.date} por ${post.author}</p>
+        <img src="${post.image}" alt="${post.title}" style="width: 100%; max-height: 350px; object-fit: cover; border-radius: 8px; margin-bottom: 20px;">
+        <div style="color: #333; line-height: 1.6; font-size: 1rem;">${post.content}</div>
+    `;
+
+    elements.postModal.style.display = 'block';
+    document.body.classList.add('modal-open');
+};
+
 // ==========================================
 // GERENCIAMENTO DE FAVORITOS
 // ==========================================
@@ -270,7 +311,7 @@ function updateFavoriteBadge() {
     if (elements.favoriteCountBadge) {
         const count = state.favorites.length;
         elements.favoriteCountBadge.textContent = count;
-        elements.favoriteCountBadge.style.display = count === 0 ? 'none' : 'inline-flex';
+        elements.favoriteCountBadge.hidden = count === 0;
     }
 }
 
@@ -280,16 +321,91 @@ function updateFavoriteBadge() {
 document.addEventListener('DOMContentLoaded', () => {
     const elements = getElements();
 
-    // Evento para o botão "Encontrar minha viagem" no banner amarelo da imagem
-    if (elements.goSearchBtn) {
-        elements.goSearchBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            const homeSection = document.getElementById('home') || document.querySelector('header') || document.body;
-            homeSection.scrollIntoView({ behavior: 'smooth' });
+    // Menu Mobile
+    if (elements.menuToggle && elements.mainNav) {
+        elements.menuToggle.addEventListener('click', () => {
+            const isOpen = elements.mainNav.classList.toggle('open');
+            elements.menuToggle.setAttribute('aria-expanded', isOpen);
         });
     }
 
-    // Formulário de Pesquisa
+    // Controle de Abas (Voos vs Hotéis)
+    if (elements.searchTabs) {
+        elements.searchTabs.forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                elements.searchTabs.forEach(t => t.classList.remove('active'));
+                e.target.classList.add('active');
+                state.activeTab = e.target.getAttribute('data-tab');
+
+                if (state.activeTab === 'hotels') {
+                    if (elements.originField) elements.originField.style.display = 'none';
+                    if (elements.destinationInput) elements.destinationInput.placeholder = "Cidade ou Hotel (Ex: Rio de Janeiro)";
+                } else {
+                    if (elements.originField) elements.originField.style.display = 'block';
+                    if (elements.destinationInput) elements.destinationInput.placeholder = "Cidade ou Aeroporto (Ex: GIG, EZE, MIA)";
+                }
+            });
+        });
+    }
+
+    // Tipo de Viagem (Ida e Volta / Somente Ida)
+    if (elements.typeOneWay && elements.typeRoundTrip && elements.returnField) {
+        elements.typeOneWay.addEventListener('change', () => {
+            elements.returnField.classList.add('disabled-input');
+            if (elements.returnInput) elements.returnInput.required = false;
+        });
+
+        elements.typeRoundTrip.addEventListener('change', () => {
+            elements.returnField.classList.remove('disabled-input');
+            if (elements.returnInput) elements.returnInput.required = true;
+        });
+    }
+
+    // Eventos nos Cards de Destinos que Inspiram
+    document.querySelectorAll('[data-destination]').forEach(card => {
+        card.addEventListener('click', (e) => {
+            const destinationName = e.currentTarget.getAttribute('data-destination');
+            const destIata = iataMap[destinationName] || 'GIG';
+            const redirectUrl = generateTravelpayoutsUrl('GRU', destIata, '', '');
+            window.open(redirectUrl, '_blank');
+        });
+    });
+
+    // Botão "Ver todas"
+    if (elements.showAllBtn) {
+        elements.showAllBtn.addEventListener('click', () => {
+            state.activeFilter = 'Todos';
+            state.showOnlyFavorites = false;
+            document.querySelectorAll('[data-trip-type]').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('data-trip-type') === 'Todos');
+            });
+            renderTrips();
+        });
+    }
+
+    // Botão Favoritos no Header
+    if (elements.favoritesButton) {
+        elements.favoritesButton.addEventListener('click', () => {
+            if (state.favorites.length === 0 && !state.showOnlyFavorites) {
+                showToast("Você ainda não salvou nenhuma oferta nos favoritos!");
+                return;
+            }
+            state.showOnlyFavorites = !state.showOnlyFavorites;
+            renderTrips();
+        });
+    }
+
+    // Filtros de Categoria
+    document.querySelectorAll('[data-trip-type]').forEach(button => {
+        button.addEventListener('click', (e) => {
+            document.querySelectorAll('[data-trip-type]').forEach(btn => btn.classList.remove('active'));
+            e.target.classList.add('active');
+            state.activeFilter = e.target.getAttribute('data-trip-type');
+            renderTrips();
+        });
+    });
+
+    // Submissão do Formulário de Busca
     if (elements.searchForm) {
         elements.searchForm.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -299,17 +415,40 @@ document.addEventListener('DOMContentLoaded', () => {
             const passengers = elements.passengersSelect ? elements.passengersSelect.value : 1;
 
             if (!destination.trim()) {
-                showToast("Por favor, preencha o destino.");
+                showToast("Por favor, informe o destino.");
                 return;
             }
 
-            const origin = elements.originInput ? elements.originInput.value : '';
-            const redirectUrl = generateTravelpayoutsUrl(origin, destination, departure, returnDate, passengers);
+            let redirectUrl = '';
+            if (state.activeTab === 'hotels') {
+                redirectUrl = generateHotellookUrl(destination, departure, returnDate, passengers);
+            } else {
+                const origin = elements.originInput ? elements.originInput.value : '';
+                redirectUrl = generateTravelpayoutsUrl(origin, destination, departure, returnDate, passengers);
+            }
+
             window.open(redirectUrl, '_blank');
         });
     }
 
+    // Modal do Blog - Fechar
+    if (elements.closePostBtn && elements.postModal) {
+        elements.closePostBtn.addEventListener('click', () => {
+            elements.postModal.style.display = 'none';
+            document.body.classList.remove('modal-open');
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === elements.postModal) {
+                elements.postModal.style.display = 'none';
+                document.body.classList.remove('modal-open');
+            }
+        });
+    }
+
+    // Inicialização
     updateFavoriteBadge();
     renderFeaturedDestination();
     renderTrips();
+    renderBlogPosts();
 });
