@@ -44,15 +44,23 @@ const ASSIST365_CONFIG = {
 // ==========================================
 function getElements() {
     const originInput = document.getElementById('origin');
+    const departureInput = document.getElementById('departure');
+    const returnInput = document.getElementById('return');
+    const passengersSelect = document.getElementById('passengers');
+
     return {
         searchForm: document.getElementById('searchForm'),
         originInput: originInput,
         destinationInput: document.getElementById('destination'),
-        departureInput: document.getElementById('departure'),
-        returnInput: document.getElementById('return'),
-        passengersSelect: document.getElementById('passengers'),
+        departureInput: departureInput,
+        returnInput: returnInput,
+        passengersSelect: passengersSelect,
         returnField: document.getElementById('returnField'),
         originField: document.getElementById('originField') || (originInput ? originInput.closest('.search-field') : null),
+        departureLabel: departureInput ? departureInput.closest('.search-field')?.querySelector('label') : null,
+        returnLabel: returnInput ? returnInput.closest('.search-field')?.querySelector('label') : null,
+        passengersLabel: passengersSelect ? passengersSelect.closest('.search-field')?.querySelector('label') : null,
+        tripTypeContainer: document.querySelector('.trip-type-container'),
         typeRoundTrip: document.getElementById('typeRoundTrip'),
         typeOneWay: document.getElementById('typeOneWay'),
         tripGrid: document.getElementById('tripGrid'),
@@ -338,11 +346,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 state.activeTab = e.target.getAttribute('data-tab');
 
                 if (state.activeTab === 'hotels') {
+                    // Esconder Origem e Ocultar a seleção de "Ida e Volta / Somente Ida"
                     if (elements.originField) elements.originField.style.display = 'none';
+                    if (elements.tripTypeContainer) elements.tripTypeContainer.style.display = 'none';
+
+                    // Alterar Placeholders e Labels para Check-in / Check-out / Hóspedes
                     if (elements.destinationInput) elements.destinationInput.placeholder = "Cidade ou Hotel (Ex: Rio de Janeiro)";
+                    if (elements.departureLabel) elements.departureLabel.textContent = "Check-in";
+                    if (elements.returnLabel) elements.returnLabel.textContent = "Check-out";
+                    if (elements.passengersLabel) elements.passengersLabel.textContent = "Hóspedes";
+
+                    // Garantir que a data de saída/check-out esteja habilitada no modo Hotéis
+                    if (elements.returnField) elements.returnField.classList.remove('disabled-input');
+                    if (elements.returnInput) elements.returnInput.required = true;
                 } else {
+                    // Restaurar tudo para o modo Voos
                     if (elements.originField) elements.originField.style.display = 'block';
+                    if (elements.tripTypeContainer) elements.tripTypeContainer.style.display = 'flex';
+
                     if (elements.destinationInput) elements.destinationInput.placeholder = "Cidade ou Aeroporto (Ex: GIG, EZE, MIA)";
+                    if (elements.departureLabel) elements.departureLabel.textContent = "Ida";
+                    if (elements.returnLabel) elements.returnLabel.textContent = "Volta";
+                    if (elements.passengersLabel) elements.passengersLabel.textContent = "Passageiros";
+
+                    // Reaplicar estado de desabilitado se "Somente ida" estiver ativo
+                    if (elements.typeOneWay && elements.typeOneWay.checked && elements.returnField) {
+                        elements.returnField.classList.add('disabled-input');
+                        if (elements.returnInput) elements.returnInput.required = false;
+                    }
                 }
             });
         });
@@ -351,13 +382,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // Tipo de Viagem (Ida e Volta / Somente Ida)
     if (elements.typeOneWay && elements.typeRoundTrip && elements.returnField) {
         elements.typeOneWay.addEventListener('change', () => {
-            elements.returnField.classList.add('disabled-input');
-            if (elements.returnInput) elements.returnInput.required = false;
+            if (state.activeTab === 'flights') {
+                elements.returnField.classList.add('disabled-input');
+                if (elements.returnInput) elements.returnInput.required = false;
+            }
         });
 
         elements.typeRoundTrip.addEventListener('change', () => {
-            elements.returnField.classList.remove('disabled-input');
-            if (elements.returnInput) elements.returnInput.required = true;
+            if (state.activeTab === 'flights') {
+                elements.returnField.classList.remove('disabled-input');
+                if (elements.returnInput) elements.returnInput.required = true;
+            }
         });
     }
 
