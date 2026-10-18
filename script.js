@@ -39,50 +39,6 @@ const ASSIST365_CONFIG = {
     affiliateUrl: "https://assist-365.com/ar/?utm_medium=affiliate&utm_source=web&voucher=FREETRAVELBR"
 };
 
-// ==========================================
-// ELEMENTOS DO DOM
-// ==========================================
-function getElements() {
-    const originInput = document.getElementById('origin');
-    const departureInput = document.getElementById('departure');
-    const returnInput = document.getElementById('return');
-    const passengersSelect = document.getElementById('passengers');
-
-    return {
-        searchForm: document.getElementById('searchForm'),
-        originInput: originInput,
-        destinationInput: document.getElementById('destination'),
-        departureInput: departureInput,
-        returnInput: returnInput,
-        passengersSelect: passengersSelect,
-        returnField: document.getElementById('returnField'),
-        originField: document.getElementById('originField') || (originInput ? originInput.closest('.search-field') : null),
-        departureLabel: departureInput ? departureInput.closest('.search-field')?.querySelector('label') : null,
-        returnLabel: returnInput ? returnInput.closest('.search-field')?.querySelector('label') : null,
-        passengersLabel: passengersSelect ? passengersSelect.closest('.search-field')?.querySelector('label') : null,
-        tripTypeContainer: document.querySelector('.trip-type-container'),
-        typeRoundTrip: document.getElementById('typeRoundTrip'),
-        typeOneWay: document.getElementById('typeOneWay'),
-        tripGrid: document.getElementById('tripGrid'),
-        resultCount: document.getElementById('resultCount'),
-        budgetSlider: document.getElementById('budgetSlider'),
-        budgetValue: document.getElementById('budgetValue'),
-        favoriteCountBadge: document.querySelector('[data-favorite-count]'),
-        favoritesButton: document.querySelector('[data-action="show-favorites"]'),
-        showAllBtn: document.querySelector('[data-action="show-all"]'),
-        goSearchBtn: document.querySelector('[data-action="go-search"]'),
-        featuredContainer: document.getElementById('featuredDestinationContainer'),
-        menuToggle: document.querySelector('[data-menu-toggle]'),
-        mainNav: document.getElementById('mainNav'),
-        loginBtn: document.querySelector('.login-btn'),
-        searchTabs: document.querySelectorAll('.search-tab'),
-        blogGrid: document.getElementById('blogGrid'),
-        postModal: document.getElementById('postModal'),
-        closePostBtn: document.getElementById('closePostBtn'),
-        postContent: document.getElementById('postContent')
-    };
-}
-
 // Helpers Utilitários
 function goToAssist365() {
     window.open(ASSIST365_CONFIG.affiliateUrl, '_blank');
@@ -110,8 +66,11 @@ function getFutureDateString(daysAhead) {
 
 function formatDateForUrl(dateString) {
     if (!dateString) return '';
-    const [year, month, day] = dateString.split('-');
-    return `${day}${month}`;
+    const parts = dateString.split('-');
+    if (parts.length === 3) {
+        return `${parts[2]}${parts[1]}`;
+    }
+    return '';
 }
 
 function showToast(message) {
@@ -131,10 +90,11 @@ function showToast(message) {
 // GERADORES DE URL AFILIADA
 // ==========================================
 function generateTravelpayoutsUrl(origin, destination, departureDate, returnDate, passengers = 1) {
-    const elements = getElements();
+    const typeOneWay = document.getElementById('typeOneWay');
+    const isOneWay = typeOneWay && typeOneWay.checked;
+
     const originIata = extractIataCode(origin) || 'GRU';
     const destinationIata = extractIataCode(destination) || 'GIG';
-    const isOneWay = elements.typeOneWay && elements.typeOneWay.checked;
 
     const depDate = departureDate || getFutureDateString(30);
     const formattedDep = formatDateForUrl(depDate);
@@ -163,8 +123,8 @@ function generateHotellookUrl(destinationInput, checkInDate, checkOutDate, guest
 // RENDERIZAÇÃO DE COMPONENTES
 // ==========================================
 function renderFeaturedDestination() {
-    const elements = getElements();
-    if (!elements.featuredContainer) return;
+    const featuredContainer = document.getElementById('featuredDestinationContainer');
+    if (!featuredContainer) return;
 
     const featuredData = {
         title: "Tóquio, Japão",
@@ -179,7 +139,7 @@ function renderFeaturedDestination() {
 
     const directUrl = generateTravelpayoutsUrl(featuredData.originCode, featuredData.destinationCode, '', '');
 
-    elements.featuredContainer.innerHTML = `
+    featuredContainer.innerHTML = `
       <section style="position: relative; border-radius: 20px; overflow: hidden; background: linear-gradient(90deg, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.35) 100%), url('${featuredData.image}') center/cover no-repeat; color: #ffffff; padding: 60px 40px; min-height: 380px; display: flex; align-items: center; box-shadow: 0 14px 40px rgba(0,0,0,0.12); margin: 40px 0;">
         <div style="max-width: 580px;">
           <span style="display: inline-block; background: #f5c400; color: #090909; font-size: 11px; font-weight: 900; padding: 5px 12px; border-radius: 6px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px;">${featuredData.badge}</span>
@@ -199,8 +159,9 @@ function renderFeaturedDestination() {
 }
 
 function renderTrips() {
-    const elements = getElements();
-    if (!elements.tripGrid) return;
+    const tripGrid = document.getElementById('tripGrid');
+    const resultCount = document.getElementById('resultCount');
+    if (!tripGrid) return;
 
     state.filteredTrips = state.allTrips.filter(trip => {
         const matchesCategory = state.activeFilter === 'Todos' || trip.category === state.activeFilter;
@@ -209,12 +170,12 @@ function renderTrips() {
         return matchesCategory && matchesBudget && matchesFavorites;
     });
 
-    if (elements.resultCount) {
-        elements.resultCount.textContent = `${state.filteredTrips.length} oferta(s) encontrada(s)`;
+    if (resultCount) {
+        resultCount.textContent = `${state.filteredTrips.length} oferta(s) encontrada(s)`;
     }
 
     if (state.filteredTrips.length === 0) {
-        elements.tripGrid.innerHTML = `
+        tripGrid.innerHTML = `
             <div style="grid-column: 1 / -1; text-align: center; padding: 40px 20px; color: #666;">
                 <p style="font-size: 1.2rem; margin-bottom: 10px;">Nenhuma oferta encontrada.</p>
                 <small>Tente alterar os filtros de categoria ou ajuste o orçamento.</small>
@@ -222,7 +183,7 @@ function renderTrips() {
         return;
     }
 
-    elements.tripGrid.innerHTML = state.filteredTrips.map(trip => {
+    tripGrid.innerHTML = state.filteredTrips.map(trip => {
         const isFav = state.favorites.includes(trip.id);
         const affiliateUrl = generateTravelpayoutsUrl(trip.originCode, trip.destinationCode, trip.departureDate, trip.returnDate);
 
@@ -260,10 +221,10 @@ function renderTrips() {
 
 // Renderizar Posts do Blog
 function renderBlogPosts() {
-    const elements = getElements();
-    if (!elements.blogGrid || typeof blogPosts === 'undefined') return;
+    const blogGrid = document.getElementById('blogGrid');
+    if (!blogGrid || typeof blogPosts === 'undefined') return;
 
-    elements.blogGrid.innerHTML = blogPosts.map(post => `
+    blogGrid.innerHTML = blogPosts.map(post => `
         <article style="background: #fff; border: 1px solid #e0e0e0; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between;">
             <div>
                 <img src="${post.image}" alt="${post.title}" style="width: 100%; height: 180px; object-fit: cover;">
@@ -281,18 +242,19 @@ function renderBlogPosts() {
 }
 
 window.openPostModal = function(postId) {
-    const elements = getElements();
+    const postModal = document.getElementById('postModal');
+    const postContent = document.getElementById('postContent');
     const post = blogPosts.find(p => p.id === postId);
-    if (!post || !elements.postModal || !elements.postContent) return;
+    if (!post || !postModal || !postContent) return;
 
-    elements.postContent.innerHTML = `
+    postContent.innerHTML = `
         <h2 style="font-size: 1.8rem; color: #111; margin-bottom: 10px;">${post.title}</h2>
         <p style="color: #888; font-size: 0.85rem; margin-bottom: 20px;">Publicado em ${post.date} por ${post.author}</p>
         <img src="${post.image}" alt="${post.title}" style="width: 100%; max-height: 350px; object-fit: cover; border-radius: 8px; margin-bottom: 20px;">
         <div style="color: #333; line-height: 1.6; font-size: 1rem;">${post.content}</div>
     `;
 
-    elements.postModal.style.display = 'block';
+    postModal.style.display = 'block';
     document.body.classList.add('modal-open');
 };
 
@@ -315,11 +277,11 @@ window.toggleFavorite = function(tripId) {
 };
 
 function updateFavoriteBadge() {
-    const elements = getElements();
-    if (elements.favoriteCountBadge) {
+    const favoriteCountBadge = document.querySelector('[data-favorite-count]');
+    if (favoriteCountBadge) {
         const count = state.favorites.length;
-        elements.favoriteCountBadge.textContent = count;
-        elements.favoriteCountBadge.hidden = count === 0;
+        favoriteCountBadge.textContent = count;
+        favoriteCountBadge.hidden = count === 0;
     }
 }
 
@@ -327,52 +289,69 @@ function updateFavoriteBadge() {
 // INICIALIZAÇÃO E EVENTOS
 // ==========================================
 document.addEventListener('DOMContentLoaded', () => {
-    const elements = getElements();
+    const menuToggle = document.querySelector('[data-menu-toggle]');
+    const mainNav = document.getElementById('mainNav');
+    const searchTabs = document.querySelectorAll('.search-tab');
+    const typeOneWay = document.getElementById('typeOneWay');
+    const typeRoundTrip = document.getElementById('typeRoundTrip');
+    const returnField = document.getElementById('returnField');
+    const returnInput = document.getElementById('return');
+    const originField = document.getElementById('originField');
+    const destinationInput = document.getElementById('destination');
+    const departureInput = document.getElementById('departure');
+    const passengersSelect = document.getElementById('passengers');
+    const originInput = document.getElementById('origin');
+    const tripTypeContainer = document.querySelector('.trip-type-container');
+    const searchForm = document.getElementById('searchForm');
+    const showAllBtn = document.querySelector('[data-action="show-all"]');
+    const favoritesButton = document.querySelector('[data-action="show-favorites"]');
+    const closePostBtn = document.getElementById('closePostBtn');
+    const postModal = document.getElementById('postModal');
+
+    const departureLabel = departureInput ? departureInput.closest('.search-field')?.querySelector('label') : null;
+    const returnLabel = returnInput ? returnInput.closest('.search-field')?.querySelector('label') : null;
+    const passengersLabel = passengersSelect ? passengersSelect.closest('.search-field')?.querySelector('label') : null;
 
     // Menu Mobile
-    if (elements.menuToggle && elements.mainNav) {
-        elements.menuToggle.addEventListener('click', () => {
-            const isOpen = elements.mainNav.classList.toggle('open');
-            elements.menuToggle.setAttribute('aria-expanded', isOpen);
+    if (menuToggle && mainNav) {
+        menuToggle.addEventListener('click', () => {
+            const isOpen = mainNav.classList.toggle('open');
+            menuToggle.setAttribute('aria-expanded', isOpen);
         });
     }
 
     // Controle de Abas (Voos vs Hotéis)
-    if (elements.searchTabs) {
-        elements.searchTabs.forEach(tab => {
+    if (searchTabs) {
+        searchTabs.forEach(tab => {
             tab.addEventListener('click', (e) => {
-                elements.searchTabs.forEach(t => t.classList.remove('active'));
-                e.target.classList.add('active');
-                state.activeTab = e.target.getAttribute('data-tab');
+                searchTabs.forEach(t => t.classList.remove('active'));
+                const target = e.currentTarget;
+                target.classList.add('active');
+                state.activeTab = target.getAttribute('data-tab');
 
                 if (state.activeTab === 'hotels') {
-                    // Esconder Origem e Ocultar a seleção de "Ida e Volta / Somente Ida"
-                    if (elements.originField) elements.originField.style.display = 'none';
-                    if (elements.tripTypeContainer) elements.tripTypeContainer.style.display = 'none';
+                    if (originField) originField.style.display = 'none';
+                    if (tripTypeContainer) tripTypeContainer.style.display = 'none';
 
-                    // Alterar Placeholders e Labels para Check-in / Check-out / Hóspedes
-                    if (elements.destinationInput) elements.destinationInput.placeholder = "Cidade ou Hotel (Ex: Rio de Janeiro)";
-                    if (elements.departureLabel) elements.departureLabel.textContent = "Check-in";
-                    if (elements.returnLabel) elements.returnLabel.textContent = "Check-out";
-                    if (elements.passengersLabel) elements.passengersLabel.textContent = "Hóspedes";
+                    if (destinationInput) destinationInput.placeholder = "Cidade ou Hotel (Ex: Rio de Janeiro)";
+                    if (departureLabel) departureLabel.textContent = "Check-in";
+                    if (returnLabel) returnLabel.textContent = "Check-out";
+                    if (passengersLabel) passengersLabel.textContent = "Hóspedes";
 
-                    // Garantir que a data de saída/check-out esteja habilitada no modo Hotéis
-                    if (elements.returnField) elements.returnField.classList.remove('disabled-input');
-                    if (elements.returnInput) elements.returnInput.required = true;
+                    if (returnField) returnField.classList.remove('disabled-input');
+                    if (returnInput) returnInput.required = true;
                 } else {
-                    // Restaurar tudo para o modo Voos
-                    if (elements.originField) elements.originField.style.display = 'block';
-                    if (elements.tripTypeContainer) elements.tripTypeContainer.style.display = 'flex';
+                    if (originField) originField.style.display = 'block';
+                    if (tripTypeContainer) tripTypeContainer.style.display = 'flex';
 
-                    if (elements.destinationInput) elements.destinationInput.placeholder = "Cidade ou Aeroporto (Ex: GIG, EZE, MIA)";
-                    if (elements.departureLabel) elements.departureLabel.textContent = "Ida";
-                    if (elements.returnLabel) elements.returnLabel.textContent = "Volta";
-                    if (elements.passengersLabel) elements.passengersLabel.textContent = "Passageiros";
+                    if (destinationInput) destinationInput.placeholder = "Cidade ou Aeroporto (Ex: GIG, EZE, MIA)";
+                    if (departureLabel) departureLabel.textContent = "Ida";
+                    if (returnLabel) returnLabel.textContent = "Volta";
+                    if (passengersLabel) passengersLabel.textContent = "Passageiros";
 
-                    // Reaplicar estado de desabilitado se "Somente ida" estiver ativo
-                    if (elements.typeOneWay && elements.typeOneWay.checked && elements.returnField) {
-                        elements.returnField.classList.add('disabled-input');
-                        if (elements.returnInput) elements.returnInput.required = false;
+                    if (typeOneWay && typeOneWay.checked && returnField) {
+                        returnField.classList.add('disabled-input');
+                        if (returnInput) returnInput.required = false;
                     }
                 }
             });
@@ -380,23 +359,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Tipo de Viagem (Ida e Volta / Somente Ida)
-    if (elements.typeOneWay && elements.typeRoundTrip && elements.returnField) {
-        elements.typeOneWay.addEventListener('change', () => {
+    if (typeOneWay && typeRoundTrip && returnField) {
+        typeOneWay.addEventListener('change', () => {
             if (state.activeTab === 'flights') {
-                elements.returnField.classList.add('disabled-input');
-                if (elements.returnInput) elements.returnInput.required = false;
+                returnField.classList.add('disabled-input');
+                if (returnInput) returnInput.required = false;
             }
         });
 
-        elements.typeRoundTrip.addEventListener('change', () => {
+        typeRoundTrip.addEventListener('change', () => {
             if (state.activeTab === 'flights') {
-                elements.returnField.classList.remove('disabled-input');
-                if (elements.returnInput) elements.returnInput.required = true;
+                returnField.classList.remove('disabled-input');
+                if (returnInput) returnInput.required = true;
             }
         });
     }
 
-    // Eventos nos Cards de Destinos que Inspiram
+    // Eventos nos Cards de Destinos
     document.querySelectorAll('[data-destination]').forEach(card => {
         card.addEventListener('click', (e) => {
             const destinationName = e.currentTarget.getAttribute('data-destination');
@@ -407,8 +386,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Botão "Ver todas"
-    if (elements.showAllBtn) {
-        elements.showAllBtn.addEventListener('click', () => {
+    if (showAllBtn) {
+        showAllBtn.addEventListener('click', () => {
             state.activeFilter = 'Todos';
             state.showOnlyFavorites = false;
             document.querySelectorAll('[data-trip-type]').forEach(btn => {
@@ -418,9 +397,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Botão Favoritos no Header
-    if (elements.favoritesButton) {
-        elements.favoritesButton.addEventListener('click', () => {
+    // Botão Favoritos
+    if (favoritesButton) {
+        favoritesButton.addEventListener('click', () => {
             if (state.favorites.length === 0 && !state.showOnlyFavorites) {
                 showToast("Você ainda não salvou nenhuma oferta nos favoritos!");
                 return;
@@ -440,26 +419,27 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Submissão do Formulário de Busca
-    if (elements.searchForm) {
-        elements.searchForm.addEventListener('submit', (e) => {
+    // Submissão do Formulário de Busca (CORRIGIDA)
+    if (searchForm) {
+        searchForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            const destination = elements.destinationInput ? elements.destinationInput.value : '';
-            const departure = elements.departureInput ? elements.departureInput.value : '';
-            const returnDate = elements.returnInput ? elements.returnInput.value : '';
-            const passengers = elements.passengersSelect ? elements.passengersSelect.value : 1;
 
-            if (!destination.trim()) {
+            const destVal = destinationInput ? destinationInput.value : '';
+            const depVal = departureInput ? departureInput.value : '';
+            const retVal = returnInput ? returnInput.value : '';
+            const passVal = passengersSelect ? passengersSelect.value : 1;
+            const origVal = originInput ? originInput.value : '';
+
+            if (!destVal.trim()) {
                 showToast("Por favor, informe o destino.");
                 return;
             }
 
             let redirectUrl = '';
             if (state.activeTab === 'hotels') {
-                redirectUrl = generateHotellookUrl(destination, departure, returnDate, passengers);
+                redirectUrl = generateHotellookUrl(destVal, depVal, retVal, passVal);
             } else {
-                const origin = elements.originInput ? elements.originInput.value : '';
-                redirectUrl = generateTravelpayoutsUrl(origin, destination, departure, returnDate, passengers);
+                redirectUrl = generateTravelpayoutsUrl(origVal, destVal, depVal, retVal, passVal);
             }
 
             window.open(redirectUrl, '_blank');
@@ -467,15 +447,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Modal do Blog - Fechar
-    if (elements.closePostBtn && elements.postModal) {
-        elements.closePostBtn.addEventListener('click', () => {
-            elements.postModal.style.display = 'none';
+    if (closePostBtn && postModal) {
+        closePostBtn.addEventListener('click', () => {
+            postModal.style.display = 'none';
             document.body.classList.remove('modal-open');
         });
 
         window.addEventListener('click', (e) => {
-            if (e.target === elements.postModal) {
-                elements.postModal.style.display = 'none';
+            if (e.target === postModal) {
+                postModal.style.display = 'none';
                 document.body.classList.remove('modal-open');
             }
         });
